@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab3044d0d213fbb42bb52c6a2846aa9e, type: 3}
+  m_Name: TestLuncher
+  m_EditorClassIdentifier: Assembly-CSharp::TowerData
+  towerID: 1
+  towerName: TowerLuncher
+  cost: 15
+  damage: 20
+  attackRange: 20
+  attackInterval: 2
+  monsterLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  projectileData: {fileID: 11400000, guid: ccb11473b2cf5b2439f0edd3b4d28434, type: 2}
+  bullet: {fileID: 0}
+  towerPF: {fileID: 0}
