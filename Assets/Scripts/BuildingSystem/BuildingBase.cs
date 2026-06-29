@@ -74,7 +74,7 @@ public abstract class BuildingBase : MonoBehaviour, IBuildable, IHasPreview
         return previewPF;
     }
 
-    public abstract void OnPlaced();
+    public virtual void OnPlaced() { }
 
     public void SetVisualState(BuildingVisualState newState)
     {

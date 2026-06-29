@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class Tower : MonoBehaviour
+public class Tower : BuildingBase
 {
     [Header("Tower Data")]
     [SerializeField] private TowerData towerData;

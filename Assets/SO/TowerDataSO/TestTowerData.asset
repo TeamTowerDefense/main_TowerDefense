@@ -21,9 +21,9 @@ MonoBehaviour:
   type: 0
   monsterLayer:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 512
   attackMode: 0
   projectileData: {fileID: 11400000, guid: ccb11473b2cf5b2439f0edd3b4d28434, type: 2}
   hitBoxAttackData: {fileID: 0}
   bullet: {fileID: 8780727661788297695, guid: 18d2b03dab4102b4fa5cd7aba5a5e404, type: 3}
-  towerPF: {fileID: 919132149155446097, guid: fada03482166a784890caf577bea1bb5, type: 3}
+  towerPF: {fileID: 8340965744140817121, guid: 6bb5d459c8ae1a7438ec6c9e684d87b1, type: 3}
