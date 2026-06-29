@@ -6,7 +6,14 @@ public enum TowerType
     Cannon,
     Laser,
     Support,
-    Slow
+    Slow,
+    HitBox
+}
+
+public enum TowerAttackMode
+{
+    Projectile,
+    HitBox
 }
 
 [CreateAssetMenu(menuName = "Tower/Data")]
@@ -22,11 +29,20 @@ public class TowerData : ScriptableObject
     public float attackRange = 5f;
     public float attackInterval = 1f;
 
+    [Header("Tower Type")]
+    public TowerType type = TowerType.Basic;
+
     [Header("Target")]
     public LayerMask monsterLayer;
 
+    [Header("Attack Mode")]
+    public TowerAttackMode attackMode;
+
     [Header("ProjectTile")]
     public ProjectileData projectileData;
+
+    [Header("HitBox Attack")]
+    public HitBoxAttackData hitBoxAttackData;
 
     public GameObject bullet;
     public GameObject towerPF;

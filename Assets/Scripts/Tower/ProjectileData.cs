@@ -7,7 +7,7 @@ public enum ProjectileAttackType
     Area
 }
 
-[CreateAssetMenu(menuName = "projectile/Data")]
+[CreateAssetMenu(menuName = "Attack/Projectile")]
 public class ProjectileData : ScriptableObject
 {
     public GameObject projectilePF;

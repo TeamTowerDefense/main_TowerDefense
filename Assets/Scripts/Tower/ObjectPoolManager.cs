@@ -55,6 +55,8 @@ public class ObjectPoolManager : MonoBehaviour
         obj.transform.SetPositionAndRotation(position, rotation);
         obj.OnSpawned();
 
+        Debug.Log($"[Pool] 실제 타입 : {obj.GetType().Name}, 요청 타입 : {typeof(T).Name}");
+
         return obj as T;
     }
     #endregion

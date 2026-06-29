@@ -321,7 +321,7 @@ GameObject:
   - component: {fileID: 5083330694576680960}
   - component: {fileID: 5083330694576680961}
   m_Layer: 0
-  m_Name: Luncher
+  m_Name: Bubble
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

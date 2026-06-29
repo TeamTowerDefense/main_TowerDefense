@@ -82,7 +82,7 @@ MonoBehaviour:
   projectileData: {fileID: 11400000, guid: ccb11473b2cf5b2439f0edd3b4d28434, type: 2}
   monsterLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   rotateBody: {fileID: 3275506443000837453}
   rotateSpeed: 10
 --- !u!1001 &5570168505360380976
