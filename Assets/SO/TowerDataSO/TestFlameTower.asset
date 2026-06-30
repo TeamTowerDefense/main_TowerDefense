@@ -19,7 +19,7 @@ MonoBehaviour:
   isDestructible: 1
   baseFootprint:
   - {x: 0, y: 0}
-  previewPF: {fileID: 3697426809127930414, guid: e414d73bf59732646b24fff585cfb085, type: 3}
+  previewPF: {fileID: 3697426809127930414, guid: 4852ce388538770489b960d833e7fdc5, type: 3}
   validStateMaterial: {fileID: 2100000, guid: 4eaf14d00b5b02d4786058d19d124e39, type: 2}
   inValidStateMaterial: {fileID: 2100000, guid: 4a85c9e89378a73489c64b9eede43a1b, type: 2}
   placeVFX: {fileID: -7969546562051743012, guid: 201eafd12c4c6b34396a2be032e4a7c9, type: 3}

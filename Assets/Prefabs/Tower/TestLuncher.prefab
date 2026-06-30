@@ -42,6 +42,8 @@ GameObject:
   - component: {fileID: 1989286964293096250}
   - component: {fileID: 6812877529357987594}
   - component: {fileID: 7393930370931174458}
+  - component: {fileID: 8065979465948170874}
+  - component: {fileID: 7275925654192151852}
   m_Layer: 8
   m_Name: TestLuncher
   m_TagString: Untagged
@@ -110,6 +112,35 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0.8, z: 0}
+--- !u!114 &8065979465948170874
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6451708471463169753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d945d9d9aac7f124da79716d88a3329f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TowerInfoProvider
+  targetTransform: {fileID: 1989286964293096250}
+  isAlive: 1
+  isPlaced: 1
+--- !u!114 &7275925654192151852
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6451708471463169753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90b77edc0a11bf644b0c3859ed1eea7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TowerTargetFinder
+  searchInterval: 0.15
+  targetMode: 0
 --- !u!1001 &4733684892597303080
 PrefabInstance:
   m_ObjectHideFlags: 0

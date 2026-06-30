@@ -79,13 +79,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e427b9c0424f2540b9db38b8033cbb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Tower
-  baseFootprint:
-  - {x: 0, y: 0}
-  previewPF: {fileID: 6797076878322164941, guid: aac46f5a58839364490aa37af72ef597, type: 3}
-  validStateMaterial: {fileID: 2100000, guid: 4eaf14d00b5b02d4786058d19d124e39, type: 2}
-  inValidStateMaterial: {fileID: 2100000, guid: 4a85c9e89378a73489c64b9eede43a1b, type: 2}
-  isDestructible: 1
-  towerData: {fileID: 11400000, guid: e393610002f3f1e42bed2f10b03ed509, type: 2}
+  buildingData: {fileID: 11400000, guid: e393610002f3f1e42bed2f10b03ed509, type: 2}
   firePoint: {fileID: 891083189724630870}
   projectileData: {fileID: 11400000, guid: ccb11473b2cf5b2439f0edd3b4d28434, type: 2}
   hitBoxAttackData: {fileID: 0}
