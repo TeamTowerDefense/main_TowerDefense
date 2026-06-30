@@ -4,6 +4,7 @@ using System.Linq;
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static IGameInterface.ITowerInfoProvider;
 namespace IGameInterface
 {
     public interface ISceneService { }
@@ -164,15 +165,30 @@ namespace IGameInterface
         IReadOnlyList<TowerInfo> Towers { get; }
         IReadOnlyList<EnemyInfo> Enemies { get; }
 
-        void Register(IMapInfoProvider provider);
-        void Unregister(IMapInfoProvider provider);
-        void Register(ITowerInfoProvider provider);
-        void Unregister(ITowerInfoProvider provider);
-        void Register(IEnemyInfoProvider provider);
-        void Unregister(IEnemyInfoProvider provider);
+        int AliveTowerCount { get; }
+        int AliveEnemyCount { get; }
+
+        void Register(object provider);
+        void Unregister(object provider);
+
+        bool TryGetEnemy(Vector3 origin, float range, EnemyTargetMode mode, out EnemyInfo enemy);
+
 
         Vector3 ClampCameraPosition(Vector3 position);
         bool ContainsWorldPosition(Vector3 worldPos);
+    }
+
+    public enum EnemyTargetMode
+    {
+        ClosestToTower,
+        FarthestFromTower,
+        FrontMost,
+        BackMost
+    }
+
+    public interface IGameService : ISceneService
+    {
+
     }
 
     public interface ICameraModule
@@ -207,54 +223,95 @@ namespace IGameInterface
         PositionView,
         TurretView
     }
-    public interface IMapInfoProvider
-    {
-        bool TryGetMapInfo(out MapInfo info);
-    }
 
-    public interface ITowerInfoProvider
+    public interface IInfoProvider<T> { bool TryGetInfo(out T info); T Info { get; } }
+    public interface IMapInfoProvider : IInfoProvider<MapInfo> { }
+
+    public interface ITowerInfoProvider : IInfoProvider<TowerInfo>
     {
         bool TryGetTowerInfo(out TowerInfo info);
+        bool IInfoProvider<TowerInfo>.TryGetInfo(out TowerInfo info) => TryGetTowerInfo(out info);
+        TowerInfo IInfoProvider<TowerInfo>.Info => TryGetTowerInfo(out TowerInfo info) ? info : null;
     }
 
-    public interface IEnemyInfoProvider
+    public interface IEnemyInfoProvider : IInfoProvider<EnemyInfo>
     {
         bool TryGetEnemyInfo(out EnemyInfo info);
+        bool IInfoProvider<EnemyInfo>.TryGetInfo(out EnemyInfo info) => TryGetEnemyInfo(out info);
+        EnemyInfo IInfoProvider<EnemyInfo>.Info => TryGetEnemyInfo(out EnemyInfo info) ? info : null;
     }
 
-    public readonly struct TowerInfo
+    public interface IEnemyInfoWriter
     {
-        public readonly Transform Transform;
-        public readonly Vector3 Position;
-        public readonly bool IsAlive;
+        void SetAlive(bool value);
+        void SetTargetable(bool value);
+        void SetPathProgress(float value);
+        void SetAttackTarget(IAttackTarget target);
+    }
 
-        public TowerInfo(Transform transform, Vector3 position, bool isAlive = true)
+    public interface IAttackTarget
+    {
+        Transform TargetTransform { get; }
+        bool CanBeDamaged { get; }
+
+        void TakeDamage(float damage);
+    }
+
+    public class TowerInfo
+    {
+        Vector3 fallbackPos;
+
+        public Transform Transform;
+        public bool IsAlive;
+        public bool IsPlaced;
+
+        public Vector3 Position => Transform ? Transform.position : fallbackPos;
+
+        public TowerInfo(Transform transform, Vector3 position, bool isAlive = true, bool isPlaced = true)
         {
             Transform = transform;
-            Position = position;
+            fallbackPos = position;
             IsAlive = isAlive;
+            IsPlaced = isPlaced;
         }
     }
 
-    public readonly struct EnemyInfo
+    public class EnemyInfo
     {
-        public readonly Transform Transform;
-        public readonly Vector3 Position;
-        public readonly bool IsAlive;
+        Vector3 fallbackPosition;
 
-        public EnemyInfo(Transform transform, Vector3 position, bool isAlive = true)
+        public Transform Transform;
+        public IAttackTarget AttackTarget;
+
+        public bool IsAlive;
+        public bool IsTargetable;
+        public float PathProgress;
+
+        public Vector3 Position => Transform ? Transform.position : fallbackPosition;
+        public bool CanBeTargeted => IsAlive && IsTargetable && Transform;
+
+        public EnemyInfo(
+            Transform transform,
+            Vector3 position,
+            bool isAlive = true,
+            bool isTargetable = true,
+            float pathProgress = 0f,
+            IAttackTarget attackTarget = null)
         {
             Transform = transform;
-            Position = position;
+            fallbackPosition = position;
             IsAlive = isAlive;
+            IsTargetable = isTargetable;
+            PathProgress = pathProgress;
+            AttackTarget = attackTarget;
         }
     }
 
-    public readonly struct MapInfo
+    public class MapInfo
     {
-        public readonly Bounds MapBounds;
-        public readonly Bounds CameraBounds;
-        public readonly bool HasBounds;
+        public Bounds MapBounds;
+        public Bounds CameraBounds;
+        public bool HasBounds;
 
         public MapInfo(Bounds mapBounds, Bounds cameraBounds, bool hasBounds = true)
         {
@@ -263,4 +320,57 @@ namespace IGameInterface
             HasBounds = hasBounds;
         }
     }
+
+    public interface ITowerTargetFinder
+    {
+        EnemyInfo CurrentTarget { get; }
+        EnemyTargetMode ChaseMode { get; }
+        bool HasTarget { get; }
+
+        bool TryGetTarget(Vector3 origin, float range, EnemyTargetMode mode, out EnemyInfo target);
+        bool TryGetTarget(Vector3 origin, float range, out EnemyInfo target);
+        bool IsValidTarget(EnemyInfo target, Vector3 origin, float range);
+        void SetChaseMode(EnemyTargetMode mode);
+        void ClearTarget();
+    }
+
+    public enum StageState
+    {
+        None,
+        Prepare,
+        Playing,
+        WaveClear,
+        StageClear,
+        StageFailed
+    }
+
+    public interface IMonsterSpawnManager : ISceneService
+    {
+        bool IsSpawning { get; }
+        bool SpawnFinished { get; }
+
+        void StartWave(MonsterSpawnDataSO spawnData);
+        void StopWave();
+    }
+
+    public interface IStageDamageSource
+    {
+        int LeakDamage { get; }
+    }
+    public interface IStageService : ISceneService
+    {
+        StageState CurrentState { get; }
+        int CurrentBaseHp { get; }
+        int MaxBaseHp { get; }
+        int TowerLimit { get; }
+
+        event Action<StageState> StateChanged;
+        event Action<int, int> BaseHpChanged;
+
+        void StartStage();
+        void StartWave();
+        void TakeBaseDamage(int damage);
+    }
+
+
 }

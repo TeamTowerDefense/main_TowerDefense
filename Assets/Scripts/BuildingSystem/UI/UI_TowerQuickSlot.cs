@@ -24,7 +24,7 @@ public class UI_TowerQuickSlot : MonoBehaviour
         }
     }
 
-    public void SetupUI(BuildingData[] activeTowers)
+    public void SetupUI(TowerData[] activeTowers)
     {
         if (activeTowers == null)
             return;

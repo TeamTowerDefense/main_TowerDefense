@@ -6,7 +6,6 @@ public abstract class BuildingBase : MonoBehaviour, IBuildable, IHasPreview
 {
     [SerializeField]
     protected BuildingData buildingData;
-    public BuildingData Data => buildingData;
 
     public bool IsDestructible => buildingData != null ? buildingData.isDestructible : true;
     public int BuildCost => buildingData != null ? buildingData.cost : 0;

@@ -1,7 +1,6 @@
-using System;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
-using static UnityEngine.LowLevelPhysics2D.PhysicsShape;
 
 public class ConstructController : MonoBehaviour
 {
@@ -16,7 +15,7 @@ public class ConstructController : MonoBehaviour
     private LayerMask obstacleLayer;
 
     [Header("타워 프리팹 목록")]
-    [SerializeField] private BuildingData[] TowerDeck;
+    [SerializeField] private TowerData[] TowerDeck;
 
     [Header("퀵슬롯 뷰")]
     [SerializeField]
@@ -108,18 +107,12 @@ public class ConstructController : MonoBehaviour
 
     public void SelectBuildingByIndex(int slotIndex)
     {
-        BuildingData[] towers = Model.towerDatas;
+        TowerData[] towers = Model.towerDatas;
 
         if (towers == null || slotIndex < 0 || slotIndex >= towers.Length) return;
         if (towers[slotIndex] == null) return;
 
-        BuildingData selectedBuilding = Model.towerDatas[slotIndex];
-
-        if (resourceSystem != null && !resourceSystem.CanAfford(selectedBuilding.cost))
-        {
-            Debug.LogWarning($"자원이 부족하여 {selectedBuilding.buildingName}을 선택할 수 없습니다.");
-            return;
-        }
+        TowerData selectedBuilding = Model.towerDatas[slotIndex];
 
         bool buildingSelected = SelectBuilding(selectedBuilding);
         if (buildingSelected)
@@ -128,7 +121,7 @@ public class ConstructController : MonoBehaviour
         }
     }
 
-    public bool SelectBuilding(BuildingData towerData)
+    public bool SelectBuilding(TowerData towerData)
     {
         if (towerData == null || !isConstructMod) 
             return false;

@@ -1427,6 +1427,8 @@ GameObject:
   - component: {fileID: 5153917004061848977}
   - component: {fileID: -3142431804408923328}
   - component: {fileID: 3519068505886476455}
+  - component: {fileID: 977047859170228459}
+  - component: {fileID: 8705497507599344616}
   m_Layer: 9
   m_Name: Skeleton_110
   m_TagString: Untagged
@@ -1466,7 +1468,7 @@ Animator:
   m_Controller: {fileID: 22100000, guid: ccfcef0ea4d3ca846a54601112e22e94, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
-  m_ApplyRootMotion: 0
+  m_ApplyRootMotion: 1
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
@@ -1513,6 +1515,39 @@ CapsuleCollider:
   m_Height: 2.07
   m_Direction: 1
   m_Center: {x: 0, y: 0.74, z: 0}
+--- !u!114 &977047859170228459
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4253210182481893339}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27d03b93565e1d641b99303e0bb0f938, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyInfoProvider
+  targetTransform: {fileID: 8868286918359095940}
+  isAlive: 1
+  isTargetable: 1
+  pathProgress: 0
+  attackTargetSource: {fileID: -3142431804408923328}
+--- !u!114 &8705497507599344616
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4253210182481893339}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7c72810e0774a14d9c6af1a132ab8e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MonsterRuntimeBridge
+  monster: {fileID: -3142431804408923328}
+  infoWriter:
+    target: {fileID: 977047859170228459}
+  targetTransform: {fileID: 8868286918359095940}
 --- !u!1 &4381643526415728320
 GameObject:
   m_ObjectHideFlags: 0

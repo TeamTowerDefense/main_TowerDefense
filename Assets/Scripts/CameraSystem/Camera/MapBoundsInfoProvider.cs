@@ -1,4 +1,4 @@
-using IGameInterface;
+﻿using IGameInterface;
 using UnityEngine;
 
 public class MapBoundsInfoProvider : MonoBehaviour, IMapInfoProvider
@@ -8,6 +8,9 @@ public class MapBoundsInfoProvider : MonoBehaviour, IMapInfoProvider
     [SerializeField] Collider cameraBoundsCollider;
 
     bool registered;
+    MapInfo map;
+
+    public MapInfo Info => map;
 
     #region 생명 주기
     void Reset()
@@ -40,7 +43,7 @@ public class MapBoundsInfoProvider : MonoBehaviour, IMapInfoProvider
     }
     #endregion
 
-    public bool TryGetMapInfo(out MapInfo info)
+    public bool TryGetInfo(out MapInfo info)
     {
         if (mapBoundsCollider == null)
         {
@@ -51,6 +54,7 @@ public class MapBoundsInfoProvider : MonoBehaviour, IMapInfoProvider
         Bounds mapBounds = mapBoundsCollider.bounds;
         Bounds cameraBounds = cameraBoundsCollider != null ? cameraBoundsCollider.bounds : mapBounds;
         info = new MapInfo(mapBounds, cameraBounds);
+        map = info;
         return true;
     }
 
