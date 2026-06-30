@@ -18,9 +18,12 @@ MonoBehaviour:
   damage: 20
   attackRange: 10
   attackInterval: 2
+  type: 0
   monsterLayer:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 512
+  attackMode: 0
   projectileData: {fileID: 11400000, guid: 4df76543a904f20458827d0e99690400, type: 2}
-  bullet: {fileID: 5083330694576680963, guid: b47cd3198bdb41e4c84c691ad9e61d8d, type: 3}
+  hitBoxAttackData: {fileID: 0}
+  bullet: {fileID: 9042438279177923111, guid: 1b55dec9921f0e4439f638a5cb2a954f, type: 3}
   towerPF: {fileID: 6451708471463169753, guid: c9c33a53087dc9d4fb3146333e4b09c9, type: 3}

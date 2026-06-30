@@ -16,6 +16,7 @@ public class ProjectileData : ScriptableObject
 
     public float projectileSpeed = 10f;
     public float explosionRadius = 1.5f;
+    public float stun = 0f;
     public LayerMask targetLayer;
 
     public GameObject hitEffectPF;

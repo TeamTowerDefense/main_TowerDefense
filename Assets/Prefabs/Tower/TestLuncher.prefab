@@ -77,9 +77,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e427b9c0424f2540b9db38b8033cbb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Tower
-  towerData: {fileID: 11400000, guid: e393610002f3f1e42bed2f10b03ed509, type: 2}
+  baseFootprint:
+  - {x: 0, y: 0}
+  previewPF: {fileID: 0}
+  validStateMaterial: {fileID: 0}
+  inValidStateMaterial: {fileID: 0}
+  isDestructible: 0
+  towerData: {fileID: 11400000, guid: f094352850be13c49b024e4b9aa4583c, type: 2}
   firePoint: {fileID: 8098602852197667483}
   projectileData: {fileID: 11400000, guid: 4df76543a904f20458827d0e99690400, type: 2}
+  hitBoxAttackData: {fileID: 0}
   monsterLayer:
     serializedVersion: 2
     m_Bits: 64

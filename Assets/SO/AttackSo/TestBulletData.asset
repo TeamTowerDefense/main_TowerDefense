@@ -18,5 +18,5 @@ MonoBehaviour:
   explosionRadius: 1
   targetLayer:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 512
   hitEffectPF: {fileID: 1835174905073365006, guid: ca384fe1efcc88547ba1d18ab9a53131, type: 3}
