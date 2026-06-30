@@ -41,7 +41,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1989286964293096250}
   - component: {fileID: 6812877529357987594}
-  m_Layer: 0
+  - component: {fileID: 7393930370931174458}
+  m_Layer: 8
   m_Name: TestLuncher
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -77,21 +78,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e427b9c0424f2540b9db38b8033cbb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Tower
-  baseFootprint:
-  - {x: 0, y: 0}
-  previewPF: {fileID: 0}
-  validStateMaterial: {fileID: 0}
-  inValidStateMaterial: {fileID: 0}
-  isDestructible: 0
-  towerData: {fileID: 11400000, guid: f094352850be13c49b024e4b9aa4583c, type: 2}
+  buildingData: {fileID: 11400000, guid: f094352850be13c49b024e4b9aa4583c, type: 2}
   firePoint: {fileID: 8098602852197667483}
   projectileData: {fileID: 11400000, guid: 4df76543a904f20458827d0e99690400, type: 2}
   hitBoxAttackData: {fileID: 0}
   monsterLayer:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 512
   rotateBody: {fileID: 1989286964293096250}
   rotateSpeed: 10
+--- !u!136 &7393930370931174458
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6451708471463169753}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.9
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.8, z: 0}
 --- !u!1001 &4733684892597303080
 PrefabInstance:
   m_ObjectHideFlags: 0

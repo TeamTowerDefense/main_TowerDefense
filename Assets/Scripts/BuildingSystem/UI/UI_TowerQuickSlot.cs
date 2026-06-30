@@ -6,7 +6,12 @@ public class UI_TowerQuickSlot : MonoBehaviour
     public event Action<int> OnSlotSelected;
 
     [Header("슬롯 리스트")]
-    [SerializeField] private Slot_TowerQuickSlot[] slots;
+    [SerializeField]
+    private Slot_TowerQuickSlot slotPF;
+    [SerializeField]
+    private Transform slotParent;
+
+    private Slot_TowerQuickSlot[] slots;
 
     private void OnDestroy()
     {
@@ -21,16 +26,22 @@ public class UI_TowerQuickSlot : MonoBehaviour
 
     public void SetupUI(TowerData[] activeTowers)
     {
-        for (int i = 0; i < slots.Length; i++)
+        if (activeTowers == null)
+            return;
+
+        slots = new Slot_TowerQuickSlot[activeTowers.Length];
+
+        for (int i = 0; i < activeTowers.Length; i++)
         {
-            if (slots[i] == null) continue;
+            if (slotPF == null)
+                break;
 
-            //TowerDataSO data = (activeTowers != null && i < activeTowers.Length) ? activeTowers[i] : null;
-            slots[i].Initialize(i);
-            slots[i].SetSlotData(activeTowers[i]);
+            Slot_TowerQuickSlot newSlot = Instantiate(slotPF, slotParent);
+            newSlot.Initialize(i);
+            newSlot.SetSlotData(activeTowers[i]);
+            newSlot.OnClicked += HandleSlotClicked;
 
-            // 하위 슬롯 클릭 이벤트 구독
-            slots[i].OnClicked += HandleSlotClicked;
+            slots[i] = newSlot;
         }
     }
 

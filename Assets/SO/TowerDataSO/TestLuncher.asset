@@ -12,9 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab3044d0d213fbb42bb52c6a2846aa9e, type: 3}
   m_Name: TestLuncher
   m_EditorClassIdentifier: Assembly-CSharp::TowerData
-  towerID: 1
-  towerName: TowerLuncher
+  buildingID: 1
+  buildingName: "\uACE0\uC591\uC774"
+  buildingPrefab: {fileID: 6451708471463169753, guid: c9c33a53087dc9d4fb3146333e4b09c9, type: 3}
   cost: 15
+  isDestructible: 1
+  baseFootprint:
+  - {x: 0, y: 0}
+  previewPF: {fileID: 6797076878322164941, guid: 41dcaf0a9491d0c478b4ba9b5d866cd7, type: 3}
+  validStateMaterial: {fileID: 2100000, guid: 4eaf14d00b5b02d4786058d19d124e39, type: 2}
+  inValidStateMaterial: {fileID: 2100000, guid: 4a85c9e89378a73489c64b9eede43a1b, type: 2}
+  placeVFX: {fileID: -7969546562051743012, guid: 201eafd12c4c6b34396a2be032e4a7c9, type: 3}
   damage: 20
   attackRange: 10
   attackInterval: 2
@@ -25,5 +33,4 @@ MonoBehaviour:
   attackMode: 0
   projectileData: {fileID: 11400000, guid: 4df76543a904f20458827d0e99690400, type: 2}
   hitBoxAttackData: {fileID: 0}
-  bullet: {fileID: 9042438279177923111, guid: 1b55dec9921f0e4439f638a5cb2a954f, type: 3}
-  towerPF: {fileID: 6451708471463169753, guid: c9c33a53087dc9d4fb3146333e4b09c9, type: 3}
+  bullet: {fileID: 5083330694576680963, guid: b47cd3198bdb41e4c84c691ad9e61d8d, type: 3}

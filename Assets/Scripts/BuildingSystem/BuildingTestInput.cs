@@ -120,15 +120,6 @@ public partial class @BuildingTestInput: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""TowerQuickSlotScroll"",
-                    ""type"": ""PassThrough"",
-                    ""id"": ""714d61a1-f0be-462c-99ef-8736a10b148c"",
-                    ""expectedControlType"": ""Axis"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
                     ""name"": ""CancelAction"",
                     ""type"": ""Button"",
                     ""id"": ""5aa3e352-0fb6-4f88-93c2-79c1c8557076"",
@@ -218,17 +209,6 @@ public partial class @BuildingTestInput: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""ae235685-65ab-404d-96e2-5517356e9933"",
-                    ""path"": ""<Mouse>/scroll/y"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""TowerQuickSlotScroll"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""864fe0c5-455d-457d-bb7a-b1995f9c2e67"",
                     ""path"": ""<Mouse>/rightButton"",
                     ""interactions"": """",
@@ -248,7 +228,6 @@ public partial class @BuildingTestInput: IInputActionCollection2, IDisposable
         m_Building_MousePos = m_Building.FindAction("MousePos", throwIfNotFound: true);
         m_Building_MainAction = m_Building.FindAction("MainAction", throwIfNotFound: true);
         m_Building_TowerSelect = m_Building.FindAction("TowerSelect", throwIfNotFound: true);
-        m_Building_TowerQuickSlotScroll = m_Building.FindAction("TowerQuickSlotScroll", throwIfNotFound: true);
         m_Building_CancelAction = m_Building.FindAction("CancelAction", throwIfNotFound: true);
     }
 
@@ -333,7 +312,6 @@ public partial class @BuildingTestInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_Building_MousePos;
     private readonly InputAction m_Building_MainAction;
     private readonly InputAction m_Building_TowerSelect;
-    private readonly InputAction m_Building_TowerQuickSlotScroll;
     private readonly InputAction m_Building_CancelAction;
     /// <summary>
     /// Provides access to input actions defined in input action map "Building".
@@ -358,10 +336,6 @@ public partial class @BuildingTestInput: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Building/TowerSelect".
         /// </summary>
         public InputAction @TowerSelect => m_Wrapper.m_Building_TowerSelect;
-        /// <summary>
-        /// Provides access to the underlying input action "Building/TowerQuickSlotScroll".
-        /// </summary>
-        public InputAction @TowerQuickSlotScroll => m_Wrapper.m_Building_TowerQuickSlotScroll;
         /// <summary>
         /// Provides access to the underlying input action "Building/CancelAction".
         /// </summary>
@@ -401,9 +375,6 @@ public partial class @BuildingTestInput: IInputActionCollection2, IDisposable
             @TowerSelect.started += instance.OnTowerSelect;
             @TowerSelect.performed += instance.OnTowerSelect;
             @TowerSelect.canceled += instance.OnTowerSelect;
-            @TowerQuickSlotScroll.started += instance.OnTowerQuickSlotScroll;
-            @TowerQuickSlotScroll.performed += instance.OnTowerQuickSlotScroll;
-            @TowerQuickSlotScroll.canceled += instance.OnTowerQuickSlotScroll;
             @CancelAction.started += instance.OnCancelAction;
             @CancelAction.performed += instance.OnCancelAction;
             @CancelAction.canceled += instance.OnCancelAction;
@@ -427,9 +398,6 @@ public partial class @BuildingTestInput: IInputActionCollection2, IDisposable
             @TowerSelect.started -= instance.OnTowerSelect;
             @TowerSelect.performed -= instance.OnTowerSelect;
             @TowerSelect.canceled -= instance.OnTowerSelect;
-            @TowerQuickSlotScroll.started -= instance.OnTowerQuickSlotScroll;
-            @TowerQuickSlotScroll.performed -= instance.OnTowerQuickSlotScroll;
-            @TowerQuickSlotScroll.canceled -= instance.OnTowerQuickSlotScroll;
             @CancelAction.started -= instance.OnCancelAction;
             @CancelAction.performed -= instance.OnCancelAction;
             @CancelAction.canceled -= instance.OnCancelAction;
@@ -494,13 +462,6 @@ public partial class @BuildingTestInput: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnTowerSelect(InputAction.CallbackContext context);
-        /// <summary>
-        /// Method invoked when associated input action "TowerQuickSlotScroll" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnTowerQuickSlotScroll(InputAction.CallbackContext context);
         /// <summary>
         /// Method invoked when associated input action "CancelAction" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>

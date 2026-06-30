@@ -25,6 +25,8 @@ public static class InputActionKeys
     public const string SecondaryClick = "SecondaryClick";
     public const string MiddleClick = "MiddleClick";
 
+    public const string TowerSelect = "TowerSelect";
+
     public const string Submit = "Submit";
     public const string Cancel = "Cancel";
 }

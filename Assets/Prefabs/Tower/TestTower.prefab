@@ -41,7 +41,8 @@ GameObject:
   m_Component:
   - component: {fileID: 3275506443000837453}
   - component: {fileID: 1236827546789982407}
-  m_Layer: 0
+  - component: {fileID: -8185731491562517691}
+  m_Layer: 8
   m_Name: TestTower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -77,13 +78,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e427b9c0424f2540b9db38b8033cbb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Tower
-  baseFootprint:
-  - {x: 0, y: 0}
-  previewPF: {fileID: 6797076878322164941, guid: aac46f5a58839364490aa37af72ef597, type: 3}
-  validStateMaterial: {fileID: 2100000, guid: 4eaf14d00b5b02d4786058d19d124e39, type: 2}
-  inValidStateMaterial: {fileID: 2100000, guid: 4a85c9e89378a73489c64b9eede43a1b, type: 2}
-  isDestructible: 1
-  towerData: {fileID: 11400000, guid: e393610002f3f1e42bed2f10b03ed509, type: 2}
+  buildingData: {fileID: 11400000, guid: e393610002f3f1e42bed2f10b03ed509, type: 2}
   firePoint: {fileID: 891083189724630870}
   projectileData: {fileID: 11400000, guid: ccb11473b2cf5b2439f0edd3b4d28434, type: 2}
   hitBoxAttackData: {fileID: 0}
@@ -92,6 +87,29 @@ MonoBehaviour:
     m_Bits: 512
   rotateBody: {fileID: 3275506443000837453}
   rotateSpeed: 10
+--- !u!136 &-8185731491562517691
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8340965744140817121}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.9
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.8, z: 0}
 --- !u!1001 &5570168505360380976
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -179,37 +197,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: fada03482166a784890caf577bea1bb5, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 7570123363294174389}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fada03482166a784890caf577bea1bb5, type: 3}
---- !u!1 &4723255042656684385 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: fada03482166a784890caf577bea1bb5, type: 3}
-  m_PrefabInstance: {fileID: 5570168505360380976}
-  m_PrefabAsset: {fileID: 0}
---- !u!65 &7570123363294174389
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4723255042656684385}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 2, y: 2, z: 2}
-  m_Center: {x: 0, y: 0.8, z: 0}
 --- !u!4 &5388433547452191707 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: fada03482166a784890caf577bea1bb5, type: 3}

@@ -41,7 +41,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6263802522851665161}
   - component: {fileID: 876265298200813600}
-  m_Layer: 0
+  - component: {fileID: -8316148156065255348}
+  m_Layer: 8
   m_Name: TestFlameThrower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -77,14 +78,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e427b9c0424f2540b9db38b8033cbb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Tower
-  towerData: {fileID: 11400000, guid: 0ce8c047fa7f26248b9e14250a55ec7c, type: 2}
+  buildingData: {fileID: 11400000, guid: 0ce8c047fa7f26248b9e14250a55ec7c, type: 2}
   firePoint: {fileID: 8390506677513015391}
   projectileData: {fileID: 11400000, guid: 4df76543a904f20458827d0e99690400, type: 2}
+  hitBoxAttackData: {fileID: 0}
   monsterLayer:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 512
   rotateBody: {fileID: 6263802522851665161}
   rotateSpeed: 10
+--- !u!136 &-8316148156065255348
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3697426809127930414}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.9
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.8, z: 0}
 --- !u!1001 &1855840595557040959
 PrefabInstance:
   m_ObjectHideFlags: 0

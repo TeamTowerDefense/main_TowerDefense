@@ -5,6 +5,8 @@ using UnityEngine.InputSystem;
 
 public class ConstructTestInput: MonoBehaviour
 {
+    [SerializeField]
+    private LayerMask rayHitLayer;
     [SerializeField] private ConstructController controller;
     [SerializeField] private Camera mainCamera;
 
@@ -47,7 +49,7 @@ public class ConstructTestInput: MonoBehaviour
         Vector2 mousePos = inputActions.Building.MousePos.ReadValue<Vector2>();
         Ray ray = mainCamera.ScreenPointToRay(mousePos);
 
-        bool isHit = Physics.Raycast(ray, out RaycastHit hit, 1000f);
+        bool isHit = Physics.Raycast(ray, out RaycastHit hit, 1000f, rayHitLayer);
 
         controller.UpdateRayHitInfo(isHit, hit);
     }

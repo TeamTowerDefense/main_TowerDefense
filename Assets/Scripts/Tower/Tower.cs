@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class Tower : BuildingBase
 {
-    [Header("Tower Data")]
-    [SerializeField] private TowerData towerData;
+    private TowerData towerData => buildingData as TowerData;  
 
     [Header("Fire Point")]
     [SerializeField] private Transform firePoint;

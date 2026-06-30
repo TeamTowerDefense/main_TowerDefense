@@ -4,20 +4,11 @@ using UnityEngine;
 
 public abstract class BuildingBase : MonoBehaviour, IBuildable, IHasPreview
 {
-    // 직렬화된 변수들은 나중에 SO로 이동
     [SerializeField]
-    private List<Vector2Int> baseFootprint = new List<Vector2Int>() { new Vector2Int(0, 0) };
-    [SerializeField]
-    private GameObject previewPF;
-    [SerializeField]
-    private Material validStateMaterial;
-    [SerializeField]
-    private Material inValidStateMaterial;
+    protected BuildingData buildingData;
 
-    [SerializeField]
-    private bool isDestructible;
-
-    public bool IsDestructible => isDestructible;
+    public bool IsDestructible => buildingData != null ? buildingData.isDestructible : true;
+    public int BuildCost => buildingData != null ? buildingData.cost : 0;
 
     public IGridProvider ConstructedGrid {  get; set; }
     public Vector2Int ConstructedIndex { get; set; }
@@ -30,6 +21,7 @@ public abstract class BuildingBase : MonoBehaviour, IBuildable, IHasPreview
     {
         List<Vector2Int> cells = new List<Vector2Int>();
 
+        List<Vector2Int> baseFootprint = buildingData.baseFootprint;
         foreach (Vector2Int localOffset in baseFootprint)
         {
             cells.Add(localOffset);
@@ -71,14 +63,29 @@ public abstract class BuildingBase : MonoBehaviour, IBuildable, IHasPreview
 
     public GameObject GetPreview()
     {
-        return previewPF;
+        return buildingData.previewPF;
     }
 
-    public virtual void OnPlaced() { }
+    public virtual void OnPlaced() 
+    {
+        PoolEffect placeVFX = buildingData.placeVFX;
+
+        if (placeVFX == null)
+            return;
+
+        PoolEffect placeEffect = ObjectPoolManager.Instance.Spawn<PoolEffect>
+            (placeVFX.gameObject, transform.position, Quaternion.identity, ObjectPoolManager.Instance.GetEffectParent());
+
+        if (placeEffect != null)
+            placeEffect.Play();
+    }
 
     public void SetVisualState(BuildingVisualState newState)
     {
         Renderer[] renderers = GetComponentsInChildren<Renderer>();
+
+        Material validMaterial = buildingData.validStateMaterial;
+        Material invalidMaterial = buildingData.inValidStateMaterial;
 
         Material targetMaterial = null;
         // newState에 따라 targetMaterial 설정
@@ -94,10 +101,10 @@ public abstract class BuildingBase : MonoBehaviour, IBuildable, IHasPreview
                 }
                 return;
             case BuildingVisualState.Valid:
-                targetMaterial = validStateMaterial;
+                targetMaterial = validMaterial;
                 break;
             case BuildingVisualState.InValid:
-                targetMaterial = inValidStateMaterial;
+                targetMaterial = invalidMaterial;
                 break;
         }
 

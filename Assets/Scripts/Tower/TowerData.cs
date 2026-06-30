@@ -17,13 +17,8 @@ public enum TowerAttackMode
 }
 
 [CreateAssetMenu(menuName = "Tower/Data")]
-public class TowerData : ScriptableObject
+public class TowerData : BuildingData
 {
-    [Header("Basic")]
-    public int towerID = 0;
-    public string towerName = "TowerName";
-    public int cost = 10;
-
     [Header("Combat")]
     public int damage = 10;
     public float attackRange = 5f;
@@ -45,5 +40,4 @@ public class TowerData : ScriptableObject
     public HitBoxAttackData hitBoxAttackData;
 
     public GameObject bullet;
-    public GameObject towerPF;
 }

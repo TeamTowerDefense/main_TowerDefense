@@ -34,15 +34,6 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "TowerQuickSlotScroll",
-                    "type": "PassThrough",
-                    "id": "714d61a1-f0be-462c-99ef-8736a10b148c",
-                    "expectedControlType": "Axis",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "CancelAction",
                     "type": "Button",
                     "id": "5aa3e352-0fb6-4f88-93c2-79c1c8557076",
@@ -127,17 +118,6 @@
                     "processors": "",
                     "groups": "",
                     "action": "TowerSelect",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "ae235685-65ab-404d-96e2-5517356e9933",
-                    "path": "<Mouse>/scroll/y",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "TowerQuickSlotScroll",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

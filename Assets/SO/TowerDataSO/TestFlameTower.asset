@@ -12,9 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab3044d0d213fbb42bb52c6a2846aa9e, type: 3}
   m_Name: TestFlameTower
   m_EditorClassIdentifier: Assembly-CSharp::TowerData
-  towerID: 2
-  towerName: FlameTower
+  buildingID: 2
+  buildingName: "\uB2ED"
+  buildingPrefab: {fileID: 3697426809127930414, guid: 2c7b0fb24cff0e2458092d232d40c493, type: 3}
   cost: 20
+  isDestructible: 1
+  baseFootprint:
+  - {x: 0, y: 0}
+  previewPF: {fileID: 3697426809127930414, guid: e414d73bf59732646b24fff585cfb085, type: 3}
+  validStateMaterial: {fileID: 2100000, guid: 4eaf14d00b5b02d4786058d19d124e39, type: 2}
+  inValidStateMaterial: {fileID: 2100000, guid: 4a85c9e89378a73489c64b9eede43a1b, type: 2}
+  placeVFX: {fileID: -7969546562051743012, guid: 201eafd12c4c6b34396a2be032e4a7c9, type: 3}
   damage: 5
   attackRange: 5
   attackInterval: 0.5
@@ -26,4 +34,3 @@ MonoBehaviour:
   projectileData: {fileID: 0}
   hitBoxAttackData: {fileID: 11400000, guid: cdf1c43bdf483754f82191a777161750, type: 2}
   bullet: {fileID: 786889566517218707, guid: f43d546f448decb41af66526a7f44009, type: 3}
-  towerPF: {fileID: 3697426809127930414, guid: 2c7b0fb24cff0e2458092d232d40c493, type: 3}

@@ -5,7 +5,12 @@ using UnityEngine;
 public class ConstructController : MonoBehaviour
 {
     [Header("외부 시스템 참조")]
+    [SerializeField]
+    private InterfaceReference<IResourceSystem> resourceInterfaceRef;
+    public IResourceSystem resourceSystem;
     public BuildSystem buildSystem;
+
+    [Header("셀 검사 레이어")]
     [SerializeField]
     private LayerMask obstacleLayer;
 
@@ -28,7 +33,7 @@ public class ConstructController : MonoBehaviour
     {
         Model = new ConstructModel();
         Model.ObstacleLayer = obstacleLayer;
-        Model.towerPrefabs = TowerDeck;
+        Model.towerDatas = TowerDeck;
 
         View = GetComponent<ConstructView>();
     }
@@ -41,13 +46,18 @@ public class ConstructController : MonoBehaviour
 
         if(quickSlotView != null)
         {
-            quickSlotView.SetupUI(Model.towerPrefabs);
+            quickSlotView.SetupUI(Model.towerDatas);
             quickSlotView.OnSlotSelected += SelectBuildingByIndex;
         }
 
         if (View.towerInteractUI != null)
         {
             View.towerInteractUI.OnDestroyClicked += PerformCurModeSubAction;
+        }
+
+        if(resourceInterfaceRef != null)
+        {
+            resourceSystem = resourceInterfaceRef.Value;
         }
 
         SetConstructMod(true);
@@ -97,29 +107,33 @@ public class ConstructController : MonoBehaviour
 
     public void SelectBuildingByIndex(int slotIndex)
     {
-        TowerData[] towers = Model.towerPrefabs;
+        TowerData[] towers = Model.towerDatas;
 
         if (towers == null || slotIndex < 0 || slotIndex >= towers.Length) return;
         if (towers[slotIndex] == null) return;
 
-        bool buildingSelected = SelectBuilding(Model.towerPrefabs[slotIndex].towerPF);
+        TowerData selectedBuilding = Model.towerDatas[slotIndex];
+
+        bool buildingSelected = SelectBuilding(selectedBuilding);
         if (buildingSelected)
         {
             quickSlotView.UpdateHighlight(slotIndex);
         }
     }
 
-    public bool SelectBuilding(GameObject towerPrefab)
+    public bool SelectBuilding(TowerData towerData)
     {
-        if (towerPrefab == null || !isConstructMod) 
+        if (towerData == null || !isConstructMod) 
+            return false;
+        if(towerData.buildingPrefab == null)
+            return false;
+        if(!towerData.buildingPrefab.TryGetComponent(out IBuildable prefabData))
             return false;
 
         // Model에 데이터 저장 후 상태 전환
-        Model.PrefabToBuild = towerPrefab;
-        Model.PrefabData = towerPrefab.GetComponent<IBuildable>();
-
-        //Debug.Log(Model.PrefabToBuild == null);
-        //Debug.Log(Model.PrefabData == null);
+        Model.TowerData = towerData;
+        Model.PrefabToBuild = towerData.buildingPrefab;
+        Model.PrefabData = prefabData;
 
         ChangeState<BuildState>();
 
