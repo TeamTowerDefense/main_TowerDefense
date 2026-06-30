@@ -1215,6 +1215,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26adaa2f667052c47b2c799a01d26ce4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ConstructController
+  resourceInterfaceRef:
+    target: {fileID: 531487528}
   buildSystem: {fileID: 315520728}
   obstacleLayer:
     serializedVersion: 2
@@ -1703,6 +1705,51 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8719739787567930251, guid: 341e51ffcacc4a3419e517763508953d, type: 3}
   m_PrefabInstance: {fileID: 496750226}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &531487528
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 531487530}
+  - component: {fileID: 531487529}
+  m_Layer: 0
+  m_Name: ResourceSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &531487529
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 531487528}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5534918c50c67f040889f9c3fd267847, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ResourceSystem
+  currentResource: 1000
+--- !u!4 &531487530
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 531487528}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &591087838
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5753,6 +5800,7 @@ SceneRoots:
   - {fileID: 1648864666}
   - {fileID: 42908341}
   - {fileID: 315520727}
+  - {fileID: 531487530}
   - {fileID: 158826440}
   - {fileID: 37933753}
   - {fileID: 1612529925}

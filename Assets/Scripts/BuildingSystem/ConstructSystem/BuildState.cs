@@ -59,8 +59,11 @@ public class BuildState : IConstructMode
 
             if (isCellExist)
             {
-                // 실제 셀이 존재할 때만 방해물이 없는지 유효성 검사 (2차 검증)
-                model.IsValidPosition = CheckValidity(model.CurrentGrid, model.SnappedPos);
+                bool isSpaceValid = CheckValidity(model.CurrentGrid, model.SnappedPos);
+                bool canAfford = controller.resourceSystem == null || controller.resourceSystem.CanAfford(model.TowerData.cost);
+
+                model.IsValidPosition = isSpaceValid && canAfford;
+
             }
 
             // 유효하면 스냅 좌표, 아니면 원본 마우스 좌표 사용
@@ -85,13 +88,18 @@ public class BuildState : IConstructMode
             Vector2 center = model.PrefabData.GetCenter(model.CurrentGrid.CellSize);
             Vector3 buildPos = model.SnappedPos + new Vector3(center.x, 0, center.y);
 
-            // 건설 실행
-            GameObject placedObj = controller.buildSystem.PlaceBuilding(model.PrefabToBuild, model.CurrentGrid, curCellIndex, buildPos, Quaternion.identity);
+            int cost = model.TowerData.cost;
 
-            placedObj.GetComponent<IBuildable>().OnPlaced();
-            model.CurrentGrid.RegisterOccupancy(curCellIndex, model.PrefabData.GetOccupiedOffsets(), true);
+            if (controller.resourceSystem == null || controller.resourceSystem.Spend(cost))
+            {
+                // 건설 실행
+                GameObject placedObj = controller.buildSystem.PlaceBuilding(model.PrefabToBuild, model.CurrentGrid, curCellIndex, buildPos, Quaternion.identity);
 
-            controller.ChangeState<IdleState>(); // 지은 후 대기 상태로
+                placedObj.GetComponent<IBuildable>().OnPlaced();
+                model.CurrentGrid.RegisterOccupancy(curCellIndex, model.PrefabData.GetOccupiedOffsets(), true);
+
+                controller.ChangeState<IdleState>();
+            }
         }
     }
 

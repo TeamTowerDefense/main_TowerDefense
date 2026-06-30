@@ -26,8 +26,13 @@ public class Slot_TowerQuickSlot : MonoBehaviour
         }
     }
 
-    public void SetSlotData(TowerData data)
+    public void SetSlotData(BuildingData data)
     {
+        if (slotIcon != null)
+            return;
+        if (costText == null)
+            return;
+
         if (data != null && slotIcon != null)
         {
             //slotIcon.sprite = data.towerIcon;
@@ -36,6 +41,11 @@ public class Slot_TowerQuickSlot : MonoBehaviour
         else if (slotIcon != null)
         {
             slotIcon.enabled = false;
+        }
+
+        if(data != null &&  costText != null)
+        {
+            costText.text = data.cost.ToString();
         }
     }
 
