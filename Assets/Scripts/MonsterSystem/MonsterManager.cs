@@ -157,7 +157,9 @@ public class MonsterManager : MonoBehaviour
                     foreach (var other in list)
                     {
                         if (m == other) continue;
+                        if (other.isDead) continue;
                         Vector3 diff = m.transform.position - other.transform.position;
+                        diff.y = 0;
                         if (diff.sqrMagnitude < sqrRadius) force += diff.normalized * (1.0f - (diff.magnitude / separationRadius));
                     }
                 }
