@@ -14,7 +14,7 @@ public class Monster : MonoBehaviour
     private List<Transform> movePath;
     private int currentPathIndex = 1;
     private Vector3 pathOffset;
-    private bool isDead = false;
+    public bool isDead { get; private set; } = false;
 
 
     public float cachedSpeedMultiplier = 1.0f;
@@ -70,6 +70,8 @@ public class Monster : MonoBehaviour
         if (distFromCenter > pathWidth)
         {
             float forceMagnitude = (distFromCenter - pathWidth) * containmentStrength * 5f;
+            Vector3 dir = (centerPointOnLine - transform.position);
+            dir.y = 0;
             boundaryForce = (centerPointOnLine - transform.position).normalized * forceMagnitude;
         }
 
