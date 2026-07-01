@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Default Local Group
+  m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
+  m_GroupName: Default Local Group
+  m_GUID: fb1b1ad18d732f94692cfb11c1e112d8
+  m_SerializeEntries:
+  - m_GUID: 14da851dccbe7334dbd5571a4a181a76
+    m_Address: Assets/SO/MonsterDataSO/TestMonsterData.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Pooling
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 0868d562560c5ec46a2a3435de8e7e62, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 1c66ddcb7e71a97419a66fb05fec6947, type: 2}
+    - {fileID: 11400000, guid: a11433cea402e2942a9eab6cfba50afa, type: 2}
