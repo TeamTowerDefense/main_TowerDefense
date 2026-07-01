@@ -29,7 +29,6 @@ public class StageController : MonoBehaviour, IStageService, IAutoSceneService
     public event Action<int, int> BaseHpChanged;
 
     #region 생명주기
-
     void Awake()
     {
         ((IAutoSceneService)this).RegisterSceneServices();
@@ -42,8 +41,7 @@ public class StageController : MonoBehaviour, IStageService, IAutoSceneService
 
         StartStage();
 
-        if (autoStartWave)
-            StartWave();
+        if (autoStartWave) StartWave();
     }
 
     void Update()
@@ -57,7 +55,7 @@ public class StageController : MonoBehaviour, IStageService, IAutoSceneService
         ((IAutoSceneService)this).UnregisterSceneServices();
     }
 
-    #endregion
+#endregion
 
     #region 인터페이스
 

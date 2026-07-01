@@ -1,5 +1,8 @@
+using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 public class ObjectPoolManager : MonoBehaviour
 {
@@ -17,6 +20,7 @@ public class ObjectPoolManager : MonoBehaviour
     {
         Instance = this;
     }
+
 
     #region 스폰 메서드
     public T Spawn<T>(GameObject prefab, Vector3 position, Quaternion rotation, Transform parent = null) where T : PoolableObject

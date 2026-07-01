@@ -123,6 +123,7 @@ public class GameInputService : SingletonBase<GameInputService>, IInputService, 
     #region 액션 맵
     public bool TryGetAction(string mapName, string actionName, out InputAction action)
     {
+        
         CacheInputActions();
 
         return actionLookup.TryGetValue(MakeActionKey(mapName, actionName), out action) && action != null;
@@ -134,11 +135,13 @@ public class GameInputService : SingletonBase<GameInputService>, IInputService, 
         switch (mode)
         {
             case GameInputMode.TopView:
+                EnableMap(InputMapKeys.Common);
                 EnableMap(InputMapKeys.TopView);
                 EnableMap(InputMapKeys.UI);
                 break;
 
             case GameInputMode.Character:
+                EnableMap(InputMapKeys.Common);
                 EnableMap(InputMapKeys.Player);
                 EnableMap(InputMapKeys.UI);
                 break;
@@ -155,7 +158,6 @@ public class GameInputService : SingletonBase<GameInputService>, IInputService, 
         CurrentMode = mode;
     }
     #endregion
-
 
     #region 입력값 리딩
     public bool IsPressed(string mapName, string actoinName)
