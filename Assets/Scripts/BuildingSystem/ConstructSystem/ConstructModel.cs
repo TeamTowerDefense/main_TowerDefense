@@ -3,14 +3,14 @@ using UnityEngine;
 public class ConstructModel
 {
     // 타워 리스트
-    public TowerData[] towerDatas { get; set; }
+    public BuildingData[] buildingDatas { get; set; }
 
     // [일반/선택 상태 데이터]
     public IBuildable HoveredTower { get; set; }
     public IBuildable SelectedTower { get; set; }
 
     // [건설 상태 데이터]
-    public TowerData TowerData { get; set; }
+    public BuildingData BuildingData { get; set; }
     public GameObject PrefabToBuild { get; set; }
     public IBuildable PrefabData { get; set; }
 

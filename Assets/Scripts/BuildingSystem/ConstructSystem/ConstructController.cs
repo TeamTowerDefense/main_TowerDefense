@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System;
 using UnityEngine;
+using IGameInterface;
 
 public class ConstructController : MonoBehaviour
 {
@@ -8,6 +9,9 @@ public class ConstructController : MonoBehaviour
     [SerializeField]
     private InterfaceReference<IResourceSystem> resourceInterfaceRef;
     public IResourceSystem resourceSystem;
+    [SerializeField]
+    private InterfaceReference<IStageService> stageInterfactRef;
+    public IStageService stageService;
     public BuildSystem buildSystem;
 
     [Header("셀 검사 레이어")]
@@ -15,7 +19,7 @@ public class ConstructController : MonoBehaviour
     private LayerMask obstacleLayer;
 
     [Header("타워 프리팹 목록")]
-    [SerializeField] private TowerData[] TowerDeck;
+    [SerializeField] private BuildingData[] BuildingDeck;
 
     [Header("퀵슬롯 뷰")]
     [SerializeField]
@@ -26,41 +30,26 @@ public class ConstructController : MonoBehaviour
 
     private Dictionary<Type, IConstructMode> modeDict = new Dictionary<Type, IConstructMode>();
     private IConstructMode currentMode;
-    private bool isConstructMod = false;
+    private bool isConstructMode = false;
     private Collider lastHitCollider;
 
     private void Awake()
     {
         Model = new ConstructModel();
         Model.ObstacleLayer = obstacleLayer;
-        Model.towerDatas = TowerDeck;
+        Model.buildingDatas = BuildingDeck;
 
         View = GetComponent<ConstructView>();
     }
 
     private void Start()
     {
-        modeDict.Add(typeof(IdleState), new IdleState(this));
-        modeDict.Add(typeof(BuildState), new BuildState(this));
-        modeDict.Add(typeof(SelectState), new SelectState(this));
+        InitController();
+    }
 
-        if(quickSlotView != null)
-        {
-            quickSlotView.SetupUI(Model.towerDatas);
-            quickSlotView.OnSlotSelected += SelectBuildingByIndex;
-        }
-
-        if (View.towerInteractUI != null)
-        {
-            View.towerInteractUI.OnDestroyClicked += PerformCurModeSubAction;
-        }
-
-        if(resourceInterfaceRef != null)
-        {
-            resourceSystem = resourceInterfaceRef.Value;
-        }
-
-        SetConstructMod(true);
+    private void Update()
+    {
+        if (isConstructMode) currentMode?.OnUpdate();
     }
 
     private void OnDestroy()
@@ -74,13 +63,42 @@ public class ConstructController : MonoBehaviour
         {
             View.towerInteractUI.OnDestroyClicked -= PerformCurModeSubAction;
         }
-
-
     }
 
-    private void Update()
+    private void InitController()
     {
-        if (isConstructMod) currentMode?.OnUpdate();
+        AddStates();
+
+        if (stageInterfactRef != null)
+        {
+            stageService = stageInterfactRef.Value;
+        }
+
+        if (resourceInterfaceRef != null)
+        {
+            resourceSystem = resourceInterfaceRef.Value;
+        }
+
+        if (quickSlotView != null)
+        {
+            quickSlotView.SetupUI(Model.buildingDatas, resourceSystem);
+            quickSlotView.OnSlotSelected += SelectBuildingByIndex;
+        }
+
+        if (View.towerInteractUI != null)
+        {
+            View.towerInteractUI.OnDestroyClicked += PerformCurModeSubAction;
+        }
+
+
+        if (stageService != null && buildSystem != null)
+        {
+            int maxLimitFromStage = stageService.TowerLimit;
+            Debug.Log(maxLimitFromStage);
+            buildSystem.SetTowerLimit(10);
+        }
+
+        SetConstructMode(true);
     }
 
     public void UpdateRayHitInfo(bool isRayHitted, RaycastHit rayHitInfo)
@@ -107,12 +125,17 @@ public class ConstructController : MonoBehaviour
 
     public void SelectBuildingByIndex(int slotIndex)
     {
-        TowerData[] towers = Model.towerDatas;
+        BuildingData[] buildings = Model.buildingDatas;
 
-        if (towers == null || slotIndex < 0 || slotIndex >= towers.Length) return;
-        if (towers[slotIndex] == null) return;
+        if (buildings == null || slotIndex < 0 || slotIndex >= buildings.Length) return;
+        if (buildings[slotIndex] == null) return;
 
-        TowerData selectedBuilding = Model.towerDatas[slotIndex];
+        BuildingData selectedBuilding = Model.buildingDatas[slotIndex];
+
+        if (!resourceSystem.CanAfford(selectedBuilding.cost))
+        {
+            return;
+        }
 
         bool buildingSelected = SelectBuilding(selectedBuilding);
         if (buildingSelected)
@@ -121,18 +144,18 @@ public class ConstructController : MonoBehaviour
         }
     }
 
-    public bool SelectBuilding(TowerData towerData)
+    public bool SelectBuilding(BuildingData buildingData)
     {
-        if (towerData == null || !isConstructMod) 
+        if (buildingData == null || !isConstructMode) 
             return false;
-        if(towerData.buildingPrefab == null)
+        if(buildingData.buildingPrefab == null)
             return false;
-        if(!towerData.buildingPrefab.TryGetComponent(out IBuildable prefabData))
+        if(!buildingData.buildingPrefab.TryGetComponent(out IBuildable prefabData))
             return false;
 
         // Model에 데이터 저장 후 상태 전환
-        Model.TowerData = towerData;
-        Model.PrefabToBuild = towerData.buildingPrefab;
+        Model.BuildingData = buildingData;
+        Model.PrefabToBuild = buildingData.buildingPrefab;
         Model.PrefabData = prefabData;
 
         ChangeState<BuildState>();
@@ -140,9 +163,16 @@ public class ConstructController : MonoBehaviour
         return true;
     }
 
+    private void AddStates()
+    {
+        modeDict.Add(typeof(IdleState), new IdleState(this));
+        modeDict.Add(typeof(BuildState), new BuildState(this));
+        modeDict.Add(typeof(SelectState), new SelectState(this));
+    }
+
     public void ChangeState<T>() where T : class, IConstructMode
     {
-        if (!isConstructMod) return;
+        if (!isConstructMode) return;
 
         if (modeDict.TryGetValue(typeof(T), out IConstructMode newMode))
         {
@@ -152,10 +182,10 @@ public class ConstructController : MonoBehaviour
         }
     }
 
-    public void SetConstructMod(bool isActivate)
+    public void SetConstructMode(bool isActivate)
     {
-        isConstructMod = isActivate;
-        if (isConstructMod) ChangeState<IdleState>();
+        isConstructMode = isActivate;
+        if (isConstructMode) ChangeState<IdleState>();
         else { currentMode?.OnExit(); currentMode = null; }
     }
 
@@ -166,6 +196,7 @@ public class ConstructController : MonoBehaviour
         Debug.Log("SubAsction");
         currentMode?.PerformSubAction();
     }
+
     public void ClearSlotHighlight()
     {
         if (quickSlotView != null)

@@ -55,12 +55,18 @@ public class SelectState : IConstructMode
         ConstructModel model = controller.Model;
 
         Debug.Log(model.SelectedTower == null);
-        Debug.Log(model.SelectedTower.IsDestructible);
+        Debug.Log(model.SelectedTower.BuildingData.isDestructible);
 
-        if (model.SelectedTower != null && model.SelectedTower.IsDestructible)
+        if (model.SelectedTower != null && model.SelectedTower.BuildingData.isDestructible)
         {
             Vector2Int curCellIndex = model.SelectedTower.ConstructedIndex;
             MonoBehaviour towerMono = model.SelectedTower as MonoBehaviour;
+
+            if (controller.resourceSystem != null)
+            {
+                controller.resourceSystem.Earn(model.SelectedTower.BuildingData.cost);
+                Debug.Log($"타워 철거 완료 -> 자원 반환: {model.SelectedTower.BuildingData.cost}");
+            }
 
             // 그리드 점유 해제
             model.SelectedTower.ConstructedGrid.RegisterOccupancy(curCellIndex, model.SelectedTower.GetOccupiedOffsets(), false);

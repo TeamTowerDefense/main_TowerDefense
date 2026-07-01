@@ -3,13 +3,29 @@ using UnityEngine;
 
 public class BuildSystem : MonoBehaviour
 {
+    public int TowerLimit { get; private set; } = 0;
+    public int CurrentTowerCount { get; private set; } = 0;
+    public event Action<int, int> OnTowerCountChanged;
+
+    public void SetTowerLimit(int limit)
+    {
+        TowerLimit = limit;
+        OnTowerCountChanged?.Invoke(CurrentTowerCount, TowerLimit);
+    }
+
+    public bool CanBuildTower()
+    {
+        return CurrentTowerCount < TowerLimit;
+    }
+
     // 건물 설치
     public GameObject PlaceBuilding(GameObject prefabToPlace, IGridProvider grid, Vector2Int index, Vector3 pos, Quaternion rotation)
     {
-        // 1. 오브젝트 생성
+        CurrentTowerCount++;
+        OnTowerCountChanged?.Invoke(CurrentTowerCount, 0);
+
         GameObject newObj = Instantiate(prefabToPlace, pos, rotation);
 
-        // 2. 자체 설치 로직 실행
         IBuildable buildable = newObj.GetComponent<IBuildable>();
         buildable.ConstructedGrid = grid;
         buildable.ConstructedIndex = index;
@@ -19,8 +35,13 @@ public class BuildSystem : MonoBehaviour
 
     // 건물 파괴
     public void DestroyBuilding(GameObject buildingObj)
-    {   
-        // 2. 오브젝트 파괴
+    {
+
+        if (CurrentTowerCount > 0)
+        {
+            CurrentTowerCount--;
+            OnTowerCountChanged?.Invoke(CurrentTowerCount, TowerLimit);
+        }
         Destroy(buildingObj);
     }
 

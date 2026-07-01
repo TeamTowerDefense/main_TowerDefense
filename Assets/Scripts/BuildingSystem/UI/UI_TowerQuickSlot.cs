@@ -12,6 +12,7 @@ public class UI_TowerQuickSlot : MonoBehaviour
     private Transform slotParent;
 
     private Slot_TowerQuickSlot[] slots;
+    private IResourceSystem resourceSystem;
 
     private void OnDestroy()
     {
@@ -22,26 +23,53 @@ public class UI_TowerQuickSlot : MonoBehaviour
                 slots[i].OnClicked -= HandleSlotClicked;
             }
         }
+
+        if (resourceSystem != null)
+        {
+            resourceSystem.OnResourceChanged -= UpdateAllSlotsAffordability;
+        }
     }
 
-    public void SetupUI(TowerData[] activeTowers)
+
+    public void SetupUI(BuildingData[] buildingDatas, IResourceSystem resourceSystem)
     {
-        if (activeTowers == null)
+        if (buildingDatas == null)
             return;
 
-        slots = new Slot_TowerQuickSlot[activeTowers.Length];
+        this.resourceSystem = resourceSystem;
 
-        for (int i = 0; i < activeTowers.Length; i++)
+        slots = new Slot_TowerQuickSlot[buildingDatas.Length];
+
+        for (int i = 0; i < buildingDatas.Length; i++)
         {
             if (slotPF == null)
                 break;
 
             Slot_TowerQuickSlot newSlot = Instantiate(slotPF, slotParent);
             newSlot.Initialize(i);
-            newSlot.SetSlotData(activeTowers[i]);
+            newSlot.SetSlotData(buildingDatas[i]);
             newSlot.OnClicked += HandleSlotClicked;
 
             slots[i] = newSlot;
+        }
+
+        if (resourceSystem != null)
+        {
+            resourceSystem.OnResourceChanged += UpdateAllSlotsAffordability;
+            UpdateAllSlotsAffordability(resourceSystem.CurrentResource);
+        }
+    }
+
+    private void UpdateAllSlotsAffordability(int currentMoney)
+    {
+        if (slots == null) return;
+
+        for (int i = 0; i < slots.Length; i++)
+        {
+            if (slots[i] != null)
+            {
+                slots[i].UpdateAffordability(currentMoney);
+            }
         }
     }
 
