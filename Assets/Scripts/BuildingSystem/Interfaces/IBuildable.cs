@@ -11,8 +11,7 @@ public enum BuildingVisualState
 
 public interface IBuildable
 {
-    // 해체 가능 여부
-    bool IsDestructible { get; }           
+    BuildingData BuildingData { get; }          
 
     // 건물이 차지하는 칸의 셀 좌표 리스트를 반환하는 함수
     List<Vector2Int> GetOccupiedOffsets();

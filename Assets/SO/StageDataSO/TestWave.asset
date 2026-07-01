@@ -17,13 +17,13 @@ MonoBehaviour:
   - MonsterData: {fileID: 11400000, guid: 14da851dccbe7334dbd5571a4a181a76, type: 2}
     Count: 10
     Interval: 3
-    StartDelay: 1
+    StartDelay: 0.2
   - MonsterData: {fileID: 11400000, guid: 14da851dccbe7334dbd5571a4a181a76, type: 2}
     Count: 10
     Interval: 3
-    StartDelay: 1
+    StartDelay: 0.2
   - MonsterData: {fileID: 11400000, guid: 14da851dccbe7334dbd5571a4a181a76, type: 2}
     Count: 10
     Interval: 3
-    StartDelay: 1
+    StartDelay: 0.2
   Reward: 2

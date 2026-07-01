@@ -1,3 +1,4 @@
+using IGameInterface;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -11,27 +12,11 @@ public class ConstructTestInput: MonoBehaviour
     [SerializeField] private Camera mainCamera;
 
     private BuildingTestInput inputActions;
+    private IInputService inputService;
 
     private void Awake()
     {
-        inputActions = new BuildingTestInput();
-
-        // 1. 좌클릭 (ModMainAction) 연결
-        inputActions.Building.MainAction.started += ctx =>
-        {
-            if (CheckPointerOnUI())
-                return;
-            
-            controller.PerformCurModeAction();
-        };
-
-        inputActions.Building.CancelAction.performed += ctx =>
-        {
-            controller.CancelCurModeAction();
-        };
-
-        // 2. 숫자키 1~5번 (TowerSelect) 연결
-        inputActions.Building.TowerSelect.performed += OnTowerSelect;
+        InitInternal();
     }
 
     private void OnEnable()
@@ -44,6 +29,11 @@ public class ConstructTestInput: MonoBehaviour
         inputActions.Disable();
     }
 
+    private void Start()
+    {
+        InitExternal();
+    }
+
     private void Update()
     {
         Vector2 mousePos = inputActions.Building.MousePos.ReadValue<Vector2>();
@@ -54,15 +44,23 @@ public class ConstructTestInput: MonoBehaviour
         controller.UpdateRayHitInfo(isHit, hit);
     }
 
-    private void OnTowerSelect(InputAction.CallbackContext ctx)
+    public void InitInternal()
     {
+        inputActions = new BuildingTestInput();
 
-        if (int.TryParse(ctx.control.name, out int keyNumber))
+        inputActions.Building.MainAction.started += ctx =>
         {
-            int slotIndex = keyNumber - 1;
+            if (CheckPointerOnUI()) return;
+            controller.PerformCurModeAction();
+        };
+        inputActions.Building.CancelAction.performed += ctx => { controller.CancelCurModeAction(); };
+        inputActions.Building.TowerSelect.performed += HandleTowerSelectInput;
+    }
 
-            controller.SelectBuildingByIndex(slotIndex);
-        }
+    public void InitExternal()
+    {
+        inputService = GameInputService.Instance;
+
     }
 
     private bool CheckPointerOnUI()
@@ -82,5 +80,29 @@ public class ConstructTestInput: MonoBehaviour
         EventSystem.current.RaycastAll(pointerEventData, results);
 
         return results.Count > 0;
+    }
+
+    private void HandleMainActionInput()
+    {
+        if (CheckPointerOnUI())
+            return;
+
+        controller.PerformCurModeAction();
+    }
+
+    private void HandleSubActionInput()
+    {
+        controller.CancelCurModeAction();
+    }
+
+    private void HandleTowerSelectInput(InputAction.CallbackContext ctx)
+    {
+
+        if (int.TryParse(ctx.control.name, out int keyNumber))
+        {
+            int slotIndex = keyNumber - 1;
+
+            controller.SelectBuildingFromSlot(slotIndex);
+        }
     }
 }

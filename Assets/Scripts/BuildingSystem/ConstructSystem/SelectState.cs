@@ -17,9 +17,9 @@ public class SelectState : IConstructMode
         var model = controller.Model;
         var view = controller.View;
 
-        if (model.SelectedTower != null)
+        if (model.SelectedBuilding != null)
         {
-            MonoBehaviour towerMono = model.SelectedTower as MonoBehaviour;
+            MonoBehaviour towerMono = model.SelectedBuilding as MonoBehaviour;
             if (towerMono != null)
             {
                 controller.View.ShowTowerMenu(towerMono.transform.position);
@@ -34,12 +34,12 @@ public class SelectState : IConstructMode
     public void PerformMainAction()
     {
         ConstructModel model = controller.Model;
-        IBuildable hitBuilding = model.CurrentHit.collider?.GetComponentInParent<IBuildable>();
+        IBuildable hitBuilding = model.PointerHitInfo.collider?.GetComponentInParent<IBuildable>();
 
         // 다른 타워를 클릭했다면 타겟을 교체하고 정보 재출력
-        if (hitBuilding != null && hitBuilding != model.SelectedTower)
+        if (hitBuilding != null && hitBuilding != model.SelectedBuilding)
         {
-            model.SelectedTower = hitBuilding;
+            model.SelectedBuilding = hitBuilding;
             OnEnter();
         }
         // 빈 땅을 클릭했다면 선택 취소
@@ -54,16 +54,22 @@ public class SelectState : IConstructMode
     {
         ConstructModel model = controller.Model;
 
-        Debug.Log(model.SelectedTower == null);
-        Debug.Log(model.SelectedTower.IsDestructible);
+        Debug.Log(model.SelectedBuilding == null);
+        Debug.Log(model.SelectedBuilding.BuildingData.isDestructible);
 
-        if (model.SelectedTower != null && model.SelectedTower.IsDestructible)
+        if (model.SelectedBuilding != null && model.SelectedBuilding.BuildingData.isDestructible)
         {
-            Vector2Int curCellIndex = model.SelectedTower.ConstructedIndex;
-            MonoBehaviour towerMono = model.SelectedTower as MonoBehaviour;
+            Vector2Int curCellIndex = model.SelectedBuilding.ConstructedIndex;
+            MonoBehaviour towerMono = model.SelectedBuilding as MonoBehaviour;
+
+            if (controller.resourceSystem != null)
+            {
+                controller.resourceSystem.Earn(model.SelectedBuilding.BuildingData.cost);
+                Debug.Log($"타워 철거 완료 -> 자원 반환: {model.SelectedBuilding.BuildingData.cost}");
+            }
 
             // 그리드 점유 해제
-            model.SelectedTower.ConstructedGrid.RegisterOccupancy(curCellIndex, model.SelectedTower.GetOccupiedOffsets(), false);
+            model.SelectedBuilding.ConstructedGrid.RegisterOccupancy(curCellIndex, model.SelectedBuilding.GetOccupiedOffsets(), false);
 
             // 오브젝트 파괴 
             controller.buildSystem.DestroyBuilding(towerMono.gameObject);
@@ -85,6 +91,6 @@ public class SelectState : IConstructMode
         Debug.Log("타워 사거리 표시 비활성화");
 
         controller.View.HideTowerMenu();
-        controller.Model.SelectedTower = null;
+        controller.Model.SelectedBuilding = null;
     }
 }

@@ -7,19 +7,19 @@ public class GridDrawer : MonoBehaviour
     private MeshFilter meshFilter;
     [SerializeField]
     private MeshRenderer meshRenderer;
-
     [SerializeField]
     private Material gridMaterial;
 
     private void Awake()
     {
-        if (meshFilter == null)
-            meshFilter = GetComponent<MeshFilter>();
-        if (meshRenderer == null)
-            meshRenderer = GetComponent<MeshRenderer>();
+        InitInternal();
+    }
 
-        if(gridMaterial != null)
-            meshRenderer.material = gridMaterial;
+    public void InitInternal()
+    {
+        if (meshFilter == null) meshFilter = GetComponent<MeshFilter>();
+        if (meshRenderer == null) meshRenderer = GetComponent<MeshRenderer>();
+        if (gridMaterial != null) meshRenderer.material = gridMaterial;
     }
 
     public void DrawMesh(Dictionary<Vector2Int, CellData> gridData, float cellSize, Vector3 startPos)

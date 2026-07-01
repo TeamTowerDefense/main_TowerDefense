@@ -7,13 +7,16 @@ public class ConstructView : MonoBehaviour
     [Header("시각적 렌더러")]
     public BuildingPreviewRenderer previewRenderer;
 
-    [Header("타워 선택 UI")]
-    public UI_TowerInteract towerInteractUI;
+    [Header("UI 컴포넌트")]
+    [SerializeField] private UI_TowerInteract towerInteractUI;
+    [SerializeField] private UI_TowerQuickSlot quickSlotUI;
 
-    public void CreatePreview(GameObject previewPF)
-    {
-        previewRenderer.CreatePreview(previewPF);
-    }
+
+    public UI_TowerInteract TowerInteractUI => towerInteractUI;
+
+    #region 타워 미리보기 제어
+    public void CreatePreview(GameObject previewPF) => previewRenderer.CreatePreview(previewPF);
+    public void HidePreview() => previewRenderer.ShowPreview(false);
 
     public void UpdatePreview(Vector3 pos, bool isValid)
     {
@@ -21,21 +24,49 @@ public class ConstructView : MonoBehaviour
         previewRenderer.SetValidityColor(isValid);
         previewRenderer.ShowPreview(true);
     }
+    #endregion
 
-    public void HidePreview()
+
+    #region 타워 상호작용 메뉴 UI
+    public void InitalizeTowerInteractUI(Action onDestroyBtnClicked)
     {
-        previewRenderer.ShowPreview(false);
+        if(towerInteractUI != null)
+            towerInteractUI.OnDestroyClicked += onDestroyBtnClicked;
     }
 
-    public void ShowTowerMenu(Vector3 worldPos)
-    {
-        if (towerInteractUI != null)
-            towerInteractUI.Show(worldPos);
-    }
-
-    public void HideTowerMenu()
+    public void UnbindTowerInteractUI(Action onDestroyBtnClicked)
     {
         if (towerInteractUI != null)
-            towerInteractUI.Hide();
+            towerInteractUI.OnDestroyClicked -= onDestroyBtnClicked;
     }
+
+    public void ShowTowerMenu(Vector3 worldPos) 
+    { 
+        if (towerInteractUI != null) towerInteractUI.Show(worldPos); 
+    }
+    
+    public void HideTowerMenu() 
+    { 
+        if (towerInteractUI != null) towerInteractUI.Hide(); 
+    }
+    #endregion
+
+    #region 퀵슬롯 UI 제어
+    public void InitializeQuickSlot(BuildingData[] deck, IResourceSystem resourceSystem, Action<int> onSlotSelected)
+    {
+        if (quickSlotUI != null)
+        {
+            quickSlotUI.SetupUI(deck, resourceSystem);
+            quickSlotUI.OnSlotSelected += onSlotSelected;
+        }
+    }
+
+    public void UnbindQuickSlot(Action<int> onSlotSelected)
+    {
+        if (quickSlotUI != null) quickSlotUI.OnSlotSelected -= onSlotSelected;
+    }
+
+    public void UpdateQuickSlotHighlight(int index) => quickSlotUI?.UpdateHighlight(index);
+    public void ClearQuickSlotHighlight() => quickSlotUI?.ClearHighlight();
+    #endregion
 }

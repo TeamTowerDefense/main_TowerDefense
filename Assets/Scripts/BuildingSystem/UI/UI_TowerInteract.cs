@@ -20,21 +20,24 @@ public class UI_TowerInteract : MonoBehaviour
 
     private void Awake()
     {
-        mainCam = Camera.main;
-
-        destroyButton.onClick.AddListener(() => { OnDestroyClicked?.Invoke(); });
-
-        Hide();
+        InitInternal();
     }
 
     private void Update()
     {
-        // 타워의 3D 월드 좌표를 2D 화면(Screen) 좌표로 변환해서 따라다님
         if (isShowing)
         {
             Vector3 screenPos = mainCam.WorldToScreenPoint(targetWorldPos + offset);
             menuRect.position = screenPos;
         }
+    }
+
+    public void InitInternal()
+    {
+        mainCam = Camera.main;
+        destroyButton.onClick.RemoveAllListeners();
+        destroyButton.onClick.AddListener(() => { OnDestroyClicked?.Invoke(); });
+        Hide();
     }
 
     public void Show(Vector3 worldPos)

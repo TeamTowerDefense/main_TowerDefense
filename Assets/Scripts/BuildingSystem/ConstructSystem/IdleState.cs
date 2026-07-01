@@ -28,9 +28,9 @@ public class IdleState : IConstructMode
     {
         ConstructModel model = controller.Model;
 
-        if (model.HoveredTower != null)
+        if (model.HoveredBuilding != null)
         {
-            model.SelectedTower = model.HoveredTower;
+            model.SelectedBuilding = model.HoveredBuilding;
             controller.ChangeState<SelectState>();
         }
     }
