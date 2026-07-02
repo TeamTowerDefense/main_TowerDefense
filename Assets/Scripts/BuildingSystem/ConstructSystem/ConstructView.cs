@@ -10,6 +10,8 @@ public class ConstructView : MonoBehaviour
     [Header("UI 컴포넌트")]
     [SerializeField] private UI_TowerInteract towerInteractUI;
     [SerializeField] private UI_TowerQuickSlot quickSlotUI;
+    [SerializeField]
+    private UI_TowerInfo towerInfoUI;
 
 
     public UI_TowerInteract TowerInteractUI => towerInteractUI;
@@ -68,5 +70,24 @@ public class ConstructView : MonoBehaviour
 
     public void UpdateQuickSlotHighlight(int index) => quickSlotUI?.UpdateHighlight(index);
     public void ClearQuickSlotHighlight() => quickSlotUI?.ClearHighlight();
+    #endregion
+
+    #region 타워 정보 UI 제어
+    public void ShowTowerInfo(BuildingData data)
+    {
+        if (towerInfoUI != null && data is TowerData towerData)
+        {
+            towerInfoUI.SetInfo(towerData);
+            towerInfoUI.Show();
+        }
+    }
+
+    public void HideTowerInfo()
+    {
+        if (towerInfoUI != null)
+        {
+            towerInfoUI.Hide();
+        }
+    }
     #endregion
 }

@@ -22,7 +22,8 @@ public class SelectState : IConstructMode
             MonoBehaviour towerMono = model.SelectedBuilding as MonoBehaviour;
             if (towerMono != null)
             {
-                controller.View.ShowTowerMenu(towerMono.transform.position);
+                view.ShowTowerMenu(towerMono.transform.position);
+                view.ShowTowerInfo(model.SelectedBuilding.BuildingData);
             }
         }
     }
@@ -91,6 +92,7 @@ public class SelectState : IConstructMode
         Debug.Log("타워 사거리 표시 비활성화");
 
         controller.View.HideTowerMenu();
+        controller.View.HideTowerInfo();
         controller.Model.SelectedBuilding = null;
     }
 }

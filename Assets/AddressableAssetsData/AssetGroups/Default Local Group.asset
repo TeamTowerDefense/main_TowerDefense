@@ -13,17 +13,53 @@ MonoBehaviour:
   m_Name: Default Local Group
   m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
   m_GroupName: Default Local Group
-  m_GUID: fb1b1ad18d732f94692cfb11c1e112d8
+  m_GUID: 4fab432b090318a408423545542942bb
   m_SerializeEntries:
-  - m_GUID: 14da851dccbe7334dbd5571a4a181a76
-    m_Address: Assets/SO/MonsterDataSO/TestMonsterData.asset
+  - m_GUID: 167734c874059ea4eab809f73f11d640
+    m_Address: Assets/Prefabs/HitBox/Fire_HitSmall.prefab
     m_ReadOnly: 0
     m_SerializedLabels:
-    - Pooling
+    - Effect
+    - Effect_HitBox
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 18d2b03dab4102b4fa5cd7aba5a5e404
+    m_Address: Assets/Prefabs/Projectile/Projectile_Bullet.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Projectile
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1b55dec9921f0e4439f638a5cb2a954f
+    m_Address: Assets/Prefabs/Projectile/Projectiles_Luncher.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Projectile
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c9c33a53087dc9d4fb3146333e4b09c9
+    m_Address: Assets/Prefabs/Tower/TestLuncher.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ca384fe1efcc88547ba1d18ab9a53131
+    m_Address: Assets/Prefabs/Projectile/Hit_fire.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Effect
+    - Effect_Projectile
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f43d546f448decb41af66526a7f44009
+    m_Address: Assets/Prefabs/HitBox/Flamethrower.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - HitBox
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f6ca4b83107ee1f48961b491c447f6d9
+    m_Address: Assets/Prefabs/Projectile/Explosion_A_2.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Effect
+    - Effect_Projectile
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 0868d562560c5ec46a2a3435de8e7e62, type: 2}
   m_SchemaSet:
-    m_Schemas:
-    - {fileID: 11400000, guid: 1c66ddcb7e71a97419a66fb05fec6947, type: 2}
-    - {fileID: 11400000, guid: a11433cea402e2942a9eab6cfba50afa, type: 2}
+    m_Schemas: []

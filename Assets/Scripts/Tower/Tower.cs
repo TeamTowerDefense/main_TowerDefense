@@ -1,7 +1,9 @@
 ﻿
 using IGameInterface;
 using System.Collections;
+using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 public class Tower : BuildingBase
 {
@@ -12,7 +14,7 @@ public class Tower : BuildingBase
 
     [Header("Projectile Data")]
     [SerializeField] private ProjectileData projectileData;
-    [SerializeField] private HitBoxAttackData hitBoxAttackData;
+    [SerializeField] private HitBoxData hitBoxAttackData;
 
     [Header("Target")]
     [SerializeField] private LayerMask monsterLayer;
@@ -20,6 +22,8 @@ public class Tower : BuildingBase
     [Header("Rotation")]
     [SerializeField] private Transform rotateBody;
     [SerializeField] private float rotateSpeed = 10f;
+
+
 
     private float attackTimer;
     private bool isAttacking;
@@ -71,7 +75,10 @@ public class Tower : BuildingBase
 
         RotateToTarget(target);
 
-        if (attackTimer >= towerData.attackInterval)
+        float finalAttackInterval =
+        towerData.attackInterval / Mathf.Max(0.01f, towerData.attackSpeed);
+
+        if (attackTimer >= finalAttackInterval)
         {
             attackTimer = 0f;
             Attack(target);
@@ -134,20 +141,28 @@ public class Tower : BuildingBase
     }
     #endregion
 
+ 
+
     #region 투사체 발사
-    private void ShootProjectile(Transform target)
+    private async Task ShootProjectile(Transform target)
     {
 
         if (ObjectPoolManager.Instance == null)
         {
-            Debug.LogError("ObjectPoolManager.Instance가 null입니다. 씬에 ObjectPoolManager 오브젝트가 없습니다.");
+            //Debug.LogError("ObjectPoolManager.Instance가 null입니다. 씬에 ObjectPoolManager 오브젝트가 없습니다.");
             return;
         }
 
         if (firePoint == null)
             return;
 
-        GameObject prefab = towerData.projectileData.projectilePF;
+        ProjectileData data = towerData.projectileData;
+
+        GameObject prefab = ObjectPoolManager.Instance.GetProjectile(
+            towerData.projectileData.projectileID
+            );
+
+        //Debug.Log($"[Projectile] 로드 결과 = {(prefab == null ? "NULL" : prefab.name)}");
 
         if (prefab == null)
             return;
@@ -157,7 +172,7 @@ public class Tower : BuildingBase
 
         if (projectile == null)
         {
-            Debug.LogError($"{prefab.name}에 Projectile 컴포넌트가 없음");
+            //Debug.LogError($"{prefab.name}에 Projectile 컴포넌트가 없음");
             return;
         }
         projectile.Initialize(target, towerData.damage, towerData.projectileData);
@@ -170,23 +185,28 @@ public class Tower : BuildingBase
     {
         if (ObjectPoolManager.Instance == null)
         {
-            Debug.LogError("ObjectPoolManager.Instance가 null입니다.");
+            //Debug.LogError("ObjectPoolManager.Instance가 null입니다.");
             yield break;
         }
 
         if (towerData.hitBoxAttackData == null)
         {
-            Debug.LogError($"{name} : hitBoxAttackData 없음");
+            //Debug.LogError($"{name} : hitBoxAttackData 없음");
             yield break;
         }
 
         isAttacking = true;
+        HitBoxData data = towerData.hitBoxAttackData;
 
-        GameObject prefab = towerData.hitBoxAttackData.hitBoxPrefab;
+        GameObject prefab = ObjectPoolManager.Instance.GetHitBox(
+             towerData.hitBoxAttackData.hitBoxID
+        );
+
+        //Debug.Log($"[HitBox] 로드 결과 = {(prefab == null ? "NULL" : prefab.name)}");
 
         if (prefab == null)
         {
-            Debug.LogError($"{name} : hitBoxPrefab 없음");
+            //Debug.LogError($"{name} : hitBoxPrefab 없음");
             yield break;
         }
 
@@ -199,7 +219,7 @@ public class Tower : BuildingBase
 
         if (hitBox == null)
         {
-            Debug.LogError($"{prefab.name} : AreaHitBox Spawn 실패");
+            //Debug.LogError($"{prefab.name} : AreaHitBox Spawn 실패");
             yield break;
         }
 
@@ -212,7 +232,8 @@ public class Tower : BuildingBase
             target,
             towerData.damage,
             towerData.monsterLayer,
-            towerData.hitBoxAttackData
+            towerData.hitBoxAttackData,
+            towerData.attackSpeed
         );
 
         float timer = 0f;

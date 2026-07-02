@@ -1489,7 +1489,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00ac41c409328154480133b4784cf180, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Monster
-  hp: 1
+  hp: 20
   speed: 1
   cachedSpeedMultiplier: 1
 --- !u!136 &3519068505886476455

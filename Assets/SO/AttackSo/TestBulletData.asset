@@ -12,11 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2047d4d09ea8bb248836e0b0069b0cae, type: 3}
   m_Name: TestBulletData
   m_EditorClassIdentifier: Assembly-CSharp::ProjectileBulletData
-  projectilePF: {fileID: 8780727661788297695, guid: 18d2b03dab4102b4fa5cd7aba5a5e404, type: 3}
+  label: Projectile
   attackType: 0
+  projectileID: 1001
+  hitEffectID: 1001
   projectileSpeed: 30
   explosionRadius: 1
+  stun: 0
   targetLayer:
     serializedVersion: 2
-    m_Bits: 64
-  hitEffectPF: {fileID: 1835174905073365006, guid: ca384fe1efcc88547ba1d18ab9a53131, type: 3}
+    m_Bits: 512

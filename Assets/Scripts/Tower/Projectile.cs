@@ -5,6 +5,7 @@ public class Projectile : PoolableObject
 {
     private Transform target;
     private int damage;
+    private float attackSpeed;
     private ProjectileData projectileData;
 
     [SerializeField] private Vector3 rotationOffset;
@@ -15,6 +16,11 @@ public class Projectile : PoolableObject
         this.target = target;
         this.damage = damage;
         this.projectileData = projectileData;
+
+        //Debug.Log(
+        //      $"[Projectile Init] Data={projectileData.name}, " +
+        //      $"HitEffectID={projectileData.hitEffectID}"
+        //);
     }
     #endregion
 
@@ -100,10 +106,8 @@ public class Projectile : PoolableObject
     #region 광역 공격
     private void ExplosionHit()
     {
-
         DrawExplosionDebug(transform.position, projectileData.explosionRadius);
         Collider[] hits = Physics.OverlapSphere(transform.position, projectileData.explosionRadius, projectileData.targetLayer);
-
 
         foreach (Collider hit in hits)
         {
@@ -125,16 +129,34 @@ public class Projectile : PoolableObject
     #region 히트 이펙트
     private void SpawnHitEffect(Vector3 hitPoint)
     {
-        if (projectileData.hitEffectPF == null)
-            return;
+        int effectID = projectileData.hitEffectID;
 
-        
+        //Debug.Log($"[HitEffect] Spawn 요청 ID={effectID}");
+
+        if (effectID <= 0)
+        {
+            //Debug.LogError("[HitEffect] effectID가 0 이하");
+            return;
+        }
+
+        GameObject prefab = ObjectPoolManager.Instance.GetEffect(projectileData.hitEffectID);
+
+
+        if (prefab == null)
+        {
+            //Debug.LogError($"HitEffect 없음 ID : {projectileData.hitEffectID}");
+            return;
+        }
+
+
         PoolEffect effect = ObjectPoolManager.Instance.Spawn<PoolEffect>(
-            projectileData.hitEffectPF,
-            transform.position,
+            prefab,
+            hitPoint,
             Quaternion.identity,
             ObjectPoolManager.Instance.GetEffectParent()
         );
+
+        //Debug.Log($"[HitEffect] Spawn 결과 = {(effect == null ? "NULL" : effect.name)}");
 
         if (effect != null)
             effect.Play();
