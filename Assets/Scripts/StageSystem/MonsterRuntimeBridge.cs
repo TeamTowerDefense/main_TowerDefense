@@ -63,13 +63,13 @@ public class MonsterRuntimeBridge : MonoBehaviour, IAttackTarget, IStageDamageSo
     }
     #endregion
 
-    public void Initialize(MonsterData data, List<Transform> movePath, float spawnY)
+    public void Initialize(MonsterData data, List<Transform> movePath, float spawnY, float separationRadius, float separationStrength)
     {
         monsterData = data;
         path = movePath;
         reachedHandled = false;
 
-        if (monster != null) monster.Initialize(movePath, spawnY);
+        if (monster != null) monster.Setup(movePath, spawnY, data, separationRadius, separationRadius);
 
         infoWriter.Value?.SetAttackTarget(this);
         SetEnemyInfo(true, true, 0f);

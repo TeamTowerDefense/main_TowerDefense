@@ -12,10 +12,10 @@ public class GridDrawer : MonoBehaviour
 
     private void Awake()
     {
-        Init();
+        InitInternal();
     }
 
-    public void Init()
+    public void InitInternal()
     {
         if (meshFilter == null) meshFilter = GetComponent<MeshFilter>();
         if (meshRenderer == null) meshRenderer = GetComponent<MeshRenderer>();

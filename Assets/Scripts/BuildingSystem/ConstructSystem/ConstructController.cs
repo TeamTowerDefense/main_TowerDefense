@@ -33,12 +33,12 @@ public class ConstructController : MonoBehaviour
 
     private void Awake()
     {
-        InitializeMVC();
+        InitInternal();
     }
 
     private void Start()
     {
-        InitController();
+        InitExternal();
     }
 
     private void Update()
@@ -52,14 +52,21 @@ public class ConstructController : MonoBehaviour
     }
 
     #region 초기화 
-    public void InitController()
+
+    public void InitInternal()
+    {
+        InitializeMVC();
+        InitializeStateMachine();
+        Debug.Log("ConstructController: 내부 초기화 완료");
+    }
+
+    public void InitExternal()
     {
         BindExternalSystems();
-        InitializeStateMachine();
         SetupUI();
         ApplyStageRules();
-
         SetConstructMode(true);
+        Debug.Log("ConstructController: 외부 연동 완료");
     }
 
     private void InitializeMVC()

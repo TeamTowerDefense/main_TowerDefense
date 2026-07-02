@@ -25,16 +25,26 @@ public class GridGenerator : MonoBehaviour, IGridProvider
 
     private float CellSizeF => (float)cellSize;
 
-    private void Start()
+    private void Awake()
     {
-        Init();
+        InitInternal();
     }
 
-    public void Init()
+    private void Start()
+    {
+        InitExternal();
+    }
+
+    public void InitInternal()
     {
         gridData = new GridData();
+    }
+
+    public void InitExternal()
+    {
         GenerateGrid();
     }
+
 
     // 해당 지점에 그리드가 존재 하는지 검사
     public bool CheckGridInPoint(Vector3 point)

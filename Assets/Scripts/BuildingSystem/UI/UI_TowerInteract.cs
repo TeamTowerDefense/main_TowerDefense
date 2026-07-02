@@ -20,7 +20,7 @@ public class UI_TowerInteract : MonoBehaviour
 
     private void Awake()
     {
-        Init();
+        InitInternal();
     }
 
     private void Update()
@@ -32,13 +32,11 @@ public class UI_TowerInteract : MonoBehaviour
         }
     }
 
-    public void Init()
+    public void InitInternal()
     {
         mainCam = Camera.main;
-
         destroyButton.onClick.RemoveAllListeners();
         destroyButton.onClick.AddListener(() => { OnDestroyClicked?.Invoke(); });
-
         Hide();
     }
 

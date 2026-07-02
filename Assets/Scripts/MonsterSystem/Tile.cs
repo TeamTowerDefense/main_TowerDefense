@@ -9,22 +9,37 @@ public class Tile : MonoBehaviour
 
     // 현재 이 타일 위에 올라와 있는 몬스터들을 담는 바구니
     // (몬스터 담당인 내가 성능 최적화를 위해 쓸 바구니)
-    public List<Monster> monstersOnTile = new List<Monster>();
+    private List<Monster> _monstersOnTile = new List<Monster>();
+    public IReadOnlyList<Monster> Monsters => _monstersOnTile;
 
-    // 주변 인접 타일들의 정보 (기획/맵 담당이 세팅해주거나 매니저가 채워줌)
+    // 주변 인접 타일들의 정보 
     public List<Tile> neighbors = new List<Tile>();
+
+    private void Start()
+    {
+        // 타일이 생성되자마자 매니저에게 '나 여기 있어!'라고 등록
+        MonsterManager.Instance.RegisterTile(this);
+    }
+    public void AddMonster(Monster m) { if (!_monstersOnTile.Contains(m)) _monstersOnTile.Add(m); }
+    public void RemoveMonster(Monster m) { _monstersOnTile.Remove(m); }
     private void OnDrawGizmos()
     {
-        // 1. 타일 전체 크기 (청록색 박스)
+        // 1. 타일 영역 표시
         Gizmos.color = Color.cyan;
-        Gizmos.DrawWireCube(transform.position, new Vector3(0.8f, 0.1f, 0.8f));
+        float tileSize = MonsterManager.Instance != null ? MonsterManager.Instance.tileSize : 1.0f;
+        Gizmos.DrawWireCube(transform.position, new Vector3(tileSize, 0.1f, tileSize));
 
-        // 2. 만약 MonsterManager에서 설정한 pathWidth가 있다면, 
-        // 몬스터가 실제로 다닐 수 있는 '안전 구역'도 같이 그려줍니다.
-        // (색상을 다르게 하여 밖으로 나가는지 확인하기 위함)
+        // 2. 경로 폭(pathWidth) 표시 (MonsterManager에서 가져오기)
         Gizmos.color = Color.yellow;
-        // pathWidth는 매니저에 있지만, 여기선 임시로 1.5로 가정하거나 
-        // MonsterManager.instance.pathWidth 등으로 접근 가능합니다.
-        Gizmos.DrawWireCube(transform.position, new Vector3(1f, 0.05f, 1f));
+        float pathWidth = MonsterManager.Instance != null ? MonsterManager.Instance.pathWidth : 1.5f;
+        Gizmos.DrawWireCube(transform.position, new Vector3(pathWidth, 0.05f, pathWidth));
+
+        // 3. [추가] 이웃 타일로 선 그리기 (연결 확인용)
+        Gizmos.color = Color.green;
+        foreach (var neighbor in neighbors)
+        {
+            if (neighbor != null)
+                Gizmos.DrawLine(transform.position, neighbor.transform.position);
+        }
     }
 }

@@ -6,6 +6,7 @@ using UnityEngine;
 public class PathData
 {
     public string pathName;
+    public MonsterData monsterData;
     public List<Transform> waypoints;
     public int countPerSpawn = 5;
     public float spawnInterval = 3.0f;
@@ -14,36 +15,45 @@ public class PathData
 
 public class MonsterManager : MonoBehaviour
 {
+    private Dictionary<Vector2Int, Tile> pathTiles = new Dictionary<Vector2Int, Tile>();
+
     [SerializeField] bool useAutoSpawn = true;
 
-    public static MonsterManager Instance; // 어디서든 접근 가능하게 설정
-
+    private static MonsterManager _instance;
+    public static MonsterManager Instance
+    {
+        get
+        {
+            // Instance가 null이라면, 씬에서 자동으로 찾아 할당함 (Lazy Loading)
+            if (_instance == null)
+            {
+                _instance = FindAnyObjectByType<MonsterManager>();
+            }
+            return _instance;
+        }
+    }
     public GameObject monsterPrefab;
-    public int poolSize = 100;
     public float spawnY = 0f;
 
     public float separationRadius = 1.5f, separationStrength = 2.0f;
     public float tileSize = 1, pathWidth = 1.5f, containmentStrength = 3.0f;
     public List<PathData> paths;
 
-    private Queue<Monster> monsterPool = new Queue<Monster>();
-
     private List<Monster> activeMonsters = new List<Monster>();
-    private Dictionary<Vector2Int, List<Monster>> gridBuckets = new Dictionary<Vector2Int, List<Monster>>();
 
     void Awake()
     {
-        Instance = this; // 자기 자신을 등록
-        for (int i = 0; i < poolSize; i++)
-        {
-            GameObject obj = Instantiate(monsterPrefab);
-            obj.SetActive(false);
-            monsterPool.Enqueue(obj.GetComponent<Monster>());
-        }
+        _instance = this; // 자기 자신을 등록
     }
-    /* 원본 업데이트
+    private void Start()
+    {
+        // 게임 시작 시 한 번만 실행
+        StartCoroutine(DelayedInitialization());
+    }
     void Update()
     {
+        if (!useAutoSpawn) return;
+
         // 1. 몬스터 스폰 체크
         foreach (var path in paths)
         {
@@ -55,32 +65,25 @@ public class MonsterManager : MonoBehaviour
             }
         }
 
-        // 2. 그리드 및 물리 연산
-        foreach (var list in gridBuckets.Values) list.Clear();
-        foreach (var m in activeMonsters)
-        {
-            m.UpdateGridPosition(tileSize);
-            if (!gridBuckets.ContainsKey(m.CurrentGridPos)) gridBuckets[m.CurrentGridPos] = new List<Monster>();
-            gridBuckets[m.CurrentGridPos].Add(m);
-        }
-
+        // 2. 통합된 몬스터 로직 루프 (여기에 모든 기능을 합침)
         bool shouldUpdateCache = (Time.frameCount % 5 == 0);
 
         for (int i = activeMonsters.Count - 1; i >= 0; i--)
         {
             Monster m = activeMonsters[i];
-            Vector3 separationForce = CalculateSeparation(m);
-            if (shouldUpdateCache) m.cachedSpeedMultiplier = CalculateSpeedMultiplier(m);
+
+            m.UpdateGridPosition();
+            // A. 물리 힘 계산 (몬스터가 직접 계산하게 함)
+            Vector3 separationForce = m.CalculateSeparation();
+
+            // B. 속도 캐싱
+            if (shouldUpdateCache)
+                m.cachedSpeedMultiplier = CalculateSpeedMultiplier(m);
+
+            // C. 업데이트
             m.ManualUpdate(Time.deltaTime, separationForce, pathWidth, containmentStrength, m.cachedSpeedMultiplier);
 
-            //기존 함수
-            if (m.IsReachedEnd())
-            {
-                m.gameObject.SetActive(false);
-                activeMonsters.RemoveAt(i);
-                monsterPool.Enqueue(m);
-            }
-            
+            // D. 도착 처리 및 풀링 반환
             if (m.IsReachedEnd())
             {
                 if (m.TryGetComponent(out MonsterRuntimeBridge bridge))
@@ -88,7 +91,7 @@ public class MonsterManager : MonoBehaviour
 
                 m.gameObject.SetActive(false);
                 activeMonsters.RemoveAt(i);
-                monsterPool.Enqueue(m);
+                ObjectPoolManager.Instance.Despawn(m);
             }
         }
     }*/
@@ -171,19 +174,20 @@ public class MonsterManager : MonoBehaviour
     {
         for (int i = 0; i < pathData.countPerSpawn; i++)
         {
-                Monster m = GetMonster();
-                m.OnMonsterDie -= HandleMonsterDeath;
-                m.OnMonsterDie += HandleMonsterDeath;
-                m.gameObject.SetActive(true);
-                m.Initialize(pathData.waypoints, spawnY);
+            Monster m = ObjectPoolManager.Instance.Spawn<Monster>(
+                pathData.monsterData.Prefab,
+                pathData.waypoints[0].position,
+                Quaternion.identity
+            );
 
-                if (m.TryGetComponent(out MonsterRuntimeBridge bridge))
-                    bridge.BindPath(pathData.waypoints);
+            if (m == null) continue;
 
-                activeMonsters.Add(m);
+            // [중요!] 여기서 매니저의 설정값들을 직접 넘겨줍니다.
+            // Monster는 이제 MonsterManager.Instance를 호출할 필요가 없습니다.
+            m.Setup(pathData.waypoints, spawnY, pathData.monsterData, separationRadius, separationStrength);
 
-            if (i < pathData.countPerSpawn - 1)
-                yield return new WaitForSeconds(Mathf.Max(0.2f, pathData.spawnInterval));
+            activeMonsters.Add(m);
+            yield return new WaitForSeconds(pathData.spawnInterval);
         }
     }
     private void HandleMonsterDeath(Monster deadMonster)
@@ -198,54 +202,60 @@ public class MonsterManager : MonoBehaviour
         }
 
         // 풀링으로 반환
-        monsterPool.Enqueue(deadMonster);
+        ObjectPoolManager.Instance.Despawn(deadMonster);
 
         Debug.Log("몬스터가 죽어서 풀로 돌아갔습니다.");
 
-    }
-    Vector3 CalculateSeparation(Monster m)
-    {
-        Vector3 force = Vector3.zero;
-        float sqrRadius = separationRadius * separationRadius;
-        for (int x = -1; x <= 1; x++)
-        {
-            for (int z = -1; z <= 1; z++)
-            {
-                if (gridBuckets.TryGetValue(m.CurrentGridPos + new Vector2Int(x, z), out var list))
-                {
-                    foreach (var other in list)
-                    {
-                        if (m == other) continue;
-                        if (other.isDead) continue;
-                        Vector3 diff = m.transform.position - other.transform.position;
-                        diff.y = 0;
-                        if (diff.sqrMagnitude < sqrRadius) force += diff.normalized * (1.0f - (diff.magnitude / separationRadius));
-                    }
-                }
-            }
-        }
-        return force * separationStrength;
     }
 
     float CalculateSpeedMultiplier(Monster m)
     {
         return 1.0f; // 추가적인 가속 제어 시 확장
     }
-
-    public Monster GetMonster()
+    public void RegisterTile(Tile tile)
     {
-        // 1. 풀에 여유가 있다면 꺼내서 사용
-        if (monsterPool.Count > 0)
+        if (!pathTiles.ContainsKey(tile.gridPos))
+            pathTiles.Add(tile.gridPos, tile);
+    }
+    IEnumerator DelayedInitialization()
+    {
+        yield return null; // 한 프레임 대기 (모든 Awake/Start가 처리될 시간을 줌)
+        InitializeTileConnections();
+    }
+    public void InitializeTileConnections()
+    {
+        // 1. 모든 타일을 순회
+        foreach (var kvp in pathTiles)
         {
-            return monsterPool.Dequeue();
+            Tile currentTile = kvp.Value;
+            Vector2Int pos = kvp.Key;
+
+            // 2. 주변 8방향 확인
+            for (int x = -1; x <= 1; x++)
+            {
+                for (int y = -1; y <= 1; y++)
+                {
+                    if (x == 0 && y == 0) continue; // 자기 자신은 제외
+
+                    Vector2Int neighborPos = pos + new Vector2Int(x, y);
+
+                    // 3. 해당 좌표에 타일이 존재하면 neighbors 리스트에 추가
+                    if (pathTiles.TryGetValue(neighborPos, out Tile neighbor))
+                    {
+                        if (!currentTile.neighbors.Contains(neighbor))
+                        {
+                            currentTile.neighbors.Add(neighbor);
+                        }
+                    }
+                }
+            }
         }
-        // 2. 풀이 비었다면 새로 생성해서 반환
-        else
-        {
-            GameObject obj = Instantiate(monsterPrefab);
-            Monster newMonster = obj.GetComponent<Monster>();
-            obj.SetActive(false);
-            return newMonster;
-        }
+        Debug.Log("모든 타일의 이웃 연결이 완료되었습니다!");
+    }
+
+    public Tile GetTileAt(Vector2Int pos)
+    {
+        pathTiles.TryGetValue(pos, out Tile tile);
+        return tile; // 없으면 null 반환
     }
 }

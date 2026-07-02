@@ -9,10 +9,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 44e31e6e184c4f441acd02b080524260, type: 3}
+  m_Script: {fileID: 11500000, guid: 4db155bf894d96c41a060ad48c5cf716, type: 3}
   m_Name: TestMonsterData
-  m_EditorClassIdentifier: Assembly-CSharp::MonsterDataSO
-  Name: TestMonster01
-  Prefab: {fileID: 919132149155446097, guid: a8c7e3e3a63514f439c3cb6bca6f8a0c, type: 3}
-  Hp: 10
-  Speed: 3
+  m_EditorClassIdentifier: Assembly-CSharp::MonsterData
+  monsterName: monster1
+  Prefab: {fileID: 4253210182481893339, guid: d71c56f2e6af1ba449a0a11217b143a4, type: 3}
+  maxHP: 1
+  speed: 1
+  defense: 0
+  Att: 0
+  LeakDamage: 1
+  StunGauge: 10
+  Stunstack: 0
+  moveWeight: 1
+  separationWeight: 0.3
+  boundaryWeight: 3
+  containmentMultiplier: 5

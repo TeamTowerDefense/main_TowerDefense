@@ -16,24 +16,7 @@ public class ConstructTestInput: MonoBehaviour
 
     private void Awake()
     {
-        inputActions = new BuildingTestInput();
-
-        // 1. 좌클릭 (ModMainAction) 연결
-        inputActions.Building.MainAction.started += ctx =>
-        {
-            if (CheckPointerOnUI())
-                return;
-            
-            controller.PerformCurModeAction();
-        };
-
-        inputActions.Building.CancelAction.performed += ctx =>
-        {
-            controller.CancelCurModeAction();
-        };
-
-        // 2. 숫자키 1~5번 (TowerSelect) 연결
-        inputActions.Building.TowerSelect.performed += HandleTowerSelectInput;
+        InitInternal();
     }
 
     private void OnEnable()
@@ -48,7 +31,7 @@ public class ConstructTestInput: MonoBehaviour
 
     private void Start()
     {
-        inputService = GameInputService.Instance;
+        InitExternal();
     }
 
     private void Update()
@@ -59,6 +42,25 @@ public class ConstructTestInput: MonoBehaviour
         bool isHit = Physics.Raycast(ray, out RaycastHit hit, 1000f, rayHitLayer);
 
         controller.UpdateRayHitInfo(isHit, hit);
+    }
+
+    public void InitInternal()
+    {
+        inputActions = new BuildingTestInput();
+
+        inputActions.Building.MainAction.started += ctx =>
+        {
+            if (CheckPointerOnUI()) return;
+            controller.PerformCurModeAction();
+        };
+        inputActions.Building.CancelAction.performed += ctx => { controller.CancelCurModeAction(); };
+        inputActions.Building.TowerSelect.performed += HandleTowerSelectInput;
+    }
+
+    public void InitExternal()
+    {
+        inputService = GameInputService.Instance;
+
     }
 
     private bool CheckPointerOnUI()
