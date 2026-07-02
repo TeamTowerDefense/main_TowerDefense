@@ -12,7 +12,7 @@ public class Monster : PoolableObject
     private float _separationRadius;
     private float _separationStrength;
 
-    private float hp;
+    [SerializeField] private float hp;
     private float speed;
     private float moveWeight ;
     private float separationWeight;
