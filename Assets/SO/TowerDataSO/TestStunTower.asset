@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab3044d0d213fbb42bb52c6a2846aa9e, type: 3}
+  m_Name: TestStunTower
+  m_EditorClassIdentifier: Assembly-CSharp::TowerData
+  buildingID: 4
+  buildingName: "\uB3FC\uC9C0"
+  buildingPrefab: {fileID: 7107717812107533692, guid: 829fd095e4270ee48a4002de72905758, type: 3}
+  cost: 10
+  isDestructible: 1
+  baseFootprint:
+  - {x: 0, y: 0}
+  previewPF: {fileID: 7107717812107533692, guid: 9fc307e9417429046bdbd98ee002a923, type: 3}
+  validStateMaterial: {fileID: 2100000, guid: 4eaf14d00b5b02d4786058d19d124e39, type: 2}
+  inValidStateMaterial: {fileID: 2100000, guid: 4a85c9e89378a73489c64b9eede43a1b, type: 2}
+  placeVFX: {fileID: -7969546562051743012, guid: 201eafd12c4c6b34396a2be032e4a7c9, type: 3}
+  damage: 5
+  attackRange: 5
+  attackInterval: 5
+  type: 5
+  monsterLayer:
+    serializedVersion: 2
+    m_Bits: 512
+  attackMode: 1
+  projectileData: {fileID: 0}
+  hitBoxAttackData: {fileID: 11400000, guid: d9b0691295123c04cb32769a8b746258, type: 2}
+  bullet: {fileID: 2033358281796941150, guid: 3b1c54572b2e58243a5f71c24a4900fe, type: 3}

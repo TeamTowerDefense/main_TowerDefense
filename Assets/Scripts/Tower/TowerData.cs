@@ -6,7 +6,7 @@ public enum TowerType
     Cannon,
     Laser,
     Support,
-    Slow,
+    Debuff,
     HitBox
 }
 
@@ -16,13 +16,14 @@ public enum TowerAttackMode
     HitBox
 }
 
-[CreateAssetMenu(menuName = "Tower/Data")]
+[CreateAssetMenu(menuName = "TowerDB/Tower Data")]
 public class TowerData : BuildingData
 {
     [Header("Combat")]
     public int damage = 10;
     public float attackRange = 5f;
     public float attackInterval = 1f;
+    public float attackSpeed = 1f;
 
     [Header("Tower Type")]
     public TowerType type = TowerType.Basic;
@@ -37,7 +38,7 @@ public class TowerData : BuildingData
     public ProjectileData projectileData;
 
     [Header("HitBox Attack")]
-    public HitBoxAttackData hitBoxAttackData;
+    public HitBoxData hitBoxAttackData;
 
     public GameObject bullet;
 }

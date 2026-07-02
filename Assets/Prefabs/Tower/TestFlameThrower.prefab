@@ -82,8 +82,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Tower
   buildingData: {fileID: 11400000, guid: 0ce8c047fa7f26248b9e14250a55ec7c, type: 2}
   firePoint: {fileID: 8390506677513015391}
-  projectileData: {fileID: 11400000, guid: 4df76543a904f20458827d0e99690400, type: 2}
-  hitBoxAttackData: {fileID: 0}
+  projectileData: {fileID: 0}
+  hitBoxAttackData: {fileID: 11400000, guid: cdf1c43bdf483754f82191a777161750, type: 2}
   monsterLayer:
     serializedVersion: 2
     m_Bits: 512
@@ -140,7 +140,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TowerTargetFinder
   searchInterval: 0.15
-  targetMode: 2
+  targetMode: 3
 --- !u!1001 &1855840595557040959
 PrefabInstance:
   m_ObjectHideFlags: 0
