@@ -21,7 +21,7 @@ public class MonsterSpawnDataSO : ScriptableObject
 [Serializable]
 public class MonsterSpawnGroup
 {
-    public MonsterDataSO MonsterData;
+    public MonsterData MonsterData;
     public int Count = 1;
     public float Interval = 1f;
     public float StartDelay = 0f;
