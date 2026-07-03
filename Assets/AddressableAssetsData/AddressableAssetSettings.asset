@@ -15,7 +15,7 @@ MonoBehaviour:
   m_DefaultGroup: 
   m_currentHash:
     serializedVersion: 2
-    Hash: 5d7d953ec4ec193bbc99f99d38adf216
+    Hash: 1dde9afdf1b44547ef1419625a676f75
   m_OptimizeCatalogSize: 0
   m_BuildRemoteCatalog: 0
   m_CatalogRequestsTimeout: 0
@@ -55,7 +55,7 @@ MonoBehaviour:
     m_Id: 
   m_RemoteCatalogLoadPath:
     m_Id: 
-  m_ContentStateBuildPathProfileVariableName: 
+  m_ContentStateBuildPathProfileVariableName: <default settings path>
   m_CustomContentStateBuildPath: 
   m_ContentStateBuildPath: 
   m_BuildAddressablesWithPlayerBuild: 0
@@ -107,6 +107,8 @@ MonoBehaviour:
     - Tower
     - Effect_HitBox
     - Effect
+    - MonsterData
+    - StageData
   m_SchemaTemplates: []
   m_GroupTemplateObjects: []
   m_InitializationObjects: []
