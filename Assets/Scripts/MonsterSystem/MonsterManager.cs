@@ -39,6 +39,7 @@ public class MonsterManager : MonoBehaviour
     public float tileSize = 1, pathWidth = 1.5f, containmentStrength = 3.0f;
     public List<PathData> paths;
 
+    private Dictionary<Vector2Int, List<Monster>> gridBuckets = new Dictionary<Vector2Int, List<Monster>>();
     private List<Monster> activeMonsters = new List<Monster>();
 
     void Awake()
@@ -52,51 +53,76 @@ public class MonsterManager : MonoBehaviour
     }
     void Update()
     {
-        if (!useAutoSpawn) return;
+        UpdateGridBuckets();
+        ProcessMonsters();
+    }
+    public void SpawnPathGroup(PathData pathData, int count, float interval)
+    {
+        StartCoroutine(SpawnMonsterGroup(pathData, count, interval));
+    }
 
-        // 1. 몬스터 스폰 체크
-        foreach (var path in paths)
+    private IEnumerator SpawnMonsterGroup(PathData pathData, int count, float interval)
+    {
+        for (int i = 0; i < count; i++)
         {
-            path.spawnTimer += Time.deltaTime;
-            if (path.spawnTimer >= path.spawnInterval)
+            Monster m = ObjectPoolManager.Instance.Spawn<Monster>(
+                pathData.monsterData.Prefab,
+                pathData.waypoints[0].position,
+                Quaternion.identity
+            );
+
+            if (m != null)
             {
-                path.spawnTimer = 0f;
-                StartCoroutine(SpawnMonsterGroup(path));
+                
+                
+                m.Setup(pathData.waypoints, spawnY, pathData.monsterData, separationRadius, separationStrength);
+                m.UpdateGridPosition();
+                m.OnMonsterDie += HandleMonsterDeath;
+                m.gameObject.SetActive(true);
+                activeMonsters.Add(m);
             }
-        }
-
-        // 2. 통합된 몬스터 로직 루프 (여기에 모든 기능을 합침)
-        bool shouldUpdateCache = (Time.frameCount % 5 == 0);
-
-        for (int i = activeMonsters.Count - 1; i >= 0; i--)
-        {
-            Monster m = activeMonsters[i];
-
-            m.UpdateGridPosition();
-            // A. 물리 힘 계산 (몬스터가 직접 계산하게 함)
-            Vector3 separationForce = m.CalculateSeparation();
-
-            // B. 속도 캐싱
-            if (shouldUpdateCache)
-                m.cachedSpeedMultiplier = CalculateSpeedMultiplier(m);
-
-            // C. 업데이트
-            m.ManualUpdate(Time.deltaTime, separationForce, pathWidth, containmentStrength, m.cachedSpeedMultiplier);
-
-            // D. 도착 처리 및 풀링 반환
-            if (m.IsReachedEnd())
-            {
-                if (m.TryGetComponent(out MonsterRuntimeBridge bridge))
-                    bridge.HandleReachedEnd();
-
-                m.gameObject.SetActive(false);
-                activeMonsters.RemoveAt(i);
-                ObjectPoolManager.Instance.Despawn(m);
-            }
+                
+            yield return new WaitForSeconds(interval);
         }
     }
 
+    private void UpdateGridBuckets()
+    {
+        foreach (var list in gridBuckets.Values) list.Clear();
+        foreach (var m in activeMonsters)
+        {
+            m.UpdateGridPosition();
+            Vector2Int pos = m.CurrentGridPos;
+            if (!gridBuckets.ContainsKey(pos)) gridBuckets[pos] = new List<Monster>();
+            gridBuckets[pos].Add(m);
+        }
+    }
 
+    private void ProcessMonsters()
+    {
+        for (int i = activeMonsters.Count - 1; i >= 0; i--)
+        {
+            Monster m = activeMonsters[i];
+            Vector3 force = CalculateSeparation(m);
+            m.ManualUpdate(Time.deltaTime, force, pathWidth, containmentStrength, 1.0f);
+
+            if (m.IsReachedEnd()) HandleMonsterReachedEnd(m, i);
+        }
+    }
+
+    private void HandleMonsterReachedEnd(Monster m, int index)
+    {
+        if (m.TryGetComponent(out MonsterRuntimeBridge bridge)) bridge.HandleReachedEnd();
+        m.OnMonsterDie -= HandleMonsterDeath;
+        activeMonsters.RemoveAt(index);
+        ObjectPoolManager.Instance.Despawn(m);
+    }
+
+    private void HandleMonsterDeath(Monster deadMonster)
+    {
+        deadMonster.OnMonsterDie -= HandleMonsterDeath;
+        if (activeMonsters.Contains(deadMonster)) activeMonsters.Remove(deadMonster);
+    }
     public int ActiveMonsterCount => activeMonsters.Count;
 
     public void StopAutoSpawn()
@@ -111,50 +137,7 @@ public class MonsterManager : MonoBehaviour
     {
         enabled = true;
     }
-    public Coroutine SpawnPathGroup(PathData pathData) => StartCoroutine(SpawnMonsterGroup(pathData));
 
-    IEnumerator SpawnMonsterGroup(PathData pathData)
-    {
-        for (int i = 0; i < pathData.countPerSpawn; i++)
-        {
-            Monster m = ObjectPoolManager.Instance.Spawn<Monster>(
-                pathData.monsterData.Prefab,
-                pathData.waypoints[0].position,
-                Quaternion.identity
-            );
-
-            if (m == null) continue;
-
-            // [중요!] 여기서 매니저의 설정값들을 직접 넘겨줍니다.
-            // Monster는 이제 MonsterManager.Instance를 호출할 필요가 없습니다.
-            m.Setup(pathData.waypoints, spawnY, pathData.monsterData, separationRadius, separationStrength);
-
-            activeMonsters.Add(m);
-            yield return new WaitForSeconds(pathData.spawnInterval);
-        }
-    }
-    private void HandleMonsterDeath(Monster deadMonster)
-    {
-        // 이벤트 구독 해지 (메모리 누수 방지)
-        deadMonster.OnMonsterDie -= HandleMonsterDeath;
-
-        // 활성 리스트에서 제거
-        if (activeMonsters.Contains(deadMonster))
-        {
-            activeMonsters.Remove(deadMonster);
-        }
-
-        // 풀링으로 반환
-        ObjectPoolManager.Instance.Despawn(deadMonster);
-
-        Debug.Log("몬스터가 죽어서 풀로 돌아갔습니다.");
-
-    }
-
-    float CalculateSpeedMultiplier(Monster m)
-    {
-        return 1.0f; // 추가적인 가속 제어 시 확장
-    }
     public void RegisterTile(Tile tile)
     {
         if (!pathTiles.ContainsKey(tile.gridPos))
@@ -200,5 +183,33 @@ public class MonsterManager : MonoBehaviour
     {
         pathTiles.TryGetValue(pos, out Tile tile);
         return tile; // 없으면 null 반환
+    }
+    private Vector3 CalculateSeparation(Monster m)
+    {
+        Vector3 force = Vector3.zero;
+        Vector2Int pos = m.CurrentGridPos;
+
+      
+        for (int x = -1; x <= 1; x++)
+        {
+            for (int y = -1; y <= 1; y++)
+            {
+                Vector2Int checkPos = pos + new Vector2Int(x, y);
+
+                // 해당 타일에 몬스터들이 있다면?
+                if (gridBuckets.TryGetValue(checkPos, out List<Monster> monsters))
+                {
+                    foreach (var other in monsters)
+                    {
+                        // 자기 자신이거나 죽은 몬스터는 패스
+                        if (m == other || other.isDead) continue;
+
+                        // 이제 public이 된 GetSeparationForce 호출
+                        force += m.GetSeparationForce(other, separationRadius, separationStrength);
+                    }
+                }
+            }
+        }
+        return force;
     }
 }

@@ -29,10 +29,12 @@ public class Monster : PoolableObject
     public Vector2Int CurrentGridPos { get; private set; }
     public event Action<Monster> OnMonsterDie;
 
+    private EnemyInfoProvider enemyInfoProvider;
     private void Awake()
     {
         anim = GetComponent<Animator>();
         col = GetComponent<Collider>();
+        enemyInfoProvider = GetComponent<EnemyInfoProvider>();
     }
     private void OnDisable()
     {
@@ -140,6 +142,8 @@ public class Monster : PoolableObject
 
     public void TakeDamage(int damage)
     {
+        if (isDead) return;
+
         hp -= damage;
 
         if (hp <= 0)
@@ -149,49 +153,33 @@ public class Monster : PoolableObject
     }
     public void Die()
     {
-        if (isDead) return;
+        if (isDead || !gameObject.activeInHierarchy) return;
         isDead = true;
-        currentTile?.RemoveMonster(this);
-        if (col != null) col.enabled = false;
-  
-        StartCoroutine(DieCoroutine());
+        enemyInfoProvider.SetAlive(false);
+        enemyInfoProvider.SetTargetable(false);
+        if (currentTile != null)
+        {
+            currentTile.RemoveMonster(this);
+            currentTile = null;
+        }
         
+        if (col != null) col.enabled = false;
+       
+        StartCoroutine(DieCoroutine());
+
     }
 
     private IEnumerator DieCoroutine()
     {
-        // 1. 애니메이터에 Die 트리거 발동 (Animator Controller에 'Die' 파라미터가 있어야 합니다)
         anim.SetTrigger("Die");
-
         // 애니메이션 재생되는 시간 동안
-        yield return new WaitForSeconds(1.5f);
-
+        yield return new WaitForSeconds(2f);
+        ObjectPoolManager.Instance.Despawn(this);
         OnMonsterDie?.Invoke(this);
 
-        gameObject.SetActive(false);
-    }
-    public Vector3 CalculateSeparation()
-    {
-        Vector3 force = Vector3.zero;
-        if (currentTile == null) return force;
 
-        foreach (var other in currentTile.Monsters)
-        {
-            if (this == other || other.isDead) continue;
-            force += GetSeparationForce(other, _separationRadius, _separationStrength);
-        }
-
-        foreach (var neighbor in currentTile.neighbors)
-        {
-            foreach (var other in neighbor.Monsters)
-            {
-                if (other.isDead) continue;
-                force += GetSeparationForce(other, _separationRadius, _separationStrength);
-            }
-        }
-        return force;
     }
-    private Vector3 GetSeparationForce(Monster other, float radius, float strength)
+    public Vector3 GetSeparationForce(Monster other, float radius, float strength)
     {
         // 1. 거리 계산
         Vector3 diff = transform.position - other.transform.position;

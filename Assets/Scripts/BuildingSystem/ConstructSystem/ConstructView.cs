@@ -1,6 +1,7 @@
 using System;
 using UnityEngine.UI;
 using UnityEngine;
+using IGameInterface;
 
 public class ConstructView : MonoBehaviour
 {
@@ -73,11 +74,11 @@ public class ConstructView : MonoBehaviour
     #endregion
 
     #region 타워 정보 UI 제어
-    public void ShowTowerInfo(BuildingData data)
+    public void ShowTowerInfo(BuildingData data, EnemyTargetMode targetMode)
     {
         if (towerInfoUI != null && data is TowerData towerData)
         {
-            towerInfoUI.SetInfo(towerData);
+            towerInfoUI.SetInfo(towerData, targetMode);
             towerInfoUI.Show();
         }
     }
