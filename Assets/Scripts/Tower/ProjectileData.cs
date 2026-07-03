@@ -22,5 +22,8 @@ public class ProjectileData : ScriptableObject
     public float stun = 0f;
     public LayerMask targetLayer;
 
+    public AssetReferenceGameObject projectilePF;
+
+    [HideInInspector] public GameObject loadedPrefab;
 
 }

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 public enum TowerType
 {
@@ -41,4 +42,8 @@ public class TowerData : BuildingData
     public HitBoxData hitBoxAttackData;
 
     public GameObject bullet;
+
+    [Header("Addressable Data")]
+    public AssetReferenceGameObject towerPrefab;
+
 }

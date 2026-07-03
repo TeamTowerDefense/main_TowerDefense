@@ -22,3 +22,9 @@ MonoBehaviour:
   targetLayer:
     serializedVersion: 2
     m_Bits: 512
+  projectilePF:
+    m_AssetGUID: 18d2b03dab4102b4fa5cd7aba5a5e404
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_SubObjectGUID: 
+    m_EditorAssetChanged: 0

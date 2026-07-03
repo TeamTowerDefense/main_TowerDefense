@@ -35,3 +35,9 @@ MonoBehaviour:
   projectileData: {fileID: 11400000, guid: ccb11473b2cf5b2439f0edd3b4d28434, type: 2}
   hitBoxAttackData: {fileID: 0}
   bullet: {fileID: 8780727661788297695, guid: 18d2b03dab4102b4fa5cd7aba5a5e404, type: 3}
+  towerPrefab:
+    m_AssetGUID: 6bb5d459c8ae1a7438ec6c9e684d87b1
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_SubObjectGUID: 
+    m_EditorAssetChanged: 0

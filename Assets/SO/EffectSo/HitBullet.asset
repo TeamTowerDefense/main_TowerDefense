@@ -14,3 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EffectData
   effectID: 1001
   label: Effect_Projectile
+  effectPF:
+    m_AssetGUID: ca384fe1efcc88547ba1d18ab9a53131
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_SubObjectGUID: 
+    m_EditorAssetChanged: 1
+  loadedPrefab: {fileID: 0}

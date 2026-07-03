@@ -4,6 +4,7 @@ using System.Collections;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 public class Tower : BuildingBase
 {
@@ -144,7 +145,7 @@ public class Tower : BuildingBase
  
 
     #region 투사체 발사
-    private async Task ShootProjectile(Transform target)
+    private void ShootProjectile(Transform target)
     {
 
         if (ObjectPoolManager.Instance == null)
@@ -156,16 +157,17 @@ public class Tower : BuildingBase
         if (firePoint == null)
             return;
 
-        ProjectileData data = towerData.projectileData;
+        ProjectileData projectileData = towerData.projectileData;
 
-        GameObject prefab = ObjectPoolManager.Instance.GetProjectile(
-            towerData.projectileData.projectileID
-            );
+
+
+        GameObject prefab = ObjectPoolManager.Instance.GetProjectile(projectileData.projectileID);
 
         //Debug.Log($"[Projectile] 로드 결과 = {(prefab == null ? "NULL" : prefab.name)}");
 
         if (prefab == null)
             return;
+
         //Debug.Log($"Spawn 시도 : {prefab.name}");
         Projectile projectile = ObjectPoolManager.Instance.Spawn<Projectile>
             (prefab, firePoint.position, firePoint.rotation, ObjectPoolManager.Instance.GetProjectileParent());
@@ -196,13 +198,19 @@ public class Tower : BuildingBase
         }
 
         isAttacking = true;
-        HitBoxData data = towerData.hitBoxAttackData;
 
-        GameObject prefab = ObjectPoolManager.Instance.GetHitBox(
-             towerData.hitBoxAttackData.hitBoxID
-        );
+        HitBoxData hitBoxData = towerData.hitBoxAttackData;
+        GameObject prefab = ObjectPoolManager.Instance.GetHitBox(hitBoxData.hitBoxID);
+
+        if (prefab == null)
+        {
+            Debug.LogError($"[HitBox] 프리팹 없음 ID: {hitBoxData.hitBoxID}, Data: {hitBoxData.name}");
+            isAttacking = false;
+            yield break;
+        }
 
         Debug.Log($"[HitBox] 로드 결과 = {(prefab == null ? "NULL" : prefab.name)}");
+
 
         if (prefab == null)
         {

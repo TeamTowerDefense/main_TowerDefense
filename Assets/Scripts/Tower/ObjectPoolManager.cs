@@ -1,4 +1,3 @@
-using System;
 
 using System.Collections;
 
@@ -27,16 +26,23 @@ public class ObjectPoolManager : MonoBehaviour
     // 오브젝트 풀
     private Dictionary<GameObject, Queue<PoolableObject>> pools = new();
 
-    private Dictionary<int, GameObject> projectileTable = new();
-    private Dictionary<int, GameObject> hitBoxTable = new();
-    private Dictionary<int, GameObject> effectTable = new();
+    private Dictionary<int, ProjectileData> projectileTable = new();
+    private Dictionary<int, HitBoxData> hitBoxTable = new();
+    private Dictionary<int, EffectData> effectTable = new();
 
     private Dictionary<string, GameObject> loadedPrefabs = new();
 
 
     private void Awake()
     {
+        if (Instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         Instance = this;
+        DontDestroyOnLoad(gameObject);
     }
     private IEnumerator Start()
     {
@@ -52,16 +58,20 @@ public class ObjectPoolManager : MonoBehaviour
         foreach (ProjectileData data in projectileDB.projectiles)
         {
             AsyncOperationHandle handle =
-                Addressables.LoadAssetsAsync<GameObject>(
-                    data.label,
-                    prefab =>
-                    {
-                        projectileTable[data.projectileID] = prefab;
-
-                        Debug.Log($"Projectile 등록 : {data.projectileID}");
-                    });
-
+                data.projectilePF.LoadAssetAsync<GameObject>();
             yield return handle;
+            if (handle.Status != AsyncOperationStatus.Succeeded)
+            {
+                Debug.LogError($"[projectile Load 실패] Data: {data.name}");
+                continue;
+            }
+
+            GameObject prefab = (GameObject)handle.Result;
+
+            data.loadedPrefab = prefab;
+            projectileTable[data.projectileID] = data;
+
+            Debug.Log($"[projectileTable 등록] ID: {data.projectileID}, Data: {data.name}, Prefab: {prefab.name}");
         }
     }
     private IEnumerator LoadHitBoxAssets()
@@ -70,73 +80,104 @@ public class ObjectPoolManager : MonoBehaviour
         {
 
             AsyncOperationHandle handle =
-                Addressables.LoadAssetsAsync<GameObject>(
-                    data.label,
-                    prefab =>
-                    {
-                        hitBoxTable[data.hitBoxID] = prefab;
-                        Debug.Log($"[HitBoxTable 등록] ID: {data.hitEffectID}, Data: {data.name}, Prefab: {prefab.name}");
-                        Debug.Log($"HitBox 등록 : {data.hitBoxID}");
-                    });
-
+                data.hitboxPF.LoadAssetAsync<GameObject>();
             yield return handle;
+
+            if (handle.Status != AsyncOperationStatus.Succeeded)
+            {
+                Debug.LogError($"[HitBox Load 실패] Data: {data.name}");
+                continue;
+            }
+
+            GameObject prefab = (GameObject)handle.Result;
+
+            data.loadedPrefab = prefab;
+            hitBoxTable[data.hitBoxID] = data;
+
+            Debug.Log($"[HitBoxTable 등록] ID: {data.hitBoxID}, Data: {data.name}, Prefab: {prefab.name}");
         }
     }
 
     private IEnumerator LoadEffectAssets()
     {
-
-
         foreach (EffectData data in effectDatabase.effects)
         {
-            Debug.Log($"[Effect] 로드 시도 ID={data.effectID}, Label={data.label}");
-            AsyncOperationHandle handle = 
-                Addressables.LoadAssetsAsync<GameObject>(
-                data.label,
-                prefab =>
-                {
-                    effectTable[data.effectID] = prefab;
-                    Debug.Log($"Effect 등록 시도 ID={data.effectID}, Label={data.label}, Prefab={prefab.name}");
-                    //Debug.Log($"Effect 등록 : {data.effectID} / {prefab.name}");
-                });
-            
+            if (data == null)
+                continue;
 
+            if (data.effectPF == null || !data.effectPF.RuntimeKeyIsValid())
+            {
+                Debug.LogError($"[Effect] AssetReference 유효하지 않음: {data.name}");
+                continue;
+            }
+
+            var handle = data.effectPF.LoadAssetAsync<GameObject>();
             yield return handle;
+
+            if (handle.Status != AsyncOperationStatus.Succeeded)
+            {
+                Debug.LogError($"[Effect Load 실패] Data: {data.name}");
+                continue;
+            }
+
+            data.loadedPrefab = handle.Result;
+            effectTable[data.effectID] = data;
+
+            Debug.Log($"[EffectTable 등록] ID: {data.effectID}, Data: {data.name}, Prefab: {data.loadedPrefab.name}");
         }
     }
+    public ProjectileData GetProjectileData(int id)
+    {
+        if (projectileTable.TryGetValue(id, out ProjectileData data))
+            return data;
 
+        return null;
+    }
     public GameObject GetProjectile(int id)
     {
-        projectileTable.TryGetValue(id, out GameObject prefab);
-        return prefab;
+        ProjectileData data = GetProjectileData(id);
+        return data != null ? data.loadedPrefab : null;
+    }
+
+    public HitBoxData GetHitBoxData(int id)
+    {
+        if (hitBoxTable.TryGetValue(id, out HitBoxData data))
+            return data;
+
+        return null;
     }
 
     public GameObject GetHitBox(int id)
     {
-        Debug.Log($"HitBox 요청 ID : {id}");
+        HitBoxData data = GetHitBoxData(id);
 
-        if (hitBoxTable.TryGetValue(id, out GameObject prefab))
+        if (data == null)
         {
-            Debug.Log($"HitBox 찾음 : {prefab.name}");
-            return prefab;
+            Debug.LogError($"[HitBox] Data 없음 ID: {id}");
+            return null;
         }
 
-        Debug.LogError($"HitBox ID 없음 : {id}");
+        if (data.loadedPrefab == null)
+        {
+            Debug.LogError($"[HitBox] loadedPrefab 없음 ID: {id}, Data: {data.name}");
+            return null;
+        }
+
+        return data != null ? data.loadedPrefab : null;
+    }
+
+    public EffectData GetEffectData(int id)
+    {
+        if (effectTable.TryGetValue(id, out EffectData data))
+            return data;
+
         return null;
     }
 
     public GameObject GetEffect(int id)
     {
-        //Debug.Log($"[Effect] 요청 ID={id}");
-
-        if (effectTable.TryGetValue(id, out GameObject prefab))
-        {
-            //Debug.Log($"[Effect] 찾음 {prefab.name}");
-            return prefab;
-        }
-
-       // Debug.LogError($"[Effect] ID 없음 : {id}");
-        return null;
+        EffectData data = GetEffectData(id);
+        return data != null ? data.loadedPrefab : null;
     }
 
     public async Task<GameObject> LoadPrefabAsync(AssetReferenceGameObject reference)
