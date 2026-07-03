@@ -23,18 +23,14 @@ MonoBehaviour:
   validStateMaterial: {fileID: 2100000, guid: 4eaf14d00b5b02d4786058d19d124e39, type: 2}
   inValidStateMaterial: {fileID: 2100000, guid: 4a85c9e89378a73489c64b9eede43a1b, type: 2}
   placeVFX: {fileID: -7969546562051743012, guid: 201eafd12c4c6b34396a2be032e4a7c9, type: 3}
-  damage: 5
+  damage: 0
   attackRange: 5
   attackInterval: 1
-  attackSpeed: 3
-  type: 5
+  attackSpeed: 0.5
   monsterLayer:
     serializedVersion: 2
     m_Bits: 512
-  attackMode: 1
-  projectileData: {fileID: 0}
-  hitBoxAttackData: {fileID: 11400000, guid: d9b0691295123c04cb32769a8b746258, type: 2}
-  bullet: {fileID: 2033358281796941150, guid: 3b1c54572b2e58243a5f71c24a4900fe, type: 3}
+  attackMechanism: {fileID: 11400000, guid: 67fe410dfeb47034096f7df39fd9e08e, type: 2}
   towerPrefab:
     m_AssetGUID: 829fd095e4270ee48a4002de72905758
     m_SubObjectName: 

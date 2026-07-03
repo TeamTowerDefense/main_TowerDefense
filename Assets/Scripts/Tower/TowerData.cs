@@ -19,41 +19,20 @@ public class TowerData : BuildingData
     [Header("Target")]
     public LayerMask monsterLayer;
 
-    [Header("Attack Mode")]
-    public TowerAttackMode attackMode;
-
-    [Header("ProjectTile")]
-    public ProjectileData projectileData;
-
-    [Header("HitBox Attack")]
-    public HitBoxData hitBoxAttackData;
+    [Header("Attack Mechanism")]
+    public AttackBaseData attackMechanism;
 
     [Header("Addressable Data")]
     public AssetReferenceGameObject towerPrefab;
     
     public virtual bool CheckAttackData()
     {
-        switch (attackMode)
+        if (attackMechanism == null)
         {
-            case TowerAttackMode.Projectile:
-
-                if (projectileData == null)
-                {
-                    Debug.LogError($"{name} : ProjectileData ����");
-                    return false;
-                }
-                return true;
-
-            case TowerAttackMode.HitBox:
-
-                if (hitBoxAttackData == null)
-                {
-                    Debug.LogError($"{name} : HitBoxAttackData ����");
-                    return false;
-                }
-                return true;
-            default:
-                return false;
+            Debug.LogError($"{name} : 공격 메커니즘(AttackMechanism) 데이터가 누락되었습니다!");
+            return false;
         }
+
+        return true;
     }
 }

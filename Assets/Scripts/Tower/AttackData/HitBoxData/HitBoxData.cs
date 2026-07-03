@@ -2,12 +2,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
-[CreateAssetMenu(menuName = "Attack/HitBox")]
-public class HitBoxData : ScriptableObject
+public class HitBoxData : AttackBaseData
 {
     [Header("Addressable")]
-    public string addressKey;
-    public string label;
     public int hitBoxID;
     public int hitEffectID;
 
@@ -17,18 +14,6 @@ public class HitBoxData : ScriptableObject
 
     [Header("Shape")]
     public Vector3 center = new Vector3(0f, 0f, 3f);
-
-    [Header("Box")]
-    public Vector3 boxSize = new Vector3(1.5f, 1.5f, 6f);
-
-    [Header("Sphere")]
-    public float sphereRadius = 1f;
-
-    [Header("Capsule")]
-    public float capsuleRadius = 1f;
-    public float capsuleHeight = 1f;
-    // 0 = X, 1 = Y, 2 = Z
-    public int capsuleDirection = 0;
 
     [Header("Debuff")]
     public bool applyDebuff;

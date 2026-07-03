@@ -27,14 +27,10 @@ MonoBehaviour:
   attackRange: 10
   attackInterval: 1
   attackSpeed: 2
-  type: 0
   monsterLayer:
     serializedVersion: 2
     m_Bits: 512
-  attackMode: 0
-  projectileData: {fileID: 11400000, guid: ccb11473b2cf5b2439f0edd3b4d28434, type: 2}
-  hitBoxAttackData: {fileID: 0}
-  bullet: {fileID: 8780727661788297695, guid: 18d2b03dab4102b4fa5cd7aba5a5e404, type: 3}
+  attackMechanism: {fileID: 11400000, guid: aa190dadb8699c443ba4809a31041178, type: 2}
   towerPrefab:
     m_AssetGUID: 6bb5d459c8ae1a7438ec6c9e684d87b1
     m_SubObjectName: 

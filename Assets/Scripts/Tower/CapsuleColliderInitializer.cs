@@ -12,10 +12,12 @@ public class CapsuleColliderInitializer : MonoBehaviour, IHitBoxShapeInitializer
 
     public void Initialize(HitBoxData data)
     {
+        CapsuleHitboxData hitboxData = data as CapsuleHitboxData;
+
         capsuleCollider.isTrigger = true;
-        capsuleCollider.center = data.center;
-        capsuleCollider.radius = data.capsuleRadius;
-        capsuleCollider.height = data.capsuleHeight;
-        capsuleCollider.direction = data.capsuleDirection;
+        capsuleCollider.center = hitboxData.center;
+        capsuleCollider.radius = hitboxData.capsuleRadius;
+        capsuleCollider.height = hitboxData.capsuleHeight;
+        capsuleCollider.direction = hitboxData.capsuleDirection;
     }
 }
