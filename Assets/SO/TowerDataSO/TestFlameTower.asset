@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ab3044d0d213fbb42bb52c6a2846aa9e, type: 3}
+  m_Script: {fileID: 11500000, guid: 24e837c49ec25184c8721677fe5a1c20, type: 3}
   m_Name: TestFlameTower
   m_EditorClassIdentifier: Assembly-CSharp::TowerData
   buildingID: 2
@@ -27,11 +27,9 @@ MonoBehaviour:
   attackRange: 5
   attackInterval: 1
   attackSpeed: 5
-  type: 5
   monsterLayer:
     serializedVersion: 2
     m_Bits: 512
   attackMode: 1
   projectileData: {fileID: 0}
   hitBoxAttackData: {fileID: 11400000, guid: cdf1c43bdf483754f82191a777161750, type: 2}
-  bullet: {fileID: 786889566517218707, guid: f43d546f448decb41af66526a7f44009, type: 3}
