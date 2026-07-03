@@ -12,9 +12,11 @@ public class SphereHitBoxInitializer : MonoBehaviour, IHitBoxShapeInitializer
 
     public void Initialize(HitBoxData data)
     {
+        SphereHitboxData hitboxData = data as SphereHitboxData;
+
         spherCollider.isTrigger = true;
-        spherCollider.center = data.center;
-        spherCollider.radius = data.sphereRadius;
+        spherCollider.center = hitboxData.center;
+        spherCollider.radius = hitboxData.sphereRadius;
     }
 
 }

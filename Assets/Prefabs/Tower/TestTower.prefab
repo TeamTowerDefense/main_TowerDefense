@@ -82,7 +82,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Tower
   buildingData: {fileID: 11400000, guid: e393610002f3f1e42bed2f10b03ed509, type: 2}
   firePoint: {fileID: 891083189724630870}
-  projectileData: {fileID: 11400000, guid: ccb11473b2cf5b2439f0edd3b4d28434, type: 2}
+  projectileData: {fileID: 11400000, guid: aa190dadb8699c443ba4809a31041178, type: 2}
   hitBoxAttackData: {fileID: 0}
   monsterLayer:
     serializedVersion: 2

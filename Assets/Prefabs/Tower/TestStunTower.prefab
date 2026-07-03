@@ -44,7 +44,7 @@ GameObject:
   - component: {fileID: 8680207356780825251}
   - component: {fileID: -2198034926431609077}
   - component: {fileID: 2544732463236687574}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: TestStunTower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -82,8 +82,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Tower
   buildingData: {fileID: 11400000, guid: 53f00096ee994c04da7eb8b742127bcd, type: 2}
   firePoint: {fileID: 3339879699633357215}
-  projectileData: {fileID: 0}
-  hitBoxAttackData: {fileID: 11400000, guid: d9b0691295123c04cb32769a8b746258, type: 2}
   monsterLayer:
     serializedVersion: 2
     m_Bits: 512

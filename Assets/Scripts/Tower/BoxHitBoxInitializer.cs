@@ -12,10 +12,10 @@ public class BoxHitBoxInitializer : MonoBehaviour, IHitBoxShapeInitializer
 
     public void Initialize(HitBoxData data)
     {
-        boxCollider.isTrigger = true;
-        boxCollider.center = data.center;
-        boxCollider.size = data.boxSize;
-    }
+        BoxHitboxData hitboxData = data as BoxHitboxData;
 
-   
+        boxCollider.isTrigger = true;
+        boxCollider.center = hitboxData.center;
+        boxCollider.size = hitboxData.boxSize;
+    }
 }

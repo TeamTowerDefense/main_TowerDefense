@@ -13,18 +13,12 @@ public class Tower : BuildingBase
     [Header("Fire Point")]
     [SerializeField] private Transform firePoint;
 
-    [Header("Projectile Data")]
-    [SerializeField] private ProjectileData projectileData;
-    [SerializeField] private HitBoxData hitBoxAttackData;
-
     [Header("Target")]
     [SerializeField] private LayerMask monsterLayer;
 
     [Header("Rotation")]
     [SerializeField] private Transform rotateBody;
     [SerializeField] private float rotateSpeed = 10f;
-
-
 
     private float attackTimer;
     private bool isAttacking;
@@ -109,25 +103,22 @@ public class Tower : BuildingBase
     #region 공격 메서드
     private void Attack(Transform target)
     {
-        switch (towerData.attackMode)
+        if (towerData.attackMechanism is ProjectileData projData)
         {
-            case TowerAttackMode.Projectile:
-                ShootProjectile(target);
-                break;
-
-            case TowerAttackMode.HitBox:
-                if (!isAttacking)
-                    StartCoroutine(UseHitBoxAttack(target));
-                break;
+            ShootProjectile(target, projData); // 기존 ShootProjectile이 파라미터를 받게 수정
+        }
+        // 2. 만약 장착된 부품이 '히트박스' 타입이라면?
+        else if (towerData.attackMechanism is HitBoxData hitBoxData)
+        {
+            if (!isAttacking)
+                StartCoroutine(UseHitBoxAttack(target, hitBoxData));
         }
 
     }
     #endregion
 
- 
-
     #region 투사체 발사
-    private void ShootProjectile(Transform target)
+    private void ShootProjectile(Transform target, ProjectileData projectileData)
     {
 
         if (ObjectPoolManager.Instance == null)
@@ -138,10 +129,6 @@ public class Tower : BuildingBase
 
         if (firePoint == null)
             return;
-
-        ProjectileData projectileData = towerData.projectileData;
-
-
 
         GameObject prefab = ObjectPoolManager.Instance.GetProjectile(projectileData.projectileID);
 
@@ -159,13 +146,13 @@ public class Tower : BuildingBase
             //Debug.LogError($"{prefab.name}에 Projectile 컴포넌트가 없음");
             return;
         }
-        projectile.Initialize(target, towerData.damage, towerData.projectileData);
+        projectile.Initialize(target, towerData.damage, projectileData);
 
     }
     #endregion
 
     #region 히트박사 발사
-    private IEnumerator UseHitBoxAttack(Transform target)
+    private IEnumerator UseHitBoxAttack(Transform target, HitBoxData hitBoxData)
     {
         if (ObjectPoolManager.Instance == null)
         {
@@ -173,7 +160,7 @@ public class Tower : BuildingBase
             yield break;
         }
 
-        if (towerData.hitBoxAttackData == null)
+        if (hitBoxData == null)
         {
             //Debug.LogError($"{name} : hitBoxAttackData 없음");
             yield break;
@@ -181,7 +168,6 @@ public class Tower : BuildingBase
 
         isAttacking = true;
 
-        HitBoxData hitBoxData = towerData.hitBoxAttackData;
         GameObject prefab = ObjectPoolManager.Instance.GetHitBox(hitBoxData.hitBoxID);
 
         if (prefab == null)
@@ -198,7 +184,7 @@ public class Tower : BuildingBase
             firePoint.position,
             firePoint.rotation,
             ObjectPoolManager.Instance.GetEffectParent()
-            );
+        );
 
         if (hitBox == null)
         {
@@ -215,13 +201,13 @@ public class Tower : BuildingBase
             target,
             towerData.damage,
             towerData.monsterLayer,
-            towerData.hitBoxAttackData,
+            hitBoxData,
             towerData.attackSpeed
         );
 
         float timer = 0f;
 
-        while (timer < towerData.hitBoxAttackData.activeTime)
+        while (timer < hitBoxData.activeTime)
         {
             if (target == null)
             {
@@ -256,6 +242,7 @@ public class Tower : BuildingBase
         isAttacking = false;
     }
     #endregion
+
     #region 타겟 추적 메서드
     private void RotateToTarget(Transform target)
     {

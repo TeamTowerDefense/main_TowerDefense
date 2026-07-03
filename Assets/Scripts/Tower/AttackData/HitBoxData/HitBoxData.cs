@@ -8,12 +8,9 @@ public enum HitBoxDamageMode
     TickDamage
 }
 
-[CreateAssetMenu(menuName = "Attack/HitBox")]
-public class HitBoxData : ScriptableObject
+public class HitBoxData : AttackBaseData
 {
     [Header("Addressable")]
-    public string addressKey;
-    public string label;
     public int hitBoxID;
     public int hitEffectID;
 
@@ -24,18 +21,6 @@ public class HitBoxData : ScriptableObject
     [Header("Shape")]
     public Vector3 center = new Vector3(0f, 0f, 3f);
 
-    [Header("Box")]
-    public Vector3 boxSize = new Vector3(1.5f, 1.5f, 6f);
-
-    [Header("Sphere")]
-    public float sphereRadius = 1f;
-
-    [Header("Capsule")]
-    public float capsuleRadius = 1f;
-    public float capsuleHeight = 1f;
-    // 0 = X, 1 = Y, 2 = Z
-    public int capsuleDirection = 0;
-
     [Header("Damage Type")]
     public HitBoxDamageMode damageMode = HitBoxDamageMode.OncePerTarget;
     [Header("Effect Option")]
@@ -43,7 +28,7 @@ public class HitBoxData : ScriptableObject
 
     [Header("Hit Timing")]
     public float colliderActiveTime = 0.2f;
-
+    
     [Header("Debuff")]
     public bool applyDebuff;
     public List<DebuffEffectData> debuffs;
