@@ -2,8 +2,10 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Monster", menuName = "Monster/Monster Data")]
-public class MonsterData : PoolObject
+public class MonsterData : ScriptableObject
 {
+    public string monsterName = "New Monster";
+    public GameObject Prefab;
     public float maxHP = 100f;
     [Min(0f)]
     public float speed = 1.0f;

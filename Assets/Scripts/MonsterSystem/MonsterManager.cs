@@ -66,7 +66,7 @@ public class MonsterManager : MonoBehaviour
         for (int i = 0; i < count; i++)
         {
             Monster m = ObjectPoolManager.Instance.Spawn<Monster>(
-                pathData.monsterData.Prefab,
+                pathData.monsterData.Prefab, pathData.monsterData.name,
                 pathData.waypoints[0].position,
                 Quaternion.identity
             );
