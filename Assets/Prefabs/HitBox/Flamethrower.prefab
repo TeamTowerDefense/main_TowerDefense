@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 9179704941663707668}
   - component: {fileID: -2446594459721614561}
   - component: {fileID: -2109362690538364386}
+  - component: {fileID: -3574050078006289620}
   m_Layer: 0
   m_Name: Flamethrower
   m_TagString: Untagged
@@ -4915,6 +4916,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &-3574050078006289620
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 786889566517218707}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: abaed74baeea6454d91e6b17111e68d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BoxHitBoxInitializer
+  boxCollider: {fileID: 9179704941663707668}
 --- !u!1 &786889567476965093
 GameObject:
   m_ObjectHideFlags: 0

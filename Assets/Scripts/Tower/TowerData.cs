@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 public enum TowerAttackMode
 {
@@ -27,6 +28,9 @@ public class TowerData : BuildingData
     [Header("HitBox Attack")]
     public HitBoxData hitBoxAttackData;
 
+    [Header("Addressable Data")]
+    public AssetReferenceGameObject towerPrefab;
+    
     public virtual bool CheckAttackData()
     {
         switch (attackMode)
@@ -35,7 +39,7 @@ public class TowerData : BuildingData
 
                 if (projectileData == null)
                 {
-                    Debug.LogError($"{name} : ProjectileData ¾øÀ½");
+                    Debug.LogError($"{name} : ProjectileData ï¿½ï¿½ï¿½ï¿½");
                     return false;
                 }
                 return true;
@@ -44,7 +48,7 @@ public class TowerData : BuildingData
 
                 if (hitBoxAttackData == null)
                 {
-                    Debug.LogError($"{name} : HitBoxAttackData ¾øÀ½");
+                    Debug.LogError($"{name} : HitBoxAttackData ï¿½ï¿½ï¿½ï¿½");
                     return false;
                 }
                 return true;

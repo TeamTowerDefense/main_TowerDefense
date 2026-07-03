@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 24e837c49ec25184c8721677fe5a1c20, type: 3}
+  m_Script: {fileID: 11500000, guid: ab3044d0d213fbb42bb52c6a2846aa9e, type: 3}
   m_Name: TestLuncher
   m_EditorClassIdentifier: Assembly-CSharp::TowerData
   buildingID: 1
@@ -23,13 +23,21 @@ MonoBehaviour:
   validStateMaterial: {fileID: 2100000, guid: 4eaf14d00b5b02d4786058d19d124e39, type: 2}
   inValidStateMaterial: {fileID: 2100000, guid: 4a85c9e89378a73489c64b9eede43a1b, type: 2}
   placeVFX: {fileID: -7969546562051743012, guid: 201eafd12c4c6b34396a2be032e4a7c9, type: 3}
-  damage: 10
-  attackRange: 5
+  damage: 20
+  attackRange: 10
   attackInterval: 1
-  attackSpeed: 0.5
+  attackSpeed: 1
+  type: 0
   monsterLayer:
     serializedVersion: 2
     m_Bits: 512
   attackMode: 0
   projectileData: {fileID: 11400000, guid: 4df76543a904f20458827d0e99690400, type: 2}
   hitBoxAttackData: {fileID: 0}
+  bullet: {fileID: 5083330694576680963, guid: b47cd3198bdb41e4c84c691ad9e61d8d, type: 3}
+  towerPrefab:
+    m_AssetGUID: c9c33a53087dc9d4fb3146333e4b09c9
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_SubObjectGUID: 
+    m_EditorAssetChanged: 0
