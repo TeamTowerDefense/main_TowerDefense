@@ -1,3 +1,4 @@
+using IGameInterface;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -19,11 +20,13 @@ public class SelectState : IConstructMode
 
         if (model.SelectedBuilding != null)
         {
-            MonoBehaviour towerMono = model.SelectedBuilding as MonoBehaviour;
-            if (towerMono != null)
+            Tower towerMono = model.SelectedBuilding as Tower;
+            ITowerTargetFinder targetFinder = towerMono.GetComponent<ITowerTargetFinder>();
+
+            if (towerMono != null && targetFinder != null)
             {
                 view.ShowTowerMenu(towerMono.transform.position);
-                view.ShowTowerInfo(model.SelectedBuilding.BuildingData);
+                view.ShowTowerInfo(model.SelectedBuilding.BuildingData, targetFinder.ChaseMode);
             }
         }
     }

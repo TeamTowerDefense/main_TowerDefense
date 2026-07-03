@@ -364,6 +364,9 @@ namespace IGameInterface
         int MaxBaseHp { get; }
         int TowerLimit { get; }
 
+        int CurrentWaveIndex { get; }
+        int WaveCount { get; }
+
         event Action<StageState> StateChanged;
         event Action<int, int> BaseHpChanged;
 

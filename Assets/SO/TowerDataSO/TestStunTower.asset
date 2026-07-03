@@ -25,7 +25,8 @@ MonoBehaviour:
   placeVFX: {fileID: -7969546562051743012, guid: 201eafd12c4c6b34396a2be032e4a7c9, type: 3}
   damage: 5
   attackRange: 5
-  attackInterval: 5
+  attackInterval: 1
+  attackSpeed: 0.2
   type: 5
   monsterLayer:
     serializedVersion: 2

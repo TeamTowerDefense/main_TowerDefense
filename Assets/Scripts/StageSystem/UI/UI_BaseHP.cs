@@ -7,7 +7,7 @@ public class UI_BaseHP : MonoBehaviour
     [Header("외부 시스템 참조")]
     [SerializeField]
     private InterfaceReference<IStageService> stageInterfactRef;
-    [Header("텍스트 UI")]
+    [Header("UI 컴포넌트")]
     [SerializeField]
     private TextMeshProUGUI curHpText;
 
@@ -20,6 +20,11 @@ public class UI_BaseHP : MonoBehaviour
 
     private void Start()
     {
+        if (stageInterfactRef != null)
+        {
+            stageService = stageInterfactRef.Value;
+        }
+
         if (stageService != null)
         {
             stageService.BaseHpChanged += SetHpText;
