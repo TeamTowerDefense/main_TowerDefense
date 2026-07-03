@@ -83,6 +83,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - Projectile
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 53f00096ee994c04da7eb8b742127bcd
+    m_Address: Assets/SO/TowerDataSO/TestStunTower.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Tower
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 55df833929b73ab4db1716f13cb45bc5
     m_Address: Assets/Prefabs/Projectile/Projectiles_Explosion.prefab
     m_ReadOnly: 0
@@ -124,6 +130,16 @@ MonoBehaviour:
     m_SerializedLabels:
     - Effect
     - Effect_Projectile
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d71c56f2e6af1ba449a0a11217b143a4
+    m_Address: Assets/Scripts/MonsterSystem/Skeleton_110.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: e393610002f3f1e42bed2f10b03ed509
+    m_Address: Assets/SO/TowerDataSO/TestBulletTower.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Tower
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: e7eab914f7d32a244b2f031dcee3e2f4
     m_Address: Assets/Prefabs/HitBox/Fog_speedSlow.prefab
