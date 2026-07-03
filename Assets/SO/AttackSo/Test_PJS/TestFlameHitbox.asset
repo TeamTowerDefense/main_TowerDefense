@@ -18,6 +18,9 @@ MonoBehaviour:
   damageInterval: 0.2
   hitEffectData: {fileID: 11400000, guid: 8e445a0834199bb449e407d0a9f18ca6, type: 2}
   center: {x: 0, y: 0, z: 3}
+  damageMode: 1
+  stopEffectOutOfRange: 1
+  colliderActiveTime: 0.2
   applyDebuff: 0
   debuffs: []
   debuffApplyInterval: 0.5

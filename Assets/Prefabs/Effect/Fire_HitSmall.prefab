@@ -19377,6 +19377,7 @@ GameObject:
   - component: {fileID: 4477386985593874648}
   - component: {fileID: 4477386985593874649}
   - component: {fileID: -1093082272122931326}
+  - component: {fileID: -4729060618032660254}
   m_Layer: 0
   m_Name: Fire_HitSmall
   m_TagString: Untagged
@@ -19414,7 +19415,7 @@ ParticleSystem:
   serializedVersion: 8
   lengthInSec: 4
   simulationSpeed: 1
-  stopAction: 0
+  stopAction: 3
   cullingMode: 0
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
@@ -24231,6 +24232,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc6005df85b27db499cac560b29144cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PoolableObject
+--- !u!114 &-4729060618032660254
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4477386985593874650}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c6e2605147fd7242bd143ea40e4b6a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EffectAutoDespawn
 --- !u!1 &5866890231153878705
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -77,19 +78,6 @@ public class AreaHitBox : PoolableObject
         if (monster == null)
             return;
 
-        if (!activeHitEffects.TryGetValue(monster, out List<PoolableObject> effects))
-            return;
-
-        foreach (PoolableObject effect in effects)
-        {
-            if (effect == null)
-                continue;
-
-            effect.transform.SetParent(ObjectPoolManager.Instance.GetEffectParent());
-            ObjectPoolManager.Instance.Despawn(effect);
-        }
-
-        activeHitEffects.Remove(monster);
         damageTimers.Remove(monster);
     }
 
@@ -125,25 +113,7 @@ public class AreaHitBox : PoolableObject
         if (monster == null || monster.isDead)
             return;
 
-
-        if (hitBoxData.damageMode == HitBoxDamageMode.OncePerTarget)
-        {
-            if (hitTargets.Contains(monster))
-                return;
-
-            ApplyDamage(monster);
-            hitTargets.Add(monster);
-            return;
-        }
-
         float tickInterval = hitBoxData.damageInterval / Mathf.Max(0.01f, attackSpeed);
-
-
-        if (monster == null)
-        {
-            Debug.LogError("[HitBox] damageTimers 접근 직전 monster NULL");
-            return;
-        }
 
         if (!damageTimers.ContainsKey(monster))
         {
@@ -164,24 +134,11 @@ public class AreaHitBox : PoolableObject
 
     private void ApplyDamage(Monster monster)
     {
-        if (monster == null)
-        {
-            Debug.LogError("[AreaHitBox] ApplyDamage monster NULL");
-            return;
-        }
-
-        if (hitBoxData == null)
+        if (monster == null || hitBoxData == null)
             return;
 
         monster.TakeDamage(damage);
         SpawnHitEffect(monster);
-       
-        if (ObjectPoolManager.Instance == null)
-            return;
-
-        if (activeHitEffects.ContainsKey(monster))
-            return;
-        
     }
 
     private void SpawnHitEffect(Monster monster)
@@ -190,6 +147,9 @@ public class AreaHitBox : PoolableObject
             return;
 
         if (hitBoxData.hitEffectData == null)
+            return;
+
+        if (ObjectPoolManager.Instance == null)
             return;
 
         GameObject effectPF = ObjectPoolManager.Instance.GetEffect(hitBoxData.hitEffectData.effectID);
@@ -212,15 +172,24 @@ public class AreaHitBox : PoolableObject
         effect.transform.localPosition = Vector3.zero;
         effect.transform.localRotation = Quaternion.identity;
 
-        if (!activeHitEffects.TryGetValue(monster, out List<PoolableObject> effects))
-        {
-            effects = new List<PoolableObject>();
-            activeHitEffects.Add(monster, effects);
-        }
+        float lifeTime = hitBoxData.hitEffectData.lifeTime;
 
-        effects.Add(effect);
+        StartCoroutine(DespawnEffectAfterTime(effect, lifeTime));
     }
 
+    private IEnumerator DespawnEffectAfterTime(PoolableObject effect, float lifeTime)
+    {
+        yield return new WaitForSeconds(lifeTime);
+
+        if (effect == null)
+            yield break;
+
+        if (ObjectPoolManager.Instance == null)
+            yield break;
+
+        effect.transform.SetParent(ObjectPoolManager.Instance.GetEffectParent());
+        ObjectPoolManager.Instance.Despawn(effect);
+    }
 
     public void DisableHitCollider()
     {
@@ -231,22 +200,9 @@ public class AreaHitBox : PoolableObject
     public override void OnDespawned()
     {
         target = null;
-        foreach (var pair in activeHitEffects)
-        {
-            List<PoolableObject> effects = pair.Value;
-
-            foreach (PoolableObject effect in effects)
-            {
-                if (effect == null)
-                    continue;
-
-                effect.transform.SetParent(ObjectPoolManager.Instance.GetEffectParent());
-                ObjectPoolManager.Instance.Despawn(effect);
-            }
-        }
         damageTimers.Clear();
         hitTargets.Clear();
-        activeHitEffects.Clear();
+
         //hitBoxData = null;
         base.OnDespawned();
     }
