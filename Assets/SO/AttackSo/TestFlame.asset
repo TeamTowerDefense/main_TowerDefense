@@ -25,6 +25,7 @@ MonoBehaviour:
   capsuleRadius: 1
   capsuleHeight: 1
   capsuleDirection: 0
+  damageMode: 1
   applyDebuff: 0
   debuffs: []
   debuffApplyInterval: 0.5

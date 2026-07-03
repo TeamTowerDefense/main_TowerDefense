@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 436dffeed80d04c4d857304485a50831, type: 3}
-  m_Name: TestStunArea
+  m_Name: TestSlowArea
   m_EditorClassIdentifier: Assembly-CSharp::HitBoxAttackData
   addressKey: 1004
   label: HitBox
@@ -19,12 +19,14 @@ MonoBehaviour:
   activeTime: 5
   damageInterval: 2
   hitEffectData: {fileID: 11400000, guid: e2e5b904d2903e946998f4a2fe28bf7e, type: 2}
-  center: {x: 0, y: 0, z: 3}
+  center: {x: 0, y: 0, z: 0}
   boxSize: {x: 1.5, y: 1.5, z: 6}
   sphereRadius: 1
   capsuleRadius: 1
   capsuleHeight: 1
   capsuleDirection: 0
+  damageMode: 0
+  colliderActiveTime: 0.2
   applyDebuff: 1
   debuffs:
   - debuffType: 0

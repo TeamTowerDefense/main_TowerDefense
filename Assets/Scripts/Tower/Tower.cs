@@ -192,13 +192,6 @@ public class Tower : BuildingBase
         }
 
         Debug.Log($"[HitBox] 로드 결과 = {(prefab == null ? "NULL" : prefab.name)}");
-
-
-        if (prefab == null)
-        {
-            //Debug.LogError($"{name} : hitBoxPrefab 없음");
-            yield break;
-        }
         
         AreaHitBox hitBox = ObjectPoolManager.Instance.Spawn<AreaHitBox>(
             prefab,
@@ -231,15 +224,28 @@ public class Tower : BuildingBase
         while (timer < towerData.hitBoxAttackData.activeTime)
         {
             if (target == null)
-                break;
+            {
+                hitBox.DisableHitCollider();
 
-            float distance = Vector3.Distance(transform.position, target.position);
+                if (hitBoxData.stopEffectOutOfRange)
+                    break;
+            }
+            else
+            {
+                float distance = Vector3.Distance(transform.position, target.position);
 
-            if (distance > towerData.attackRange)
-                break;
+                if (distance > towerData.attackRange)
+                {
+                    hitBox.DisableHitCollider();
 
-            RotateToTarget(target);
-
+                    if (hitBoxData.stopEffectOutOfRange)
+                        break;
+                }
+                else
+                {
+                    RotateToTarget(target);
+                }
+            }
             timer += Time.deltaTime;
             yield return null;
         }
@@ -266,6 +272,7 @@ public class Tower : BuildingBase
         body.rotation = Quaternion.Slerp(body.rotation, lookRotation, Time.deltaTime * rotateSpeed);
     }
     #endregion
+
 
     #region 범위 표시 Gizmos
     private void OnDrawGizmos()

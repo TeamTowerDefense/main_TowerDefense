@@ -2,6 +2,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
+public enum HitBoxDamageMode
+{
+    OncePerTarget,
+    TickDamage
+}
+
 [CreateAssetMenu(menuName = "Attack/HitBox")]
 public class HitBoxData : ScriptableObject
 {
@@ -29,6 +35,14 @@ public class HitBoxData : ScriptableObject
     public float capsuleHeight = 1f;
     // 0 = X, 1 = Y, 2 = Z
     public int capsuleDirection = 0;
+
+    [Header("Damage Type")]
+    public HitBoxDamageMode damageMode = HitBoxDamageMode.OncePerTarget;
+    [Header("Effect Option")]
+    public bool stopEffectOutOfRange = true;
+
+    [Header("Hit Timing")]
+    public float colliderActiveTime = 0.2f;
 
     [Header("Debuff")]
     public bool applyDebuff;
