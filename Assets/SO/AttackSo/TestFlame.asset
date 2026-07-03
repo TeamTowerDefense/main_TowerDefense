@@ -12,13 +12,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 436dffeed80d04c4d857304485a50831, type: 3}
   m_Name: TestFlame
   m_EditorClassIdentifier: Assembly-CSharp::HitBoxAttackData
+  addressKey: 1003
   label: HitBox
   hitBoxID: 1003
   hitEffectID: 1003
   activeTime: 10
   damageInterval: 1
+  hitEffectData: {fileID: 11400000, guid: 8e445a0834199bb449e407d0a9f18ca6, type: 2}
+  center: {x: 0, y: 0, z: 3}
   boxSize: {x: 1.5, y: 1.5, z: 6}
-  boxCenter: {x: 0, y: 0, z: 3}
+  sphereRadius: 1
+  capsuleRadius: 1
+  capsuleHeight: 1
+  capsuleDirection: 0
   applyDebuff: 0
   debuffs: []
   debuffApplyInterval: 0.5
+  hitboxPF:
+    m_AssetGUID: f43d546f448decb41af66526a7f44009
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_SubObjectGUID: 
+    m_EditorAssetChanged: 0
+  loadedPrefab: {fileID: 786889566517218707, guid: f43d546f448decb41af66526a7f44009, type: 3}

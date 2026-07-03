@@ -1,17 +1,16 @@
-using System;
 using UnityEngine;
 
-public class Projectile : PoolableObject
+public abstract class Projectile : PoolableObject
 {
-    private Transform target;
-    private int damage;
-    private float attackSpeed;
     private ProjectileData projectileData;
+    protected int damage;
+    protected float attackSpeed;
+    protected Transform target;
 
     [SerializeField] private Vector3 rotationOffset;
 
     #region projectile 생성
-    public void Initialize(Transform target, int damage, ProjectileData projectileData)
+    public virtual void Initialize(Transform target, int damage, ProjectileData projectileData)
     {
         this.target = target;
         this.damage = damage;
@@ -26,7 +25,7 @@ public class Projectile : PoolableObject
 
     private void Update()
     {
-        if(target == null || projectileData == null)
+        if (target == null || projectileData == null)
         {
             DespawnSelf();
             return;
@@ -44,7 +43,6 @@ public class Projectile : PoolableObject
 
 
         float distance = Vector3.Distance(transform.position, target.position);
-
         if (distance <= 0.2f)
         {
             HitTarget();
@@ -59,23 +57,12 @@ public class Projectile : PoolableObject
 
         SpawnHitEffect(hitPoint);
 
-        switch (projectileData.attackType)
-        {
-            case ProjectileAttackType.Single:
-                SingleHit();
-                break;
-
-            case ProjectileAttackType.Explosion:
-                ExplosionHit();
-                break;
-
-            case ProjectileAttackType.Area:
-                AreaHit();
-                break;
-        }
+        OnHit();
 
         DespawnSelf();
     }
+
+    protected abstract void OnHit();
     #endregion
 
     #region 히트 Trs 가져오기
@@ -90,39 +77,6 @@ public class Projectile : PoolableObject
             return transform.position;
 
         return targetCollider.ClosestPoint(transform.position);
-    }
-    #endregion
-   
-    #region 단일 공격
-    private void SingleHit()
-    {
-        Monster monster = target.GetComponent<Monster>();
-
-        if (monster != null)
-            monster.TakeDamage(damage);
-    }
-    #endregion
-
-    #region 광역 공격
-    private void ExplosionHit()
-    {
-        DrawExplosionDebug(transform.position, projectileData.explosionRadius);
-        Collider[] hits = Physics.OverlapSphere(transform.position, projectileData.explosionRadius, projectileData.targetLayer);
-
-        foreach (Collider hit in hits)
-        {
-            Monster monster = hit.GetComponentInParent<Monster>();
-
-            if (monster != null)
-                monster.TakeDamage(damage);
-        }
-    }
-    #endregion
-
-    #region 광역 탄
-    private void AreaHit()
-    {
-        ExplosionHit();
     }
     #endregion
 
@@ -169,28 +123,4 @@ public class Projectile : PoolableObject
         ObjectPoolManager.Instance.Despawn(this);
     }
     #endregion
-
-    private void DrawExplosionDebug(Vector3 center, float radius)
-    {
-        const int segments = 32;
-
-        for (int i = 0; i < segments; i++)
-        {
-            float angle1 = i * Mathf.PI * 2 / segments;
-            float angle2 = (i + 1) * Mathf.PI * 2 / segments;
-
-            Vector3 p1 = center + new Vector3(Mathf.Cos(angle1), 0, Mathf.Sin(angle1)) * radius;
-            Vector3 p2 = center + new Vector3(Mathf.Cos(angle2), 0, Mathf.Sin(angle2)) * radius;
-
-            Debug.DrawLine(p1, p2, Color.red, 2f);
-        }
-    }
-    private void OnDrawGizmosSelected()
-    {
-        if (projectileData == null)
-            return;
-
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, projectileData.explosionRadius);
-    }
 }
