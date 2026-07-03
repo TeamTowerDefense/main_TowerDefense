@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 [CreateAssetMenu(fileName = "Monster", menuName = "Monster/Monster Data")]
 public class MonsterData : ScriptableObject
@@ -15,11 +16,13 @@ public class MonsterData : ScriptableObject
 
     [Header("스턴 세팅")]
     public float StunGauge = 10f; // 해당 값 까지 스턴 스택이 쌓이면 스턴이 걸리는 구조
-    public float Stunstack = 0f;// 스톤 될떄 가지고 있는 기본 스턴 스택
 
     [Header("힘 배율")]
     public float moveWeight = 1.0f;
     public float separationWeight = 0.3f;
     public float boundaryWeight = 3.0f;
     public float containmentMultiplier = 5f;
+
+    [Header("능력")]
+    public List<AbilityData> abilities;
 }

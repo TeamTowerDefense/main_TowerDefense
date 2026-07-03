@@ -46,6 +46,11 @@ MonoBehaviour:
     - Effect
     - Effect_Projectile
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d71c56f2e6af1ba449a0a11217b143a4
+    m_Address: Assets/Scripts/MonsterSystem/Skeleton_110.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: f43d546f448decb41af66526a7f44009
     m_Address: Assets/Prefabs/HitBox/Flamethrower.prefab
     m_ReadOnly: 0
