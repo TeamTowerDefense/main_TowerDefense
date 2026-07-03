@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class Monster : PoolableObject
@@ -9,10 +10,9 @@ public class Monster : PoolableObject
     private Animator anim;
     private Collider col;
 
-    private float _separationRadius;
-    private float _separationStrength;
 
-    [SerializeField] private float hp;
+    public float currentHp { get; private set; }
+    public float maxHp { get; private set; }    
     private float speed;
     private float moveWeight ;
     private float separationWeight;
@@ -30,31 +30,60 @@ public class Monster : PoolableObject
     public event Action<Monster> OnMonsterDie;
 
     private EnemyInfoProvider enemyInfoProvider;
+
+    [SerializeField]
+    private HpBar hpBar;
+
+    private IAbility[] allAbilities;
+    private MonsterStatus status;
     private void Awake()
     {
         anim = GetComponent<Animator>();
         col = GetComponent<Collider>();
         enemyInfoProvider = GetComponent<EnemyInfoProvider>();
+        allAbilities = GetComponents<IAbility>();
+        status = GetComponent<MonsterStatus>();
     }
     private void OnDisable()
     {
         ClearCurrentTile();
     }
-    // 초기화 로직 통합 (Initialize 삭제)
+    // 초기화 로직 통합
     public void Setup(List<Transform> path, float spawnY, MonsterData data,float separationRadius, float separationStrength)
     {
-        
-        _separationRadius = separationRadius;
-        _separationStrength = separationStrength;
+        foreach (var ability in allAbilities)
+        {
+            ability.DisableAbility();
+        }
+        foreach (var abilityData in data.abilities)
+        {
+            // 몬스터에 붙어있는 능력들 중에서 데이터 타입이 맞는 놈을 찾아서 켭니다.
+            foreach (var ability in allAbilities)
+            {
+                // 이 능력 스크립트가 해당 데이터를 처리할 수 있는지 확인
+                // (간단하게 하려면 타입 비교 후 EnableAbility 호출)
+                if (CanHandle(ability, abilityData))
+                {
+                    ability.EnableAbility(abilityData);
+                }
+            }
+        }
 
-        hp = data.maxHP;
+        currentHp = data.maxHP;
+        maxHp = data.maxHP;
         speed = data.speed;
         moveWeight = data.moveWeight;
         separationWeight = data.separationWeight;
         boundaryWeight = data.boundaryWeight;
         containmentMultiplier = data.containmentMultiplier;
+        status.Setup(data.StunGauge);
+
 
         isDead = false;
+
+        hpBar.UpdateHp(1.0f);
+
+        hpBar.gameObject.SetActive(false);
 
         if (col != null) col.enabled = true;
         if (anim != null) anim.ResetTrigger("Die");
@@ -99,7 +128,7 @@ public class Monster : PoolableObject
 
     public void ManualUpdate(float deltaTime, Vector3 separationForce, float pathWidth, float containmentStrength, float speedMultiplier)
     {
-        if (isDead || movePath == null || currentPathIndex >= movePath.Count) return;
+        if (isDead || movePath == null || currentPathIndex >= movePath.Count || status.IsStunned) return;
 
         Transform targetTile = movePath[currentPathIndex];
         Vector3 startPos = movePath[currentPathIndex - 1].position;
@@ -130,8 +159,9 @@ public class Monster : PoolableObject
 
         // 4. 최종 방향 (가중치 기반 계산)
         Vector3 finalDir = (moveDir * moveWeight + effectiveSeparation + (boundaryForce * boundaryWeight)).normalized;
-
-        transform.position += finalDir * speed * speedMultiplier * deltaTime;
+        // 5. 최종 속도
+        float finalSpeed = speed * speedMultiplier * status.SlowMultiplier;
+        transform.position += finalDir * finalSpeed * deltaTime;
 
         if (finalDir != Vector3.zero)
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(finalDir), 10f * deltaTime);
@@ -144,12 +174,37 @@ public class Monster : PoolableObject
     {
         if (isDead) return;
 
-        hp -= damage;
+        currentHp -= damage;
 
-        if (hp <= 0)
+        float ratio = currentHp / maxHp;
+        hpBar.UpdateHp(ratio);
+        bool isDamaged = (currentHp < maxHp);
+        if (hpBar.gameObject.activeSelf != isDamaged)
+        {
+            hpBar.gameObject.SetActive(isDamaged);
+        }
+
+        if (currentHp <= 0)
         {
             Die();
         }
+    }
+
+    public void TakeHeal(int healAmount)
+    {
+        if (isDead) return;
+        Debug.Log("TakeHeal 호출됨");
+        currentHp += healAmount;
+
+        // 최대 체력 넘지 않게 고정
+        if (currentHp > maxHp) currentHp = maxHp;
+
+        // HP바 UI 갱신 (이미 만들어둔 로직 재사용)
+        float ratio = (float)currentHp / maxHp;
+        hpBar.UpdateHp(ratio);
+
+        // 치유 효과 파티클/텍스트 생성 코드 (선택 사항)
+        // Instantiate(healEffect, transform.position, Quaternion.identity);
     }
     public void Die()
     {
@@ -195,6 +250,13 @@ public class Monster : PoolableObject
         float forceMagnitude = (1.0f - (dist / radius)) * strength;
 
         return diff.normalized * forceMagnitude;
+    }
+    // 능력 처리 가능 여부 확인
+    private bool CanHandle(IAbility ability, AbilityData data)
+    {
+        // 힐러 컴포넌트인지 확인하는 예시
+        if (ability is Healer && data is HealAbilityData) return true;
+        return false;
     }
     public void ClearCurrentTile()
     {
