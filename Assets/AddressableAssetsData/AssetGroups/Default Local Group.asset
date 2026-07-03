@@ -52,11 +52,23 @@ MonoBehaviour:
     m_SerializedLabels:
     - HitBox
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 48c63f0bad0fd664c87ac2a224b8a4a1
+    m_Address: Assets/Prefabs/Projectile/Projectile_Normal.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Projectile
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 53f00096ee994c04da7eb8b742127bcd
     m_Address: Assets/SO/TowerDataSO/TestStunTower.asset
     m_ReadOnly: 0
     m_SerializedLabels:
     - Tower
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 55df833929b73ab4db1716f13cb45bc5
+    m_Address: Assets/Prefabs/Projectile/Projectiles_Explosion.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Projectile
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 6bb5d459c8ae1a7438ec6c9e684d87b1
     m_Address: Assets/Prefabs/Tower/TestTower.prefab
