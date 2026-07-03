@@ -44,6 +44,7 @@ GameObject:
   - component: {fileID: 7393930370931174458}
   - component: {fileID: 8065979465948170874}
   - component: {fileID: 7275925654192151852}
+  - component: {fileID: -2282899461194629313}
   m_Layer: 8
   m_Name: TestLuncher
   m_TagString: Untagged
@@ -82,8 +83,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Tower
   buildingData: {fileID: 11400000, guid: f094352850be13c49b024e4b9aa4583c, type: 2}
   firePoint: {fileID: 8098602852197667483}
-  projectileData: {fileID: 11400000, guid: a596de33c16e32242b6eb27ff03d6c9d, type: 2}
-  hitBoxAttackData: {fileID: 0}
   monsterLayer:
     serializedVersion: 2
     m_Bits: 512
@@ -140,7 +139,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TowerTargetFinder
   searchInterval: 0.15
-  targetMode: 2
+  targetMode: 3
+--- !u!114 &-2282899461194629313
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6451708471463169753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26f19923f17a5a44689c4f87131879f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::KeywordController
 --- !u!1001 &4733684892597303080
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -23,6 +23,7 @@ public class Tower : BuildingBase
     private float attackTimer;
     private bool isAttacking;
     private ITowerTargetFinder targetFinder;
+    private KeywordController keywordController;
 
     private void Awake()
     {
@@ -38,7 +39,19 @@ public class Tower : BuildingBase
             enabled = false;
         }
 
+        keywordController = GetComponent<KeywordController>();
         targetFinder = GetComponent<ITowerTargetFinder>();
+    }
+
+    private void Start()
+    {
+        if (keywordController != null && towerData.keywords != null)
+        {
+            foreach (var kw in towerData.keywords)
+            {
+                keywordController.AddKeyword(kw);
+            }
+        }
     }
 
     private void Update()
@@ -103,6 +116,8 @@ public class Tower : BuildingBase
     #region 공격 메서드
     private void Attack(Transform target)
     {
+        int finalDamage = towerData.damage;
+
         if (towerData.attackMechanism is ProjectileData projData)
         {
             ShootProjectile(target, projData); // 기존 ShootProjectile이 파라미터를 받게 수정
