@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 940a673fcb13ec54bbb02edb55a10de0, type: 3}
+  m_Name: Stage_002
+  m_EditorClassIdentifier: Assembly-CSharp::StageDataSO
+  StageId: Stage_002
+  DisplayName: Stage2
+  Description: "\uC2A4\uD14C\uC774\uC9C0 2\n"
+  Icon: {fileID: 21300000, guid: de5afc594137f4aceb71a73abfe8a719, type: 3}
+  StartResource: 1000
+  TowerLimit: 10
+  BaseHp: 10
+  Waves:
+  - DisplayName: Test Wave
+    SpawnData: {fileID: 11400000, guid: 49be76b0f7d6ffc4d951eb4bbb0ef058, type: 2}
+    PrepareTime: 10
+    CanSkipPrepare: 0
+    AllowBuildDuringWave: 1
+  NextStageIds:
+  - Stage_003
+  StarConditions:
+  - {fileID: 11400000, guid: 048e6764a0c32cf45827982ee668e164, type: 2}
+  - {fileID: 11400000, guid: 6938b1100201b0c469d671ed3543779b, type: 2}
+  - {fileID: 11400000, guid: a638c730a1c27ac49b7ec1fe0dc18e29, type: 2}
