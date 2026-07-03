@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ab3044d0d213fbb42bb52c6a2846aa9e, type: 3}
+  m_Script: {fileID: 11500000, guid: 24e837c49ec25184c8721677fe5a1c20, type: 3}
   m_Name: TestBulletTower
   m_EditorClassIdentifier: Assembly-CSharp::TowerData
   buildingID: 0
@@ -24,14 +24,12 @@ MonoBehaviour:
   inValidStateMaterial: {fileID: 2100000, guid: 4a85c9e89378a73489c64b9eede43a1b, type: 2}
   placeVFX: {fileID: -7969546562051743012, guid: 201eafd12c4c6b34396a2be032e4a7c9, type: 3}
   damage: 10
-  attackRange: 10
+  attackRange: 5
   attackInterval: 1
-  attackSpeed: 2
-  type: 0
+  attackSpeed: 1
   monsterLayer:
     serializedVersion: 2
     m_Bits: 512
   attackMode: 0
   projectileData: {fileID: 11400000, guid: ccb11473b2cf5b2439f0edd3b4d28434, type: 2}
   hitBoxAttackData: {fileID: 0}
-  bullet: {fileID: 8780727661788297695, guid: 18d2b03dab4102b4fa5cd7aba5a5e404, type: 3}

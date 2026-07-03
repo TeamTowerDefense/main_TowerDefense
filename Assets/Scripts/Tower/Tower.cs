@@ -38,27 +38,9 @@ public class Tower : BuildingBase
             return;
         }
 
-        switch (towerData.attackMode)
+        if(!towerData.CheckAttackData())
         {
-            case TowerAttackMode.Projectile:
-
-                if (towerData.projectileData == null)
-                {
-                    Debug.LogError($"{name} : ProjectileData 없음");
-                    enabled = false;
-                }
-
-                break;
-
-            case TowerAttackMode.HitBox:
-
-                if (towerData.hitBoxAttackData == null)
-                {
-                    Debug.LogError($"{name} : HitBoxAttackData 없음");
-                    enabled = false;
-                }
-
-                break;
+            enabled = false;
         }
 
         targetFinder = GetComponent<ITowerTargetFinder>();

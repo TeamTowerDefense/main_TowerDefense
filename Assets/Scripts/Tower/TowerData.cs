@@ -1,15 +1,5 @@
 using UnityEngine;
 
-public enum TowerType
-{
-    Basic,
-    Cannon,
-    Laser,
-    Support,
-    Debuff,
-    HitBox
-}
-
 public enum TowerAttackMode
 {
     Projectile,
@@ -25,9 +15,6 @@ public class TowerData : BuildingData
     public float attackInterval = 1f;
     public float attackSpeed = 1f;
 
-    [Header("Tower Type")]
-    public TowerType type = TowerType.Basic;
-
     [Header("Target")]
     public LayerMask monsterLayer;
 
@@ -40,5 +27,29 @@ public class TowerData : BuildingData
     [Header("HitBox Attack")]
     public HitBoxData hitBoxAttackData;
 
-    public GameObject bullet;
+    public virtual bool CheckAttackData()
+    {
+        switch (attackMode)
+        {
+            case TowerAttackMode.Projectile:
+
+                if (projectileData == null)
+                {
+                    Debug.LogError($"{name} : ProjectileData 없음");
+                    return false;
+                }
+                return true;
+
+            case TowerAttackMode.HitBox:
+
+                if (hitBoxAttackData == null)
+                {
+                    Debug.LogError($"{name} : HitBoxAttackData 없음");
+                    return false;
+                }
+                return true;
+            default:
+                return false;
+        }
+    }
 }
