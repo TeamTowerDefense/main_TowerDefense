@@ -1,14 +1,5 @@
 using UnityEngine;
-
-public enum TowerType
-{
-    Basic,
-    Cannon,
-    Laser,
-    Support,
-    Debuff,
-    HitBox
-}
+using UnityEngine.AddressableAssets;
 
 public enum TowerAttackMode
 {
@@ -25,20 +16,23 @@ public class TowerData : BuildingData
     public float attackInterval = 1f;
     public float attackSpeed = 1f;
 
-    [Header("Tower Type")]
-    public TowerType type = TowerType.Basic;
-
     [Header("Target")]
     public LayerMask monsterLayer;
 
-    [Header("Attack Mode")]
-    public TowerAttackMode attackMode;
+    [Header("Attack Mechanism")]
+    public AttackBaseData attackMechanism;
 
-    [Header("ProjectTile")]
-    public ProjectileData projectileData;
+    [Header("Addressable Data")]
+    public AssetReferenceGameObject towerPrefab;
+    
+    public virtual bool CheckAttackData()
+    {
+        if (attackMechanism == null)
+        {
+            Debug.LogError($"{name} : 공격 메커니즘(AttackMechanism) 데이터가 누락되었습니다!");
+            return false;
+        }
 
-    [Header("HitBox Attack")]
-    public HitBoxData hitBoxAttackData;
-
-    public GameObject bullet;
+        return true;
+    }
 }

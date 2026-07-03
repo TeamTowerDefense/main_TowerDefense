@@ -15,6 +15,12 @@ MonoBehaviour:
   m_GroupName: Default Local Group
   m_GUID: 4fab432b090318a408423545542942bb
   m_SerializeEntries:
+  - m_GUID: 0ce8c047fa7f26248b9e14250a55ec7c
+    m_Address: Assets/SO/TowerDataSO/TestFlameTower.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Tower
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 167734c874059ea4eab809f73f11d640
     m_Address: Assets/Prefabs/HitBox/Fire_HitSmall.prefab
     m_ReadOnly: 0
@@ -34,10 +40,53 @@ MonoBehaviour:
     m_SerializedLabels:
     - Projectile
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2c7b0fb24cff0e2458092d232d40c493
+    m_Address: Assets/Prefabs/Tower/TestFlameThrower.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Tower
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3b1c54572b2e58243a5f71c24a4900fe
+    m_Address: Assets/Prefabs/HitBox/SlowArea.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - HitBox
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 48c63f0bad0fd664c87ac2a224b8a4a1
+    m_Address: Assets/Prefabs/Projectile/Projectile_Normal.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Projectile
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 53f00096ee994c04da7eb8b742127bcd
+    m_Address: Assets/SO/TowerDataSO/TestStunTower.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Tower
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 55df833929b73ab4db1716f13cb45bc5
+    m_Address: Assets/Prefabs/Projectile/Projectiles_Explosion.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Projectile
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6bb5d459c8ae1a7438ec6c9e684d87b1
+    m_Address: Assets/Prefabs/Tower/TestTower.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Tower
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 829fd095e4270ee48a4002de72905758
+    m_Address: Assets/Prefabs/Tower/TestStunTower.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Tower
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c9c33a53087dc9d4fb3146333e4b09c9
     m_Address: Assets/Prefabs/Tower/TestLuncher.prefab
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - Tower
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: ca384fe1efcc88547ba1d18ab9a53131
     m_Address: Assets/Prefabs/Projectile/Hit_fire.prefab
@@ -45,6 +94,25 @@ MonoBehaviour:
     m_SerializedLabels:
     - Effect
     - Effect_Projectile
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e393610002f3f1e42bed2f10b03ed509
+    m_Address: Assets/SO/TowerDataSO/TestBulletTower.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Tower
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e7eab914f7d32a244b2f031dcee3e2f4
+    m_Address: Assets/Prefabs/HitBox/Fog_speedSlow.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Effect
+    - Effect_HitBox
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f094352850be13c49b024e4b9aa4583c
+    m_Address: Assets/SO/TowerDataSO/TestLuncher.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Tower
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: f43d546f448decb41af66526a7f44009
     m_Address: Assets/Prefabs/HitBox/Flamethrower.prefab
