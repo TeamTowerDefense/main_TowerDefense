@@ -44,6 +44,7 @@ GameObject:
   - component: {fileID: -471524857386757526}
   - component: {fileID: -4149352218196486697}
   - component: {fileID: -985973677682753633}
+  - component: {fileID: -7595739535315460065}
   m_Layer: 8
   m_Name: TestTower
   m_TagString: Untagged
@@ -82,8 +83,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Tower
   buildingData: {fileID: 11400000, guid: e393610002f3f1e42bed2f10b03ed509, type: 2}
   firePoint: {fileID: 891083189724630870}
-  projectileData: {fileID: 11400000, guid: ccb11473b2cf5b2439f0edd3b4d28434, type: 2}
-  hitBoxAttackData: {fileID: 0}
   monsterLayer:
     serializedVersion: 2
     m_Bits: 512
@@ -141,6 +140,18 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0.8, z: 0}
+--- !u!114 &-7595739535315460065
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8340965744140817121}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26f19923f17a5a44689c4f87131879f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::KeywordController
 --- !u!1001 &5570168505360380976
 PrefabInstance:
   m_ObjectHideFlags: 0

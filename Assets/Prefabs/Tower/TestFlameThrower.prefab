@@ -44,6 +44,7 @@ GameObject:
   - component: {fileID: -8316148156065255348}
   - component: {fileID: 1134174346099616418}
   - component: {fileID: 8721491515206061795}
+  - component: {fileID: 5782221500968616505}
   m_Layer: 8
   m_Name: TestFlameThrower
   m_TagString: Untagged
@@ -82,8 +83,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Tower
   buildingData: {fileID: 11400000, guid: 0ce8c047fa7f26248b9e14250a55ec7c, type: 2}
   firePoint: {fileID: 8390506677513015391}
-  projectileData: {fileID: 0}
-  hitBoxAttackData: {fileID: 11400000, guid: cdf1c43bdf483754f82191a777161750, type: 2}
   monsterLayer:
     serializedVersion: 2
     m_Bits: 512
@@ -140,7 +139,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TowerTargetFinder
   searchInterval: 0.15
-  targetMode: 3
+  targetMode: 0
+--- !u!114 &5782221500968616505
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3697426809127930414}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26f19923f17a5a44689c4f87131879f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::KeywordController
 --- !u!1001 &1855840595557040959
 PrefabInstance:
   m_ObjectHideFlags: 0

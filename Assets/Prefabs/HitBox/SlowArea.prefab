@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 143503419362490734}
   - component: {fileID: -6252457385764182943}
   - component: {fileID: -3955531251850984280}
+  - component: {fileID: -5230310163142201971}
   m_Layer: 0
   m_Name: SlowArea
   m_TagString: Untagged
@@ -4882,6 +4883,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 997440971ff517d45a24820745a63f59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AreaHitBox
+--- !u!114 &-5230310163142201971
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2033358281796941150}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f5fdea36826fef40a8595e7207e10a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SphereHitBoxInitializer
+  spherCollider: {fileID: 143503419362490734}
 --- !u!1 &6347302178792995647
 GameObject:
   m_ObjectHideFlags: 0
