@@ -42,4 +42,45 @@ public class Tile : MonoBehaviour
                 Gizmos.DrawLine(transform.position, neighbor.transform.position);
         }
     }
+    private void OnValidate()
+    {
+        UpdateGridInfo();
+    }
+    public void UpdateGridInfo()
+    {
+        if (MonsterManager.Instance == null) return;
+
+        float size = MonsterManager.Instance.tileSize;
+        int x = Mathf.RoundToInt(transform.position.x / size);
+        int z = Mathf.RoundToInt(transform.position.z / size);
+
+        gridPos = new Vector2Int(x, z);
+
+        // 위치 보정
+        transform.position = new Vector3(x * size, transform.position.y, z * size);
+
+        UpdateNeighbors();
+    }
+    public void UpdateNeighbors()
+    {
+        neighbors.Clear();
+        if (MonsterManager.Instance == null) return;
+
+        // 상하좌우 탐색 (오프셋)
+        Vector2Int[] directions = {
+            new Vector2Int(0, 1), new Vector2Int(0, -1),
+            new Vector2Int(1, 0), new Vector2Int(-1, 0)
+        };
+
+        foreach (var dir in directions)
+        {
+            Vector2Int checkPos = gridPos + dir;
+            // MonsterManager가 가지고 있는 타일 목록에서 해당 좌표를 찾음
+            Tile neighbor = MonsterManager.Instance.GetTileAt(checkPos);
+            if (neighbor != null)
+            {
+                neighbors.Add(neighbor);
+            }
+        }
+    }
 }
