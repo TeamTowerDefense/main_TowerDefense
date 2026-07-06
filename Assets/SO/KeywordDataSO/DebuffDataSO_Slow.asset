@@ -17,5 +17,5 @@ MonoBehaviour:
   isStackable: 0
   maxStack: 1
   description: "\uC2AC\uB85C\uC6B0"
-  speedDecreaseRatio: -0.5
-  duration: 10
+  speedDecreaseRatio: -0.4
+  duration: 3

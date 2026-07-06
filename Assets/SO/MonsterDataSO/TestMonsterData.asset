@@ -13,9 +13,10 @@ MonoBehaviour:
   m_Name: TestMonsterData
   m_EditorClassIdentifier: Assembly-CSharp::MonsterData
   monsterName: monster1
+  monsterId: 0
   Prefab: {fileID: 4253210182481893339, guid: d71c56f2e6af1ba449a0a11217b143a4, type: 3}
   maxHP: 100
-  speed: 1
+  speed: 2
   defense: 0
   Att: 0
   LeakDamage: 1
@@ -28,5 +29,5 @@ MonoBehaviour:
   containmentMultiplier: 5
   abilities: []
   heightOffset: 0
-  defaultKeywords: []
   amount: 10
+  defaultKeywords: []
