@@ -68,7 +68,7 @@ public class Monster : PoolableObject
                 }
             }
         }
-
+        transform.localScale = data.scale;
         currentHp = data.maxHP;
         maxHp = data.maxHP;
         speed = data.speed;
