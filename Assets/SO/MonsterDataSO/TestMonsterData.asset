@@ -20,8 +20,9 @@ MonoBehaviour:
   Att: 0
   LeakDamage: 1
   StunGauge: 10
-  Stunstack: 0
   moveWeight: 1
   separationWeight: 0.3
   boundaryWeight: 3
   containmentMultiplier: 5
+  abilities:
+  - {fileID: 11400000, guid: 72baa0d7923bcd248baa4fb18da071f2, type: 2}
