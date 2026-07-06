@@ -13,6 +13,8 @@ public class MonsterManagerStageProvider : MonoBehaviour, IMonsterSpawnManager, 
     public bool IsSpawning { get; private set; }
     public bool SpawnFinished { get; private set; } = true;
 
+    IStageService stageService;
+
     void Awake()
     {
         if (!monsterManager) monsterManager = GetComponent<MonsterManager>();
