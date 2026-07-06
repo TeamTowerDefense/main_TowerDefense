@@ -117,6 +117,11 @@ MonoBehaviour:
     m_SerializedLabels:
     - Effect_HitBox
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 903d63fff4348ab4790c4193d8e90046
+    m_Address: Assets/Scripts/MonsterSystem/HealMonster.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: ab9ec2005f982ee4bb4d9551842f18aa
     m_Address: Assets/SO/StageDataSO/Stage_002.asset
     m_ReadOnly: 0
