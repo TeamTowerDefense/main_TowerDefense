@@ -49,14 +49,24 @@ public class KeywordController : MonoBehaviour
         }
 
         KeywordEffectBase effect = data.CreateEffect();
-        if (effect != null)
-        {
-            effect.Initialize(data, this);
-            activeKeywords.Add(effect);
-            effect.OnApply();
+        if (effect == null)
+            return;
 
-            OnKeywordChanged?.Invoke(); // 스탯 재계산 지시
+        if (effect is ITargetingModifier)
+        {
+            var existingTargetingMods = GetKeywords<ITargetingModifier>();
+
+            foreach (var mod in existingTargetingMods)
+            {
+                RemoveKeyword(mod as KeywordEffectBase);
+            }
         }
+
+        effect.Initialize(data, this);
+        activeKeywords.Add(effect);
+        effect.OnApply();
+
+        OnKeywordChanged?.Invoke(); // 스탯 재계산 지시
     }
 
     public void RemoveKeyword(KeywordEffectBase effect)
