@@ -3,6 +3,7 @@ using System.Collections;
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
@@ -29,6 +30,7 @@ public class ObjectPoolManager : MonoBehaviour
     private Dictionary<int, ProjectileData> projectileTable = new();
     private Dictionary<int, HitBoxData> hitBoxTable = new();
     private Dictionary<int, EffectData> effectTable = new();
+    private Dictionary<int, MonsterData> monsterTable = new();
 
     private Dictionary<string, GameObject> loadedPrefabs = new();
 
@@ -49,6 +51,8 @@ public class ObjectPoolManager : MonoBehaviour
         yield return LoadProjectileAssets();
         yield return LoadHitBoxAssets();
         yield return LoadEffectAssets();
+        yield return LoadMonsterAssets();
+
 
         Debug.Log("모든 Addressable 로드 완료");
     }
@@ -78,7 +82,6 @@ public class ObjectPoolManager : MonoBehaviour
     {
         foreach (HitBoxData data in hitBoxDB.hitBoxes)
         {
-
             AsyncOperationHandle handle =
                 data.hitboxPF.LoadAssetAsync<GameObject>();
             yield return handle;
@@ -125,6 +128,21 @@ public class ObjectPoolManager : MonoBehaviour
 
             Debug.Log($"[EffectTable 등록] ID: {data.effectID}, Data: {data.name}, Prefab: {data.loadedPrefab.name}");
         }
+    }
+
+    private async Task LoadMonsterAssets()
+    {
+        AsyncOperationHandle<IList<MonsterData>> handler =
+            Addressables.LoadAssetsAsync<MonsterData>("MonsterData");
+
+        await handler.Task;
+
+        foreach (MonsterData data in handler.Result)
+        {
+            monsterTable.Add(data.monsterId, data);
+        }
+
+        Addressables.Release(handler);
     }
     public ProjectileData GetProjectileData(int id)
     {

@@ -11,7 +11,7 @@ public class AreaHitBox : PoolableObject
     private LayerMask monsterLayer;
     private HitBoxData hitBoxData;
 
-    // °ø°Ý ¼Óµµ, °£°Ý
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½Óµï¿½, ï¿½ï¿½ï¿½ï¿½
     private float attackSpeed;
     private float tickInterval;
 
@@ -27,19 +27,22 @@ public class AreaHitBox : PoolableObject
 
     private Dictionary<Monster, Coroutine> effectDespawnRoutines = new();
 
+    private Tower ownerTower;
+
     private void Awake()
     {
         Collider = GetComponent<Collider>();
         Collider.enabled = false;
     }
 
-    public void Initialize(Transform target, int damage, LayerMask monsterLayer, HitBoxData data, float attackSpeed)
+    public void Initialize(Transform target, int damage, LayerMask monsterLayer, HitBoxData data, float attackSpeed, Tower owner)
     {
         this.target = target;
         this.damage = damage;
         this.monsterLayer = monsterLayer;
         this.hitBoxData = data;
         this.attackSpeed = attackSpeed;
+        ownerTower = owner;
 
         damageTimers.Clear();
         hitTargets.Clear();
@@ -54,7 +57,7 @@ public class AreaHitBox : PoolableObject
 
         if (shapeInitializer == null)
         {
-            Debug.LogError($"{name}¿¡ IHitBoxShapeInitializer°¡ ¾ø½À´Ï´Ù.");
+            Debug.LogError($"{name}ï¿½ï¿½ IHitBoxShapeInitializerï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
             return;
         }
 
@@ -219,8 +222,8 @@ public class AreaHitBox : PoolableObject
             return;
 
         // TODO:
-        // Monster ÂÊ ½½·Î¿ì Áö¼Ó½Ã°£ ¸Þ¼­µå ¹Þ¾Æ¿Ã °Í
-        // ¿ø·¡´Â ÀÌ·± ´À³¦À¸·Î µ¿ÀÛÇÔ.
+        // Monster ï¿½ï¿½ ï¿½ï¿½ï¿½Î¿ï¿½ ï¿½ï¿½ï¿½Ó½Ã°ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ ï¿½ï¿½
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì·ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.
         MonsterStatus status = monster.GetComponent<MonsterStatus>();
            
 
@@ -231,7 +234,7 @@ public class AreaHitBox : PoolableObject
         if (despawner != null)
             despawner.StartLifeTime(lifeTime);
         else
-            Debug.LogWarning($"{effect.name}¿¡ EffectLifetimeDespawner°¡ ¾ø½À´Ï´Ù.");
+            Debug.LogWarning($"{effect.name}ï¿½ï¿½ EffectLifetimeDespawnerï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
     }
 
     private PoolableObject SpawnHitEffect(Monster monster)
