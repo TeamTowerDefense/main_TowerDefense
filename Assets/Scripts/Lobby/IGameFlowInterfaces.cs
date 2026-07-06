@@ -1,5 +1,4 @@
-﻿using IGameInterface;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -50,6 +49,9 @@ namespace IGameFlowInterface
     public interface IGameFlowService : IGlobalService
     {
         event Action StageSelectOpenRequested;
+        event Action<StageResultContext, StageProgressApplyResult> StageRunFinished;
+
+        void FinishStageRun(StageResultContext result, LobbyOpenRequest lobbyRequest = LobbyOpenRequest.StageSelect);
 
         void EnterTitle();
         void EnterLobby();
