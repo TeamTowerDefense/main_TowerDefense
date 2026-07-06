@@ -156,6 +156,7 @@ public class AreaHitBox : PoolableObject
         {
             ApplyDamage(monster);
             damageTimers[monster] = tickInterval;
+            //Debug.Log($"[TickDamage] damageInterval={hitBoxData.damageInterval}, attackSpeed={attackSpeed}, tickInterval={tickInterval}");
             return;
         }
 
@@ -165,7 +166,7 @@ public class AreaHitBox : PoolableObject
         if (damageTimers[monster] <= 0f)
         {
             ApplyDamage(monster);
-            damageTimers[monster] = tickInterval;
+            damageTimers[monster] = GetTickInterval();
         }
     }
 
