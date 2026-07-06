@@ -215,13 +215,6 @@ public class Tower : BuildingBase
         }
 
         Debug.Log($"[HitBox] 로드 결과 = {(prefab == null ? "NULL" : prefab.name)}");
-
-
-        if (prefab == null)
-        {
-            //Debug.LogError($"{name} : hitBoxPrefab 없음");
-            yield break;
-        }
         
         AreaHitBox hitBox = ObjectPoolManager.Instance.Spawn<AreaHitBox>(
             prefab,
@@ -233,6 +226,7 @@ public class Tower : BuildingBase
         if (hitBox == null)
         {
             //Debug.LogError($"{prefab.name} : AreaHitBox Spawn 실패");
+            isAttacking = false;
             yield break;
         }
 
@@ -250,24 +244,38 @@ public class Tower : BuildingBase
             this
         );
 
-        float timer = 0f;
-
-        while (timer < hitBoxData.activeTime)
+        //float timer = 0f;
+        if (hitBoxData.damageMode == HitBoxDamageMode.TickDamage)
         {
-            if (target == null)
-                break;
+            while (target != null)
+            {
+                Monster monster = target.GetComponent<Monster>();
 
-            float distance = Vector3.Distance(transform.position, target.position);
+                if (monster != null && monster.isDead)
+                    break;
 
-            if (distance > towerData.attackRange)
-                break;
+                float distance = Vector3.Distance(transform.position, target.position);
 
-            RotateToTarget(target);
+                if (distance > towerData.attackRange)
+                    break;
 
-            timer += Time.deltaTime;
-            yield return null;
+                RotateToTarget(target);
+                yield return null;
+            }
+        }
+        else if (hitBoxData.damageMode == HitBoxDamageMode.OncePerTarget)
+        {
+            yield return new WaitForSeconds(hitBoxData.colliderActiveTime);
+
+            hitBox.DisableHitCollider();
+
+            float remainTime = Mathf.Max(0f, hitBoxData.activeTime - hitBoxData.colliderActiveTime);
+
+            if (remainTime > 0f)
+                yield return new WaitForSeconds(remainTime);
         }
 
+        hitBox.DisableHitCollider();
         hitBox.transform.SetParent(ObjectPoolManager.Instance.GetEffectParent());
 
         ObjectPoolManager.Instance.Despawn(hitBox);
@@ -291,6 +299,7 @@ public class Tower : BuildingBase
         body.rotation = Quaternion.Slerp(body.rotation, lookRotation, Time.deltaTime * rotateSpeed);
     }
     #endregion
+
 
     #region 범위 표시 Gizmos
     private void OnDrawGizmos()

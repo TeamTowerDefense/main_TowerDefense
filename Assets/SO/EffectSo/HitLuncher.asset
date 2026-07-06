@@ -20,4 +20,5 @@ MonoBehaviour:
     m_SubObjectType: 
     m_SubObjectGUID: 
     m_EditorAssetChanged: 1
-  loadedPrefab: {fileID: 0}
+  lifeTime: 2
+  loadedPrefab: {fileID: 885052112669815828, guid: f6ca4b83107ee1f48961b491c447f6d9, type: 3}

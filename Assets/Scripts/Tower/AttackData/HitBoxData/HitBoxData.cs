@@ -2,6 +2,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
+// 즉발성, 지속형 틱데미지
+public enum HitBoxDamageMode
+{
+    OncePerTarget,
+    TickDamage
+}
+
 public class HitBoxData : AttackBaseData
 {
     [Header("Addressable")]
@@ -14,6 +21,17 @@ public class HitBoxData : AttackBaseData
 
     [Header("Shape")]
     public Vector3 center = new Vector3(0f, 0f, 3f);
+
+    [Header("Damage Type")]
+    public HitBoxDamageMode damageMode = HitBoxDamageMode.OncePerTarget;
+    [Header("Effect Option")]
+    public bool stopEffectOutOfRange = true;
+
+    [Header("HitBox Time(TickDamage)")]
+    public float colliderActiveTime = 0.2f;
+
+    [Header("TickDamage EffectTime")]
+    public float effectDespawnDelay = 1f;
 
     [Header("Debuff")]
     public bool applyDebuff;
