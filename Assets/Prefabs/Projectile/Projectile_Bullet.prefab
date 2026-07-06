@@ -14690,7 +14690,7 @@ GameObject:
   - component: {fileID: 8780727661788297682}
   - component: {fileID: 8780727661788297681}
   - component: {fileID: 3068046160078820083}
-  - component: {fileID: 748545427527134491}
+  - component: {fileID: 1816454897450995135}
   m_Layer: 0
   m_Name: Projectile_Bullet
   m_TagString: Untagged
@@ -14706,7 +14706,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8780727661788297695}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0, y: 0, z: -0.983}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_ConstrainProportionsScale: 1
@@ -14717,7 +14717,7 @@ Transform:
   - {fileID: 9009770792754617618}
   - {fileID: 8780727661358402065}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!198 &8780727661788297682
 ParticleSystem:
   m_ObjectHideFlags: 0
@@ -19614,7 +19614,7 @@ CapsuleCollider:
   m_Height: 2.3533618
   m_Direction: 0
   m_Center: {x: -0.490564, y: 0, z: -0.007407069}
---- !u!114 &748545427527134491
+--- !u!114 &1816454897450995135
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -19623,10 +19623,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 8780727661788297695}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5b278ea150042294189630fcabf38250, type: 3}
+  m_Script: {fileID: 11500000, guid: 96284ff942c56dc4a97eff13772e4229, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Projectile
-  rotationOffset: {x: 0, y: 90, z: 0}
+  m_EditorClassIdentifier: Assembly-CSharp::NormalProjectile
+  rotationOffset: {x: 0, y: 0, z: 0}
 --- !u!1 &8780727662637616944
 GameObject:
   m_ObjectHideFlags: 0

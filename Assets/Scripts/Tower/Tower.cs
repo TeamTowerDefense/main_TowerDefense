@@ -1,10 +1,7 @@
 ﻿
 using IGameInterface;
 using System.Collections;
-using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
-using UnityEngine.ResourceManagement.AsyncOperations;
 
 public class Tower : BuildingBase
 {
@@ -45,13 +42,13 @@ public class Tower : BuildingBase
 
     private void Start()
     {
-        if (keywordController != null && towerData.keywords != null)
-        {
-            foreach (var kw in towerData.keywords)
-            {
-                keywordController.AddKeyword(kw);
-            }
-        }
+        //if (keywordController != null && towerData.keywords != null)
+        //{
+        //    foreach (var kw in towerData.keywords)
+        //    {
+        //        keywordController.AddKeyword(kw);
+        //    }
+        //}
     }
 
     private void Update()
@@ -204,6 +201,7 @@ public class Tower : BuildingBase
         if (hitBox == null)
         {
             //Debug.LogError($"{prefab.name} : AreaHitBox Spawn 실패");
+            isAttacking = false;
             yield break;
         }
 
@@ -220,37 +218,38 @@ public class Tower : BuildingBase
             towerData.attackSpeed
         );
 
-        float timer = 0f;
-
-        while (timer < hitBoxData.activeTime)
+        //float timer = 0f;
+        if (hitBoxData.damageMode == HitBoxDamageMode.TickDamage)
         {
-            if (target == null)
+            while (target != null)
             {
-                hitBox.DisableHitCollider();
+                Monster monster = target.GetComponent<Monster>();
 
-                if (hitBoxData.stopEffectOutOfRange)
+                if (monster != null && monster.isDead)
                     break;
-            }
-            else
-            {
+
                 float distance = Vector3.Distance(transform.position, target.position);
 
                 if (distance > towerData.attackRange)
-                {
-                    hitBox.DisableHitCollider();
+                    break;
 
-                    if (hitBoxData.stopEffectOutOfRange)
-                        break;
-                }
-                else
-                {
-                    RotateToTarget(target);
-                }
+                RotateToTarget(target);
+                yield return null;
             }
-            timer += Time.deltaTime;
-            yield return null;
+        }
+        else if (hitBoxData.damageMode == HitBoxDamageMode.OncePerTarget)
+        {
+            yield return new WaitForSeconds(hitBoxData.colliderActiveTime);
+
+            hitBox.DisableHitCollider();
+
+            float remainTime = Mathf.Max(0f, hitBoxData.activeTime - hitBoxData.colliderActiveTime);
+
+            if (remainTime > 0f)
+                yield return new WaitForSeconds(remainTime);
         }
 
+        hitBox.DisableHitCollider();
         hitBox.transform.SetParent(ObjectPoolManager.Instance.GetEffectParent());
 
         ObjectPoolManager.Instance.Despawn(hitBox);

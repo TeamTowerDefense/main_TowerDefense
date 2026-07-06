@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
+// 즉발성, 지속형 틱데미지
 public enum HitBoxDamageMode
 {
     OncePerTarget,
@@ -26,9 +27,12 @@ public class HitBoxData : AttackBaseData
     [Header("Effect Option")]
     public bool stopEffectOutOfRange = true;
 
-    [Header("Hit Timing")]
+    [Header("HitBox Time(TickDamage)")]
     public float colliderActiveTime = 0.2f;
-    
+
+    [Header("TickDamage EffectTime")]
+    public float effectDespawnDelay = 1f;
+
     [Header("Debuff")]
     public bool applyDebuff;
     public List<DebuffEffectData> debuffs;

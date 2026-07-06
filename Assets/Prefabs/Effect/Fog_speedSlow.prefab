@@ -24343,6 +24343,7 @@ GameObject:
   - component: {fileID: 6690736211316310121}
   - component: {fileID: 4858983116166708369}
   - component: {fileID: -5278963994714899256}
+  - component: {fileID: 8693135824763098646}
   m_Layer: 0
   m_Name: Fog_speedSlow
   m_TagString: Untagged
@@ -29218,3 +29219,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c6e2605147fd7242bd143ea40e4b6a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EffectAutoDespawn
+--- !u!114 &8693135824763098646
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6690736211316310120}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4772c3d3f2819ba458201afcefdc662b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EffectLifeTimeDespawner
