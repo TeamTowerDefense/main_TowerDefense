@@ -205,6 +205,7 @@ public class Monster : PoolableObject
         if (isDead || !gameObject.activeInHierarchy) return;
         isDead = true;
         OnMonsterDie?.Invoke(this);
+        hpBar.gameObject.SetActive(false);
         if (currentTile != null)
         {
             currentTile.RemoveMonster(this);

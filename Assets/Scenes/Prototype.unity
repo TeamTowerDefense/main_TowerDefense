@@ -9318,6 +9318,51 @@ MonoBehaviour:
     countPerSpawn: 5
     spawnInterval: 2
     spawnTimer: 0
+  - pathName: 1111
+    monsterData: {fileID: 11400000, guid: febdbf95396b5bb4eaba5cfad2225585, type: 2}
+    waypoints:
+    - {fileID: 6716638604289877639}
+    - {fileID: 1202380727}
+    - {fileID: 332210922}
+    - {fileID: 107616671}
+    - {fileID: 613941183}
+    - {fileID: 1951665403}
+    - {fileID: 1237025060}
+    - {fileID: 1014224288}
+    - {fileID: 1734803121}
+    - {fileID: 99026601}
+    - {fileID: 692821709}
+    - {fileID: 1711782187}
+    - {fileID: 369025984}
+    - {fileID: 2020253009}
+    - {fileID: 1975994527}
+    - {fileID: 530416361}
+    - {fileID: 1964231054}
+    - {fileID: 1177464314}
+    - {fileID: 1303876618}
+    - {fileID: 423585666}
+    - {fileID: 1884842692}
+    - {fileID: 587535093}
+    - {fileID: 838644740}
+    - {fileID: 1751137749}
+    - {fileID: 224123558}
+    - {fileID: 678908804}
+    - {fileID: 894271755}
+    - {fileID: 748234979}
+    - {fileID: 576781630}
+    - {fileID: 781223893}
+    - {fileID: 926533775}
+    - {fileID: 1954330958}
+    - {fileID: 290017304}
+    - {fileID: 1333451077}
+    - {fileID: 1032835382}
+    - {fileID: 847965017}
+    - {fileID: 1640494402}
+    - {fileID: 2017544393}
+    - {fileID: 2084468379}
+    countPerSpawn: 5
+    spawnInterval: 2
+    spawnTimer: 0
 --- !u!4 &1527857571
 Transform:
   m_ObjectHideFlags: 0
