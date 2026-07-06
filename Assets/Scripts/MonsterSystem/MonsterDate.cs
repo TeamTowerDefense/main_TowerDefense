@@ -30,6 +30,9 @@ public class MonsterData : ScriptableObject
     [Header("Height Offset")]
     public float heightOffset = 0f;
 
+    [Header("자원")]
+    public int amount;
+
     private void OnValidate()
     {
         // useUniformScale이 켜져 있을 때만 비율을 강제로 맞춤

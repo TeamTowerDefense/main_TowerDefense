@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class Monster : PoolableObject
@@ -10,9 +9,8 @@ public class Monster : PoolableObject
     private Animator anim;
     private Collider col;
 
-
     public float currentHp { get; private set; }
-    public float maxHp { get; private set; }    
+    public float maxHp { get; private set; }
     private float speed;
     private float moveWeight ;
     private float separationWeight;
@@ -29,8 +27,6 @@ public class Monster : PoolableObject
     public Vector2Int CurrentGridPos { get; private set; }
     public event Action<Monster> OnMonsterDie;
 
-    private EnemyInfoProvider enemyInfoProvider;
-
     [SerializeField]
     private HpBar hpBar;
 
@@ -40,7 +36,6 @@ public class Monster : PoolableObject
     {
         anim = GetComponent<Animator>();
         col = GetComponent<Collider>();
-        enemyInfoProvider = GetComponent<EnemyInfoProvider>();
         allAbilities = GetComponents<IAbility>();
         status = GetComponent<MonsterStatus>();
     }
@@ -210,8 +205,7 @@ public class Monster : PoolableObject
     {
         if (isDead || !gameObject.activeInHierarchy) return;
         isDead = true;
-        enemyInfoProvider.SetAlive(false);
-        enemyInfoProvider.SetTargetable(false);
+        OnMonsterDie?.Invoke(this);
         if (currentTile != null)
         {
             currentTile.RemoveMonster(this);
@@ -221,7 +215,6 @@ public class Monster : PoolableObject
         if (col != null) col.enabled = false;
        
         StartCoroutine(DieCoroutine());
-
     }
 
     private IEnumerator DieCoroutine()
@@ -230,9 +223,6 @@ public class Monster : PoolableObject
         // 애니메이션 재생되는 시간 동안
         yield return new WaitForSeconds(2f);
         ObjectPoolManager.Instance.Despawn(this);
-        OnMonsterDie?.Invoke(this);
-
-
     }
     public Vector3 GetSeparationForce(Monster other, float radius, float strength)
     {

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using IGameInterface;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -73,9 +74,9 @@ public class MonsterManager : MonoBehaviour
 
             if (m != null)
             {
-                
-                
                 m.Setup(pathData.waypoints, spawnY, pathData.monsterData, separationRadius, separationStrength);
+                if (m.TryGetComponent(out IMonsterSpawnContextReceiver receiver))
+                    receiver.BindSpawnContext(m, pathData.monsterData, pathData.waypoints);
                 m.UpdateGridPosition();
                 m.OnMonsterDie += HandleMonsterDeath;
                 m.gameObject.SetActive(true);

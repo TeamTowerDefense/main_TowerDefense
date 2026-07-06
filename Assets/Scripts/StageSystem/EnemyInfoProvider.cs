@@ -27,8 +27,8 @@ public class EnemyInfoProvider : MonoBehaviour, IEnemyInfoProvider, IEnemyInfoWr
             return info;
         }
     }
-    #region 생명 주기
 
+    #region 생명 주기
     void Reset()
     {
         targetTransform = transform;
@@ -64,8 +64,7 @@ public class EnemyInfoProvider : MonoBehaviour, IEnemyInfoProvider, IEnemyInfoWr
     {
         TryUnregister();
 
-        if (info != null)
-            info.IsAlive = false;
+        if (info != null) info.IsAlive = false;
     }
 
 #if UNITY_EDITOR
@@ -96,7 +95,6 @@ public class EnemyInfoProvider : MonoBehaviour, IEnemyInfoProvider, IEnemyInfoWr
     #endregion
 
     #region 외부 제어
-
     public void SetAlive(bool value)
     {
         isAlive = value;
