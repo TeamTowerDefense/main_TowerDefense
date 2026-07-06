@@ -1,4 +1,5 @@
 using IGameFlowInterface;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,7 +17,13 @@ public class UI_GameResult : MonoBehaviour
     [SerializeField] TextMeshProUGUI hpText;
     [SerializeField] TextMeshProUGUI timeText;
     [SerializeField] TextMeshProUGUI killText;
+    [SerializeField] TextMeshProUGUI leakText;
     [SerializeField] TextMeshProUGUI starText;
+
+    [Header("별 조건 목록")]
+    [SerializeField] Transform starConditionRoot;
+    [SerializeField] UI_StageStarConditionRow starConditionRowPrefab;
+    [SerializeField] bool showFallbackConditions = true;
 
     [Header("버튼")]
     [SerializeField] Button retryButton;
@@ -28,15 +35,24 @@ public class UI_GameResult : MonoBehaviour
     [SerializeField] string clearTitle = "STAGE CLEAR";
     [SerializeField] string failTitle = "GAME OVER";
 
+
+    #region 필드
+
+    readonly List<UI_StageStarConditionRow> spawnedRows = new();
+
     IGameFlowService gameFlowService;
     StageController subscribedController;
     StageResultContext currentResult;
+
     bool hasResult;
     bool pausedByPanel;
-    float previouseTimeScale = 1f;
+    float previousTimeScale = 1f;
+
+    #endregion
 
     #region 생명주기
-    private void Awake()
+
+    void Awake()
     {
         if (!panelRoot) panelRoot = gameObject;
         if (!canvasGroup) canvasGroup = panelRoot.GetComponent<CanvasGroup>();
@@ -45,12 +61,68 @@ public class UI_GameResult : MonoBehaviour
         lobbyButton?.onClick.AddListener(OnClickLobby);
         stageSelectButton?.onClick.AddListener(OnClickStageSelect);
 
+        if (starConditionRowPrefab)
+            starConditionRowPrefab.gameObject.SetActive(false);
+
         ResolveServices();
         SetVisible(false);
     }
+
+    void OnEnable()
+    {
+        Subscribe();
+    }
+
+    void Start()
+    {
+        ResolveServices();
+        Subscribe();
+    }
+
+    void OnDisable()
+    {
+        Unsubscribe();
+        RestoreTimeScale();
+    }
+
+    void OnDestroy()
+    {
+        retryButton?.onClick.RemoveListener(OnClickRetry);
+        lobbyButton?.onClick.RemoveListener(OnClickLobby);
+        stageSelectButton?.onClick.RemoveListener(OnClickStageSelect);
+    }
+
+    #endregion
+
+    #region 구독
+
+    void Subscribe()
+    {
+        if (!stageController)
+            stageController = FindAnyObjectByType<StageController>();
+
+        if (subscribedController == stageController) return;
+
+        Unsubscribe();
+
+        subscribedController = stageController;
+
+        if (subscribedController != null)
+            subscribedController.StageResultCreated += Show;
+    }
+
+    void Unsubscribe()
+    {
+        if (subscribedController == null) return;
+
+        subscribedController.StageResultCreated -= Show;
+        subscribedController = null;
+    }
+
     #endregion
 
     #region 표시
+
     public void Show(StageResultContext result)
     {
         currentResult = result;
@@ -59,40 +131,107 @@ public class UI_GameResult : MonoBehaviour
         Refresh(result);
         SetVisible(true);
 
-        if (pauseOnShow) PauseTime();
+        if (pauseOnShow)
+            PauseTime();
     }
+
     void Refresh(StageResultContext result)
     {
         StageDataSO stageData = stageController != null ? stageController.CurrentStageData : null;
+
         int starMask = StageStarEvaluator.EvaluateStarMask(stageData, result);
         int earnedStarCount = StageStarEvaluator.CountStars(starMask);
-        int maxStarCount = stageData?.StarConditions?.Count > 0 ? Mathf.Min(stageData.StarConditions.Count, 32) : 3;
+        int maxStarCount = StageStarEvaluator.GetMaxStarCount(stageData);
 
         if (titleText) titleText.text = result.Cleared ? clearTitle : failTitle;
         if (resultText) resultText.text = result.Cleared ? "클리어 성공" : "스테이지 실패";
         if (hpText) hpText.text = $"기지 체력: {result.CurrentBaseHp} / {result.MaxBaseHp}";
         if (timeText) timeText.text = $"진행 시간: {FormatTime(result.ElapsedTime)}";
         if (killText) killText.text = $"처치 수: {result.KilledEnemyCount}";
-        if (starText) starText.text = result.Cleared ? $"획득 별: {earnedStarCount} / 3" : "획득 별: 0 / 3";
+        if (leakText) leakText.text = $"누수 수: {result.LeakedEnemyCount}";
+        if (starText) starText.text = $"획득 별: {earnedStarCount} / {maxStarCount}";
 
-        if (retryButton) retryButton.gameObject.SetActive(!result.Cleared);
+        RefreshStarConditions(stageData, result, starMask);
+
+        if (retryButton)
+            retryButton.gameObject.SetActive(!result.Cleared);
     }
+
+    void RefreshStarConditions(StageDataSO stageData, StageResultContext result, int starMask)
+    {
+        ClearStarConditionRows();
+
+        if (!starConditionRoot || !starConditionRowPrefab) return;
+
+        if (StageStarEvaluator.HasCustomConditions(stageData))
+        {
+            int count = Mathf.Min(stageData.StarConditions.Count, 32);
+
+            for (int i = 0; i < count; i++)
+            {
+                StageStarConditionSO condition = stageData.StarConditions[i];
+                bool achieved = (starMask & (1 << i)) != 0;
+
+                CreateStarConditionRow(condition, achieved);
+            }
+
+            return;
+        }
+
+        if (showFallbackConditions)
+            CreateFallbackStarConditionRows(result, starMask);
+    }
+
+    void CreateStarConditionRow(StageStarConditionSO condition, bool achieved)
+    {
+        UI_StageStarConditionRow row = Instantiate(starConditionRowPrefab, starConditionRoot);
+        row.gameObject.SetActive(true);
+        row.Set(condition, achieved);
+        spawnedRows.Add(row);
+    }
+
+    void CreateFallbackStarConditionRows(StageResultContext result, int starMask)
+    {
+        CreateStarConditionRow("스테이지 클리어", "스테이지를 클리어합니다.", (starMask & (1 << 0)) != 0);
+        CreateStarConditionRow("기지 체력 50% 이상", "클리어 시 기지 체력을 50% 이상 유지합니다.", (starMask & (1 << 1)) != 0);
+        CreateStarConditionRow("기지 체력 100% 유지", "클리어 시 기지 체력을 모두 유지합니다.", (starMask & (1 << 2)) != 0);
+    }
+
+    void CreateStarConditionRow(string displayName, string description, bool achieved)
+    {
+        UI_StageStarConditionRow row = Instantiate(starConditionRowPrefab, starConditionRoot);
+        row.gameObject.SetActive(true);
+        row.Set(displayName, description, achieved);
+        spawnedRows.Add(row);
+    }
+
+    void ClearStarConditionRows()
+    {
+        for (int i = spawnedRows.Count - 1; i >= 0; i--)
+            if (spawnedRows[i]) Destroy(spawnedRows[i].gameObject);
+
+        spawnedRows.Clear();
+    }
+
     void SetVisible(bool visible)
     {
         if (panelRoot) panelRoot.SetActive(true);
+
         if (canvasGroup == null)
         {
             if (panelRoot) panelRoot.SetActive(visible);
             return;
         }
 
-        canvasGroup.alpha = visible ? 1 : 0;
+        canvasGroup.alpha = visible ? 1f : 0f;
         canvasGroup.interactable = visible;
         canvasGroup.blocksRaycasts = visible;
     }
+
     #endregion
 
     #region 버튼
+
     void OnClickRetry()
     {
         RestoreTimeScale();
@@ -108,13 +247,22 @@ public class UI_GameResult : MonoBehaviour
 
         gameFlowService.RetryStage();
     }
-    void OnClickLobby() => SubminAndReturn(LobbyOpenRequest.None);
-    void OnClickStageSelect() => SubminAndReturn(LobbyOpenRequest.StageSelect);
-    void SubminAndReturn(LobbyOpenRequest request)
+
+    void OnClickLobby()
+    {
+        SubmitAndReturn(LobbyOpenRequest.None);
+    }
+
+    void OnClickStageSelect()
+    {
+        SubmitAndReturn(LobbyOpenRequest.StageSelect);
+    }
+
+    void SubmitAndReturn(LobbyOpenRequest request)
     {
         if (!hasResult)
         {
-            Debug.LogWarning($"[StageResulPanel] 제출할 StageResult가 없습니다", this);
+            Debug.LogWarning("[StageResultTempPanel] 제출할 StageResult가 없습니다.", this);
             return;
         }
 
@@ -131,31 +279,38 @@ public class UI_GameResult : MonoBehaviour
 
         gameFlowService.FinishStageRun(currentResult, request);
     }
+
     #endregion
 
-    #region 시간 제어
+    #region 시간
+
     void PauseTime()
     {
         if (pausedByPanel) return;
 
-        previouseTimeScale = Time.timeScale;
+        previousTimeScale = Time.timeScale;
         Time.timeScale = 0f;
         pausedByPanel = true;
     }
+
     void RestoreTimeScale()
     {
         if (!pausedByPanel) return;
 
-        Time.timeScale = previouseTimeScale <= 0f ? 1f : previouseTimeScale;
+        Time.timeScale = previousTimeScale <= 0f ? 1f : previousTimeScale;
         pausedByPanel = false;
     }
+
     #endregion
 
     #region 유틸
+
     void ResolveServices()
     {
-        if (gameFlowService == null) ServiceLocator.TryGet(out gameFlowService);
+        if (gameFlowService == null)
+            ServiceLocator.TryGet(out gameFlowService);
     }
+
     static string FormatTime(float seconds)
     {
         int total = Mathf.Max(0, Mathf.FloorToInt(seconds));
@@ -164,5 +319,6 @@ public class UI_GameResult : MonoBehaviour
 
         return $"{min:00}:{sec:00}";
     }
+
     #endregion
 }

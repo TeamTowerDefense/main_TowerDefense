@@ -73,7 +73,7 @@ public class MonsterManagerStageProvider : MonoBehaviour, IMonsterSpawnManager, 
         PathData path = GetPath();
         if (path == null) yield break;
 
-        monsterManager.SpawnPathGroup(path,group.Count, 0.2f);
+        monsterManager.SpawnPathGroup(group.MonsterData, path, group.Count, 0.2f);
 
         if (group.Interval > 0f) yield return new WaitForSeconds(group.Interval);
     }
