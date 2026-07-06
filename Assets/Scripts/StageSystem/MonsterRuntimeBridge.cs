@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MonsterRuntimeBridge : MonoBehaviour, IAttackTarget, IStageDamageSource
+public class MonsterRuntimeBridge : MonoBehaviour, IAttackTarget, IStageDamageSource, IMonsterSpawnContextReceiver
 {
     [SerializeField] Monster monster;
     [SerializeField] InterfaceReference<IEnemyInfoWriter> infoWriter;
@@ -11,11 +11,14 @@ public class MonsterRuntimeBridge : MonoBehaviour, IAttackTarget, IStageDamageSo
     MonsterData monsterData;
     List<Transform> path;
     IStageService stageService;
+    IResourceSystem resourceSystem;
     bool reachedHandled;
 
     public Transform TargetTransform => targetTransform ? targetTransform : transform;
-    public bool CanBeDamaged => isActiveAndEnabled && monster != null;
-    public int LeakDamage => monsterData != null ? monsterData.LeakDamage : 1;
+    public bool CanBeDamaged =>
+        isActiveAndEnabled && monster != null && monsterData != null && !monster.isDead && !reachedHandled;
+
+    public int LeakDamage => monsterData != null ? monsterData.LeakDamage : 1;    
 
     #region 생명주기
     private void Reset()
@@ -34,25 +37,24 @@ public class MonsterRuntimeBridge : MonoBehaviour, IAttackTarget, IStageDamageSo
         if (!infoWriter.HasValue && TryGetComponent(out IEnemyInfoWriter writer) && writer is Object obj)
             infoWriter.SetTarget(obj);
 
-        ServiceLocator.TryGet(out stageService);
+        FindService();
     }
     void OnEnable()
     {
         reachedHandled = false;
 
-        if (monster != null)
-            monster.OnMonsterDie += HandleMonsterDie;
+        if (monster != null) monster.OnMonsterDie += HandleMonsterDie;
 
         infoWriter.Value?.SetAttackTarget(this);
-        SetEnemyInfo(true, true, 0f);
+
+        SetEnemyInfo(false, false, 0f);
     }
 
     void OnDisable()
     {
-        if (monster != null)
-            monster.OnMonsterDie -= HandleMonsterDie;
+        if (monster != null) monster.OnMonsterDie -= HandleMonsterDie;
 
-        SetEnemyInfo(false, false);
+        ClearSpawnContext();
     }
 
     void Update()
@@ -63,16 +65,29 @@ public class MonsterRuntimeBridge : MonoBehaviour, IAttackTarget, IStageDamageSo
     }
     #endregion
 
-    public void Initialize(MonsterData data, List<Transform> movePath, float spawnY, float separationRadius, float separationStrength)
+    public void BindSpawnContext(Monster owner, MonsterData data, List<Transform> waypoints)
     {
+        if (!monster) monster = owner != null ? owner : GetComponent<Monster>();
+        if (!targetTransform) targetTransform = transform;
+
         monsterData = data;
-        path = movePath;
+        path = waypoints;
         reachedHandled = false;
 
-        if (monster != null) monster.Setup(movePath, spawnY, data, separationRadius, separationRadius);
+        if (!infoWriter.HasValue && TryGetComponent(out IEnemyInfoWriter writer) && writer is Object obj)
+            infoWriter.SetTarget(obj);
 
         infoWriter.Value?.SetAttackTarget(this);
-        SetEnemyInfo(true, true, 0f);
+        SetEnemyInfo(data != null, data != null, 0f);
+    }
+
+    public void ClearSpawnContext()
+    {
+        monsterData = null;
+        path = null;
+        reachedHandled = false;
+
+        SetEnemyInfo(false, false, 0f);
     }
 
     public void TakeDamage(float damage)
@@ -83,7 +98,7 @@ public class MonsterRuntimeBridge : MonoBehaviour, IAttackTarget, IStageDamageSo
 
     public void HandleReachedEnd()
     {
-        if (reachedHandled) return;
+        if (reachedHandled || monsterData == null) return;
 
         reachedHandled = true;
 
@@ -100,12 +115,12 @@ public class MonsterRuntimeBridge : MonoBehaviour, IAttackTarget, IStageDamageSo
         reachedHandled = false;
 
         infoWriter.Value?.SetAttackTarget(this);
-        SetEnemyInfo(true, true, 0f);
+        SetEnemyInfo(monsterData != null, monsterData != null, 0f);
     }
 
     void CheckReachedEnd()
     {
-        if (reachedHandled || monster == null || !monster.IsReachedEnd()) return;
+        if (reachedHandled || monster == null || monsterData == null || !monster.IsReachedEnd()) return;
 
         reachedHandled = true;
 
@@ -115,9 +130,22 @@ public class MonsterRuntimeBridge : MonoBehaviour, IAttackTarget, IStageDamageSo
 
         SetEnemyInfo(false, false);
         gameObject.SetActive(false);
+
     }
 
-    void HandleMonsterDie(Monster deadMonster) => SetEnemyInfo(false, false);
+    void HandleMonsterDie(Monster deadMonster)
+    {
+        FindService();
+        SetEnemyInfo(false, false);
+
+        if (monsterData == null)
+        {
+            Debug.LogWarning("[MonsterRuntimeBridge] MonsterData 없이 사망 처리됨. MonsterManager의 BindSpawnContext 호출을 확인하세요.", this);
+            return;
+        }
+
+        resourceSystem?.Earn(monsterData.amount);
+    }
 
     void SetEnemyInfo(bool alive, bool targetTable, float? progress = null)
     {
@@ -173,5 +201,9 @@ public class MonsterRuntimeBridge : MonoBehaviour, IAttackTarget, IStageDamageSo
 
         return totalLength <= 0.001f ? 0f : Mathf.Clamp01(closestPassedLength / totalLength);
     }
-
+    void FindService()
+    {
+        if (stageService == null) ServiceLocator.TryGet(out stageService);
+        if (resourceSystem == null) ServiceLocator.TryGet(out resourceSystem);
+    }
 }
