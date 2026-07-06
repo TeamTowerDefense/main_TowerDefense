@@ -23,6 +23,7 @@ public class StageController : MonoBehaviour, IStageService, IAutoSceneService
     IMonsterSpawnManager spawnManager;
     IStageRunContextService runContextService;
     IGameFlowService gameFlowService;
+    IResourceSystem resourceSystem;
 
     int currentWaveIndex = -1;
 
@@ -98,6 +99,7 @@ public class StageController : MonoBehaviour, IStageService, IAutoSceneService
         resultCreated = false;
 
         BaseHpChanged?.Invoke(CurrentBaseHp, MaxBaseHp);
+        resourceSystem?.InitResource(stageData.StartResource);
         SetState(StageState.Prepare);
     }
 
@@ -251,6 +253,7 @@ public class StageController : MonoBehaviour, IStageService, IAutoSceneService
         if (spawnManager == null) ServiceLocator.TryGet(out spawnManager);
         if (runContextService == null) ServiceLocator.TryGet(out runContextService);
         if (gameFlowService == null) ServiceLocator.TryGet(out gameFlowService);
+        if (resourceSystem == null) ServiceLocator.TryGet(out resourceSystem);
     }
 
     bool HasValidStageData() => stageData != null && stageData.Waves != null && stageData.Waves.Count > 0;

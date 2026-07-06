@@ -61,7 +61,7 @@ public class MonsterRuntimeBridge : MonoBehaviour, IAttackTarget, IStageDamageSo
     {
         UpdatePathProgress();
 
-        CheckReachedEnd();
+        //CheckReachedEnd();
     }
     #endregion
 
@@ -71,7 +71,7 @@ public class MonsterRuntimeBridge : MonoBehaviour, IAttackTarget, IStageDamageSo
         if (!targetTransform) targetTransform = transform;
 
         monsterData = data;
-        path = waypoints;
+        path = waypoints != null ? new List<Transform>(waypoints) : null;
         reachedHandled = false;
 
         if (!infoWriter.HasValue && TryGetComponent(out IEnemyInfoWriter writer) && writer is Object obj)
@@ -111,7 +111,7 @@ public class MonsterRuntimeBridge : MonoBehaviour, IAttackTarget, IStageDamageSo
 
     public void BindPath(List<Transform> movePath)
     {
-        path = movePath;
+        path = movePath != null ? new List<Transform>(movePath) : null;
         reachedHandled = false;
 
         infoWriter.Value?.SetAttackTarget(this);
@@ -130,7 +130,6 @@ public class MonsterRuntimeBridge : MonoBehaviour, IAttackTarget, IStageDamageSo
 
         SetEnemyInfo(false, false);
         gameObject.SetActive(false);
-
     }
 
     void HandleMonsterDie(Monster deadMonster)
@@ -159,7 +158,9 @@ public class MonsterRuntimeBridge : MonoBehaviour, IAttackTarget, IStageDamageSo
     }
     void UpdatePathProgress()
     {
-        if (path == null || path.Count < 2 || !infoWriter.TryGet(out IEnemyInfoWriter writer)) return;
+        if (reachedHandled || monsterData == null) return;
+        if (path == null || path.Count < 2 || !infoWriter.TryGet(out IEnemyInfoWriter writer) ||
+            !monster.gameObject.activeInHierarchy) return;
 
         writer.SetPathProgress(EstimatePathProgress(transform.position));
     }
@@ -175,8 +176,13 @@ public class MonsterRuntimeBridge : MonoBehaviour, IAttackTarget, IStageDamageSo
 
         for (int i = 1; i < path.Count; i++)
         {
-            Vector3 a = path[i - 1].position;
-            Vector3 b = path[i].position;
+            Transform prev = path[i - 1];
+            Transform next = path[i];
+
+            if (!prev || !next) continue;
+
+            Vector3 a = prev.position;
+            Vector3 b = next.position;
 
             a.y = 0f;
             b.y = 0f;

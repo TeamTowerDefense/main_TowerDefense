@@ -3,7 +3,6 @@ using System.Collections;
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
@@ -17,6 +16,7 @@ public class ObjectPoolManager : MonoBehaviour
     [Header("Pool Parents")]
     [SerializeField] private Transform projectileParent;
     [SerializeField] private Transform effectParent;
+    [SerializeField] private Transform monsterParent;
 
     [Header("DataBase")]
     [SerializeField] private ProjectileDB projectileDB;
@@ -33,7 +33,6 @@ public class ObjectPoolManager : MonoBehaviour
     private Dictionary<int, MonsterData> monsterTable = new();
 
     private Dictionary<string, GameObject> loadedPrefabs = new();
-
 
     private void Awake()
     {
@@ -308,6 +307,11 @@ public class ObjectPoolManager : MonoBehaviour
         return effectParent != null ? effectParent : transform;
     }
     #endregion
+
+    public Transform GetMonsterParent()
+    {
+        return monsterParent != null ? monsterParent : transform;
+    }
 
     #region 코루틴용 로드 메서드
     public IEnumerator LoadPrefabCoroutine(
