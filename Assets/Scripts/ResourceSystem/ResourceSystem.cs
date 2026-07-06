@@ -1,7 +1,8 @@
+using IGameInterface;
 using System;
 using UnityEngine;
 
-public class ResourceSystem : MonoBehaviour, IResourceSystem
+public class ResourceSystem : MonoBehaviour, IResourceSystem, IAutoSceneService
 {
     public event Action<int> OnResourceChanged;
 
@@ -10,9 +11,19 @@ public class ResourceSystem : MonoBehaviour, IResourceSystem
 
     public int CurrentResource => currentResource;
 
+    private void Awake()
+    {
+        ((IAutoSceneService)this).RegisterSceneServices();
+    }
+
     private void Start()
     {
         InitExternal();
+    }
+
+    private void OnDestroy()
+    {
+        ((IAutoSceneService)this).UnregisterSceneServices();
     }
 
     public void InitExternal()
@@ -40,5 +51,12 @@ public class ResourceSystem : MonoBehaviour, IResourceSystem
     {
         currentResource += amount;
         OnResourceChanged?.Invoke(currentResource);
+    }
+
+    public void InitResource(int amount)
+    {
+        if (amount <= 0) return;
+
+        currentResource = amount;
     }
 }

@@ -12,7 +12,9 @@ public class MonsterData : ScriptableObject
     public float defense = 0f;// 방어력 (데미지 감소량)
     public float Att = 0f;   // 공격력 (현제는 회복량으로 상용)
     public int LeakDamage = 1; // 기지 데미지
-
+    [Min(0f)]
+    public Vector3 scale = Vector3.one;
+    public bool useUniformScale = true;
     [Header("스턴 세팅")]
     public float StunGauge = 10f; // 해당 값 까지 스턴 스택이 쌓이면 스턴이 걸리는 구조
 
@@ -24,4 +26,24 @@ public class MonsterData : ScriptableObject
 
     [Header("능력")]
     public List<AbilityData> abilities;
+
+    [Header("Height Offset")]
+    public float heightOffset = 0f;
+
+    [Header("자원")]
+    public int amount;
+
+    private void OnValidate()
+    {
+        // useUniformScale이 켜져 있을 때만 비율을 강제로 맞춤
+        if (useUniformScale)
+        {
+            if (scale.y != scale.x || scale.z != scale.x)
+            {
+                scale.y = scale.x;
+                scale.z = scale.x;
+            }
+        }
+    } 
+
 }

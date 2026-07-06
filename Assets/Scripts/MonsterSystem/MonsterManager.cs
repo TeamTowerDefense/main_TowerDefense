@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using IGameInterface;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -33,7 +34,7 @@ public class MonsterManager : MonoBehaviour
         }
     }
     public GameObject monsterPrefab;
-    public float spawnY = 0f;
+    public float spawnY = -1f;
 
     public float separationRadius = 1.5f, separationStrength = 2.0f;
     public float tileSize = 1, pathWidth = 1.5f, containmentStrength = 3.0f;
@@ -73,9 +74,9 @@ public class MonsterManager : MonoBehaviour
 
             if (m != null)
             {
-                
-                
                 m.Setup(pathData.waypoints, spawnY, pathData.monsterData, separationRadius, separationStrength);
+                if (m.TryGetComponent(out IMonsterSpawnContextReceiver receiver))
+                    receiver.BindSpawnContext(m, pathData.monsterData, pathData.waypoints);
                 m.UpdateGridPosition();
                 m.OnMonsterDie += HandleMonsterDeath;
                 m.gameObject.SetActive(true);
@@ -183,6 +184,26 @@ public class MonsterManager : MonoBehaviour
     {
         pathTiles.TryGetValue(pos, out Tile tile);
         return tile; // 없으면 null 반환
+    }
+    public Tile GetNearestTile(Vector3 position)
+    {
+        Tile nearest = null;
+        float minDistance = float.MaxValue;
+
+        // paths가 아니라 실제 타일들이 저장된 pathTiles.Values를 순회해야 합니다!
+        foreach (Tile tile in pathTiles.Values)
+        {
+            if (tile == null) continue; // 혹시라도 삭제된 타일 방지
+
+            float dist = Vector3.Distance(tile.transform.position, position);
+
+            if (dist < minDistance)
+            {
+                minDistance = dist;
+                nearest = tile;
+            }
+        }
+        return nearest;
     }
     private Vector3 CalculateSeparation(Monster m)
     {

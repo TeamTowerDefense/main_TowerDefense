@@ -1,7 +1,8 @@
+using IGameInterface;
 using System;
 using UnityEngine;
 
-public interface IResourceSystem
+public interface IResourceSystem : ISceneService
 {
     event Action<int> OnResourceChanged;
 
@@ -13,4 +14,5 @@ public interface IResourceSystem
 
     // ÀÚ¿ø È¹µæ
     void Earn(int amount);
+    void InitResource(int amount);
 }
