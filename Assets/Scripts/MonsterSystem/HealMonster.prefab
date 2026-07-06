@@ -688,11 +688,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27d03b93565e1d641b99303e0bb0f938, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyInfoProvider
-  targetTransform: {fileID: 8868286918359095940, guid: d71c56f2e6af1ba449a0a11217b143a4, type: 3}
+  targetTransform: {fileID: 541088879437032567}
   isAlive: 1
   isTargetable: 1
   pathProgress: 0
-  attackTargetSource: {fileID: -3142431804408923328, guid: d71c56f2e6af1ba449a0a11217b143a4, type: 3}
+  attackTargetSource: {fileID: 6581743413575889482}
 --- !u!114 &1497207566517744105
 MonoBehaviour:
   m_ObjectHideFlags: 0
