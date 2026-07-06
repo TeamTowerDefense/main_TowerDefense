@@ -78,7 +78,6 @@ public class Monster : PoolableObject
         containmentMultiplier = data.containmentMultiplier;
         status.Setup(data.StunGauge);
 
-
         isDead = false;
 
         hpBar.UpdateHp(1.0f);
@@ -210,6 +209,7 @@ public class Monster : PoolableObject
     {
         if (isDead || !gameObject.activeInHierarchy) return;
         isDead = true;
+        hpBar.gameObject.SetActive(false);
         enemyInfoProvider.SetAlive(false);
         enemyInfoProvider.SetTargetable(false);
         if (currentTile != null)

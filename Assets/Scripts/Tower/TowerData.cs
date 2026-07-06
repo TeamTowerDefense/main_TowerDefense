@@ -25,6 +25,7 @@ public class TowerData : BuildingData
     [Header("Addressable Data")]
     public AssetReferenceGameObject towerPrefab;
     
+    public KeywordData[] keywords;
     public virtual bool CheckAttackData()
     {
         if (attackMechanism == null)
