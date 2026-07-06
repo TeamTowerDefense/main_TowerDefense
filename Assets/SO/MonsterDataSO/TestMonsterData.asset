@@ -29,3 +29,4 @@ MonoBehaviour:
   abilities: []
   heightOffset: 0
   defaultKeywords: []
+  amount: 10

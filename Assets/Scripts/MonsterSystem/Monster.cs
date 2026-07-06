@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class Monster : PoolableObject
@@ -47,7 +46,6 @@ public class Monster : PoolableObject
     {
         anim = GetComponent<Animator>();
         col = GetComponent<Collider>();
-        enemyInfoProvider = GetComponent<EnemyInfoProvider>();
         allAbilities = GetComponents<IAbility>();
         status = GetComponent<MonsterStatus>();
 
@@ -252,8 +250,7 @@ public class Monster : PoolableObject
     {
         if (isDead || !gameObject.activeInHierarchy) return;
         isDead = true;
-        enemyInfoProvider.SetAlive(false);
-        enemyInfoProvider.SetTargetable(false);
+        OnMonsterDie?.Invoke(this);
         if (currentTile != null)
         {
             currentTile.RemoveMonster(this);
@@ -263,7 +260,6 @@ public class Monster : PoolableObject
         if (col != null) col.enabled = false;
        
         StartCoroutine(DieCoroutine());
-
     }
 
     private IEnumerator DieCoroutine()
@@ -272,9 +268,6 @@ public class Monster : PoolableObject
         // 애니메이션 재생되는 시간 동안
         yield return new WaitForSeconds(2f);
         ObjectPoolManager.Instance.Despawn(this);
-        OnMonsterDie?.Invoke(this);
-
-
     }
     public Vector3 GetSeparationForce(Monster other, float radius, float strength)
     {
