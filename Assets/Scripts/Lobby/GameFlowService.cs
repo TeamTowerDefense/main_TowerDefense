@@ -17,6 +17,7 @@ public class GameFlowService : GlobalServiceBase, IGameFlowService
     [SerializeField] bool logOption = true;
 
     public event Action StageSelectOpenRequested;
+    public event Action<StageResultContext, StageProgressApplyResult> StageRunFinished;
 
     #region 인터페이스
     public void EnterTitle()
@@ -90,8 +91,34 @@ public class GameFlowService : GlobalServiceBase, IGameFlowService
 
         LoadScene(lobbySceneName, useLoadingForLobby);
     }
+    public void FinishStageRun(StageResultContext result, LobbyOpenRequest lobbyRequest = LobbyOpenRequest.StageSelect)
+    {
+        if (!Resolve(out IStageRunContextService runContext)) return;
 
-#endregion
+        StageDataSO stageData = runContext.StageData;
+
+        if (stageData == null && ServiceLocator.TryGet(out IStageDatabaseService database))
+            database.TryGetStage(result.StageId, out stageData);
+
+        StageProgressApplyResult applyResult = default;
+
+        if (stageData != null && ServiceLocator.TryGet(out IStageProgressService progressService))
+            applyResult = progressService.ApplyResult(stageData, result);
+        else
+            Debug.LogWarning($"[GameFlowService] StageResult 저장 생략, StageData/StageProgressService 없음", this);
+
+        StageRunFinished?.Invoke(result, applyResult);
+
+        if (ServiceLocator.TryGet(out ILobbyReturnContextService lobbyReturnContext) && lobbyRequest != LobbyOpenRequest.None)
+            lobbyReturnContext.Request(lobbyRequest);
+
+        runContext.Clear();
+
+        if (logOption) Debug.Log($"[GameFlowService] FinishStageRun: {result.StageId} / Cleared: {result.Cleared}", this);
+        LoadScene(lobbySceneName, useLoadingForLobby);
+    }
+
+    #endregion
 
     #region 내부 유틸
 

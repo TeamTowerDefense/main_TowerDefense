@@ -147,7 +147,7 @@ public class StageProgressService : GlobalServiceBase, IStageProgressService
 
         if (result.Cleared)
         {
-            int earnedStarMask = EvaluateStarMask(stageData, result);
+            int earnedStarMask = StageStarEvaluator.EvaluateStarMask(stageData, result);
             int mergedStarMask = record.starMask | earnedStarMask;
 
             record.isCleared = true;
@@ -187,52 +187,6 @@ public class StageProgressService : GlobalServiceBase, IStageProgressService
             record.starMask,
             result.Cleared && !wasCleared,
             progressChanged);
-    }
-
-    #endregion
-
-    #region 별 조건 평가
-
-    int EvaluateStarMask(StageDataSO stageData, StageResultContext result)
-    {
-        if (stageData.StarConditions != null && stageData.StarConditions.Count > 0)
-            return EvaluateCustomStarConditions(stageData, result);
-
-        return EvaluateDefaultStarConditions(result);
-    }
-
-    int EvaluateCustomStarConditions(StageDataSO stageData, StageResultContext result)
-    {
-        int mask = 0;
-        int count = Mathf.Min(stageData.StarConditions.Count, 32);
-
-        for (int i = 0; i < count; i++)
-        {
-            StageStarConditionSO condition = stageData.StarConditions[i];
-
-            if (condition == null) continue;
-            if (!condition.Evaluate(stageData, result)) continue;
-
-            mask |= 1 << i;
-        }
-
-        return mask;
-    }
-
-    int EvaluateDefaultStarConditions(StageResultContext result)
-    {
-        int mask = 0;
-
-        if (result.Cleared)
-            mask |= 1 << 0;
-
-        if (result.Cleared && result.BaseHpRate >= 0.5f)
-            mask |= 1 << 1;
-
-        if (result.Cleared && result.BaseHpRate >= 1f)
-            mask |= 1 << 2;
-
-        return mask;
     }
 
     #endregion
