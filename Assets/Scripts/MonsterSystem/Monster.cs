@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Monster : PoolableObject
@@ -12,6 +13,7 @@ public class Monster : PoolableObject
     public float currentHp { get; private set; }
     public float maxHp { get; private set; }
     private float speed;
+
     private float moveWeight ;
     private float separationWeight;
     private float boundaryWeight; 
@@ -27,25 +29,63 @@ public class Monster : PoolableObject
     public Vector2Int CurrentGridPos { get; private set; }
     public event Action<Monster> OnMonsterDie;
 
+    private EnemyInfoProvider enemyInfoProvider;
+
+    // HP 바
     [SerializeField]
     private HpBar hpBar;
 
     private IAbility[] allAbilities;
     private MonsterStatus status;
+
+    // 키워드 시스템 적용
+    private KeywordController keywordController;
+    private Dictionary<StatType, RuntimeStat> stats = new Dictionary<StatType, RuntimeStat>();
+
     private void Awake()
     {
         anim = GetComponent<Animator>();
         col = GetComponent<Collider>();
         allAbilities = GetComponents<IAbility>();
         status = GetComponent<MonsterStatus>();
+
+        keywordController = GetComponent<KeywordController>();
+        if (keywordController != null)
+        {
+            keywordController.OnKeywordChanged += UpdateAllStats;
+        }
     }
+
     private void OnDisable()
     {
         ClearCurrentTile();
+        if (keywordController != null)
+        {
+            keywordController.OnKeywordChanged -= UpdateAllStats;
+        }
     }
+
     // 초기화 로직 통합
     public void Setup(List<Transform> path, float spawnY, MonsterData data,float separationRadius, float separationStrength)
     {
+        // 런타임 스텟 적용 및 초기 특성 키워드 적용
+        stats.Clear();
+        keywordController.ClearAllKeywords();
+
+        if (data != null)
+        {
+            foreach (var kvp in data.GetInitialStats())
+            {
+                stats[kvp.Key] = new RuntimeStat(kvp.Value);
+            }
+
+            if (data.defaultKeywords != null)
+            {
+                foreach (var kw in data.defaultKeywords)
+                    keywordController.AddKeyword(kw);
+            }
+        }
+
         foreach (var ability in allAbilities)
         {
             ability.DisableAbility();
@@ -63,10 +103,13 @@ public class Monster : PoolableObject
                 }
             }
         }
+
         transform.localScale = data.scale;
-        currentHp = data.maxHP;
-        maxHp = data.maxHP;
-        speed = data.speed;
+
+        maxHp = GetStat(StatType.MaxHealth);
+        currentHp = maxHp;
+        speed = GetStat(StatType.MoveSpeed);
+
         moveWeight = data.moveWeight;
         separationWeight = data.separationWeight;
         boundaryWeight = data.boundaryWeight;
@@ -154,8 +197,10 @@ public class Monster : PoolableObject
 
         // 4. 최종 방향 (가중치 기반 계산)
         Vector3 finalDir = (moveDir * moveWeight + effectiveSeparation + (boundaryForce * boundaryWeight)).normalized;
+
         // 5. 최종 속도
-        float finalSpeed = speed * speedMultiplier * status.SlowMultiplier;
+        float currentSpeed = GetStat(StatType.MoveSpeed);
+        float finalSpeed = currentSpeed * speedMultiplier * status.SlowMultiplier;
         transform.position += finalDir * finalSpeed * deltaTime;
 
         if (finalDir != Vector3.zero)
@@ -265,4 +310,25 @@ public class Monster : PoolableObject
     {
         base.OnDespawned();
     }
+
+    #region 스텟
+    public float GetStat(StatType type) => stats.TryGetValue(type, out var stat) ? stat.CurrentValue : 0f;
+
+    private void UpdateAllStats()
+    {
+        var allModifiers = keywordController.GetKeywords<IStatModifier>();
+        foreach (var kvp in stats)
+        {
+            var targetModifiers = allModifiers.Where(m => m.TargetStat == kvp.Key).ToList();
+            kvp.Value.RecalculateStat(targetModifiers);
+        }
+
+        // 체력 증가 버프 등을 받았을 때 maxHp 갱신
+        maxHp = GetStat(StatType.MaxHealth);
+        speed = GetStat(StatType.MoveSpeed);
+
+        Debug.Log(speed);
+
+    }
+    #endregion
 }

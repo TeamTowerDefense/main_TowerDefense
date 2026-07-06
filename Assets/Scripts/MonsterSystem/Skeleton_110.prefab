@@ -1522,6 +1522,7 @@ GameObject:
   - component: {fileID: 8705497507599344616}
   - component: {fileID: 1152373230499302323}
   - component: {fileID: -6199669741112224603}
+  - component: {fileID: 2804170097967863056}
   m_Layer: 9
   m_Name: Skeleton_110
   m_TagString: Untagged
@@ -1562,7 +1563,7 @@ Animator:
   m_Controller: {fileID: 22100000, guid: ccfcef0ea4d3ca846a54601112e22e94, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
-  m_ApplyRootMotion: 1
+  m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
@@ -1671,6 +1672,18 @@ MonoBehaviour:
   allyLayer:
     serializedVersion: 2
     m_Bits: 512
+--- !u!114 &2804170097967863056
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4253210182481893339}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26f19923f17a5a44689c4f87131879f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::KeywordController
 --- !u!1 &4381643526415728320
 GameObject:
   m_ObjectHideFlags: 0

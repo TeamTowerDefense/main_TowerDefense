@@ -1,7 +1,8 @@
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Keyword/Berserker")]
+[CreateAssetMenu(menuName = "Keyword/Buff/Berserker")]
 public class KWData_Berserker : KeywordData
 {
-    public float adBonusRatio = 0.2f; // 예: 공격력 20% 증가
+    public float adBonusRatio = 0.2f;
+    public override KeywordEffectBase CreateEffect() => new TraitEffect_Berserker();
 }
