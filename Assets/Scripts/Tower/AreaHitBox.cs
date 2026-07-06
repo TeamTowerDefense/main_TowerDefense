@@ -121,10 +121,6 @@ public class AreaHitBox : PoolableObject
 
             ApplyDamage(monster);
 
-            // TODO:
-            // 슬로우 디버프는 나중에 Monster 쪽에서 처리
-            // 예시로 이런 느낌이 될 듯
-            // monster.ApplySlow(slowValue, slowDuration);
             ApplySlows(monster);
 
             SpawnOnceEffect(monster);
@@ -191,13 +187,6 @@ public class AreaHitBox : PoolableObject
         if (status == null)
             return;
 
-        foreach (DebuffEffectData debuff in hitBoxData.debuffs)
-        {
-            if (debuff == null)
-                continue;
-
-            status.ApplySlow(debuff.value, debuff.duration);
-        }
     }
 
 
