@@ -9,13 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ab3044d0d213fbb42bb52c6a2846aa9e, type: 3}
+  m_Script: {fileID: 11500000, guid: 24e837c49ec25184c8721677fe5a1c20, type: 3}
   m_Name: TestStunTower
   m_EditorClassIdentifier: Assembly-CSharp::TowerData
-  buildingID: 4
+  buildingID: 3
   buildingName: "\uB3FC\uC9C0"
   buildingPrefab: {fileID: 7107717812107533692, guid: 829fd095e4270ee48a4002de72905758, type: 3}
-  cost: 10
+  cost: 15
   isDestructible: 1
   baseFootprint:
   - {x: 0, y: 0}
@@ -26,7 +26,7 @@ MonoBehaviour:
   damage: 0
   attackRange: 5
   attackInterval: 1
-  attackSpeed: 0.5
+  attackSpeed: 1
   monsterLayer:
     serializedVersion: 2
     m_Bits: 512
@@ -37,3 +37,5 @@ MonoBehaviour:
     m_SubObjectType: 
     m_SubObjectGUID: 
     m_EditorAssetChanged: 0
+  defaultKeywords:
+  - {fileID: 11400000, guid: 5bbd05eae28f9a24a98087d3a856b4bc, type: 2}

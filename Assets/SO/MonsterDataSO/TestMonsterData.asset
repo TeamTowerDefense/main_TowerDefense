@@ -28,3 +28,4 @@ MonoBehaviour:
   containmentMultiplier: 5
   abilities: []
   heightOffset: 0
+  defaultKeywords: []

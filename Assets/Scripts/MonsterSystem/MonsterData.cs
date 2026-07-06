@@ -42,5 +42,18 @@ public class MonsterData : ScriptableObject
             }
         }
     } 
+    
+    [Header("태생 특성")]
+    [Tooltip("이 몬스터가 소환될 때 기본으로 장착하고 시작하는 키워드 (예: 언데드, 보스 면역 등)")]
+    public List<KeywordData> defaultKeywords = new List<KeywordData>();
 
+    public Dictionary<StatType, float> GetInitialStats()
+    {
+        return new Dictionary<StatType, float>
+        {
+            { StatType.MaxHealth, this.maxHP },
+            { StatType.MoveSpeed, this.speed }
+            // 방어력 등 다른 스탯이 있다면 여기에 계속 추가하면 됩니다.
+        };
+    }
 }

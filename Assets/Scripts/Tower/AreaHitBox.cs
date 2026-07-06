@@ -20,18 +20,21 @@ public class AreaHitBox : PoolableObject
 
     private Dictionary<Monster, PoolableObject> activeHitEffects = new Dictionary<Monster, PoolableObject>();
 
+    private Tower ownerTower;
+
     private void Awake()
     {
         Collider = GetComponent<Collider>();
     }
 
-    public void Initialize(Transform target, int damage, LayerMask monsterLayer, HitBoxData data, float attackSpeed)
+    public void Initialize(Transform target, int damage, LayerMask monsterLayer, HitBoxData data, float attackSpeed, Tower owner)
     {
         this.target = target;
         this.damage = damage;
         this.monsterLayer = monsterLayer;
         this.hitBoxData = data;
         this.attackSpeed = attackSpeed;
+        ownerTower = owner;
 
         damageTimers.Clear();
 
@@ -97,6 +100,18 @@ public class AreaHitBox : PoolableObject
             return;
 
 
+        if (ownerTower != null)
+        {
+            KeywordController monsterKW = monster.GetComponent<KeywordController>();
+            KeywordController towerKW = ownerTower.GetComponent<KeywordController>();
+            if (monsterKW != null && towerKW != null)
+            {
+                foreach (var mod in towerKW.GetKeywords<IOnHitModifier>())
+                {
+                    mod.OnHit(ownerTower, monsterKW);
+                }
+            }
+        }
         monster.TakeDamage(damage);
 
         if (hitBoxData.hitEffectData == null)
