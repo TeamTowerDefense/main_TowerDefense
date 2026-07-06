@@ -41,6 +41,7 @@ public class Monster : PoolableObject
     // 키워드 시스템 적용
     private KeywordController keywordController;
     private Dictionary<StatType, RuntimeStat> stats = new Dictionary<StatType, RuntimeStat>();
+    private List<IStatModifier> cachedModifiers = new List<IStatModifier>();
 
     private void Awake()
     {
@@ -316,18 +317,29 @@ public class Monster : PoolableObject
 
     private void UpdateAllStats()
     {
-        var allModifiers = keywordController.GetKeywords<IStatModifier>();
+        // IStatModifer를 상속하는 모든 키워드 저장
+        List<IStatModifier> allModifiers = keywordController.GetKeywords<IStatModifier>();
+
+        // 2. 스탯 서랍장(Dictionary)을 순회합니다.
         foreach (var kvp in stats)
         {
-            var targetModifiers = allModifiers.Where(m => m.TargetStat == kvp.Key).ToList();
-            kvp.Value.RecalculateStat(targetModifiers);
+            // LINQ의 .ToList() 역할을 할 빈 리스트를 직접 만듭니다.
+            cachedModifiers.Clear();
+
+            // LINQ의 .Where(...) 역할을 할 수동 반복문을 돌립니다.
+            foreach (var modifier in allModifiers)
+            {
+                // 모디파이어의 타겟 스탯이 현재 순회 중인 스탯(kvp.Key)과 같다면
+                if (modifier.TargetStat == kvp.Key)
+                {
+                    // 리스트에 추가합니다.
+                    cachedModifiers.Add(modifier);
+                }
+            }
+
+            // 완성된 리스트를 재계산 함수로 넘겨줍니다.
+            kvp.Value.RecalculateStat(cachedModifiers);
         }
-
-        // 체력 증가 버프 등을 받았을 때 maxHp 갱신
-        maxHp = GetStat(StatType.MaxHealth);
-        speed = GetStat(StatType.MoveSpeed);
-
-        Debug.Log(speed);
 
     }
     #endregion
