@@ -115,6 +115,11 @@ public class AreaHitBox : PoolableObject
         if (monster == null || monster.isDead)
             return;
 
+        if(ownerTower != null)
+        {
+            TriggerOnHitEffects(monster);
+        }
+
         if (hitBoxData.damageMode == HitBoxDamageMode.OncePerTarget)
         {
             if (hitTargets.Contains(monster))
@@ -156,6 +161,7 @@ public class AreaHitBox : PoolableObject
         {
             ApplyDamage(monster);
             damageTimers[monster] = tickInterval;
+            //Debug.Log($"[TickDamage] damageInterval={hitBoxData.damageInterval}, attackSpeed={attackSpeed}, tickInterval={tickInterval}");
             return;
         }
 
@@ -165,7 +171,7 @@ public class AreaHitBox : PoolableObject
         if (damageTimers[monster] <= 0f)
         {
             ApplyDamage(monster);
-            damageTimers[monster] = tickInterval;
+            damageTimers[monster] = GetTickInterval();
         }
     }
 
@@ -325,4 +331,30 @@ public class AreaHitBox : PoolableObject
         base.OnDespawned();
     }
 
+
+    #region 히트 시 키워드 적용
+    protected void TriggerOnHitEffects(Monster targetMonster)
+    {
+        if (ownerTower == null || targetMonster == null) return;
+
+        KeywordController monsterKW = targetMonster.GetComponent<KeywordController>();
+        KeywordController towerKW = ownerTower.GetComponent<KeywordController>();
+
+        if (monsterKW == null) Debug.Log("에러: 몬스터한테 KeywordController가 없습니다!");
+        if (towerKW == null) Debug.Log("에러: 타워한테 KeywordController가 없습니다!");
+
+        if (monsterKW != null && towerKW != null)
+        {
+            var onHitModifiers = towerKW.GetKeywords<IOnHitModifier>();
+
+            Debug.Log($"타워가 가진 적중 특성 개수: {onHitModifiers.Count}");
+
+            foreach (var mod in onHitModifiers)
+            {
+                mod.OnHit(ownerTower, monsterKW);
+                Debug.Log("슬로우 묻히기 성공!");
+            }
+        }
+    }
+    #endregion
 }

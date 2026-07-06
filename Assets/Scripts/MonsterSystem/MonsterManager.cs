@@ -1,4 +1,5 @@
 ﻿using IGameInterface;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -41,6 +42,9 @@ public class MonsterManager : MonoBehaviour
 
     private Dictionary<Vector2Int, List<Monster>> gridBuckets = new Dictionary<Vector2Int, List<Monster>>();
     private List<Monster> activeMonsters = new List<Monster>();
+    private IStageService stageService;
+
+    private Coroutine spawnRoutine;
 
     void Awake()
     {
@@ -48,13 +52,21 @@ public class MonsterManager : MonoBehaviour
     }
     private void Start()
     {
+        if (stageService == null) ServiceLocator.TryGet(out stageService);
+        if (stageService != null) stageService.StateChanged += OnGameEnd;
         // 게임 시작 시 한 번만 실행
-        StartCoroutine(DelayedInitialization());
+        if (spawnRoutine != null) StopCoroutine(spawnRoutine);
+        spawnRoutine = StartCoroutine(DelayedInitialization());
     }
+
     void Update()
     {
         UpdateGridBuckets();
         ProcessMonsters();
+    }
+    private void OnDestroy()
+    {
+        if (stageService != null) stageService.StateChanged -= OnGameEnd;
     }
     public void SpawnPathGroup(MonsterData data, PathData pathData, int count, float interval)
     {
@@ -70,6 +82,8 @@ public class MonsterManager : MonoBehaviour
                 pathData.waypoints[0].position,
                 Quaternion.identity
             );
+
+            m.transform.SetParent(ObjectPoolManager.Instance.GetMonsterParent());
 
             if (m != null)
             {
@@ -231,5 +245,18 @@ public class MonsterManager : MonoBehaviour
             }
         }
         return force;
+    }
+    private void OnGameEnd(StageState state)
+    {
+        if (state == StageState.StageClear || state == StageState.StageFailed)
+        {
+            if (spawnRoutine != null) StopCoroutine(spawnRoutine);
+
+            for (int i = 0; i < activeMonsters.Count; i++)
+            {
+                if (!activeMonsters[i].TryGetComponent(out PoolableObject pool)) continue;
+                ObjectPoolManager.Instance.Despawn(pool);
+            }
+        }
     }
 }
