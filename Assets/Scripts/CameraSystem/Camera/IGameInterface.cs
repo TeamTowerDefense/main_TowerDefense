@@ -248,6 +248,11 @@ namespace IGameInterface
         void SetPathProgress(float value);
         void SetAttackTarget(IAttackTarget target);
     }
+    public interface IMonsterSpawnContextReceiver
+    {
+        void BindSpawnContext(Monster owner, MonsterData data, List<Transform> waypoints);
+        void ClearSpawnContext();
+    }
 
     public interface IAttackTarget
     {
