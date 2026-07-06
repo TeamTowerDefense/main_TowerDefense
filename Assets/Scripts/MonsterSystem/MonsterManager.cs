@@ -57,17 +57,17 @@ public class MonsterManager : MonoBehaviour
         UpdateGridBuckets();
         ProcessMonsters();
     }
-    public void SpawnPathGroup(PathData pathData, int count, float interval)
+    public void SpawnPathGroup(MonsterData data, PathData pathData, int count, float interval)
     {
-        StartCoroutine(SpawnMonsterGroup(pathData, count, interval));
+        StartCoroutine(SpawnMonsterGroup(data, pathData, count, interval));
     }
 
-    private IEnumerator SpawnMonsterGroup(PathData pathData, int count, float interval)
+    private IEnumerator SpawnMonsterGroup(MonsterData data, PathData pathData, int count, float interval)
     {
         for (int i = 0; i < count; i++)
         {
             Monster m = ObjectPoolManager.Instance.Spawn<Monster>(
-                pathData.monsterData.Prefab, 
+                data.Prefab,
                 pathData.waypoints[0].position,
                 Quaternion.identity
             );
