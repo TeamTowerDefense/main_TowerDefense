@@ -1,5 +1,9 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
+
 
 public class AreaHitBox : PoolableObject
 {
@@ -7,7 +11,7 @@ public class AreaHitBox : PoolableObject
     private LayerMask monsterLayer;
     private HitBoxData hitBoxData;
 
-    // °ø°Ý ¼Óµµ, °£°Ý
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½Óµï¿½, ï¿½ï¿½ï¿½ï¿½
     private float attackSpeed;
     private float tickInterval;
 
@@ -19,39 +23,123 @@ public class AreaHitBox : PoolableObject
     private Transform target;
 
     private Dictionary<Monster, PoolableObject> activeHitEffects = new Dictionary<Monster, PoolableObject>();
+    private HashSet<Monster> hitTargets = new HashSet<Monster>();
+
+    private Dictionary<Monster, Coroutine> effectDespawnRoutines = new();
+
+    private Tower ownerTower;
 
     private void Awake()
     {
         Collider = GetComponent<Collider>();
+        Collider.enabled = false;
     }
 
-    public void Initialize(Transform target, int damage, LayerMask monsterLayer, HitBoxData data, float attackSpeed)
+    public void Initialize(Transform target, int damage, LayerMask monsterLayer, HitBoxData data, float attackSpeed, Tower owner)
     {
         this.target = target;
         this.damage = damage;
         this.monsterLayer = monsterLayer;
         this.hitBoxData = data;
         this.attackSpeed = attackSpeed;
+        ownerTower = owner;
 
         damageTimers.Clear();
+        hitTargets.Clear();
 
         if (Collider == null)
             Collider = GetComponent<Collider>();
+
+        Collider.enabled = true;
 
         if (shapeInitializer == null)
             shapeInitializer = GetComponent<IHitBoxShapeInitializer>();
 
         if (shapeInitializer == null)
         {
-            Debug.LogError($"{name}¿¡ IHitBoxShapeInitializer°¡ ¾ø½À´Ï´Ù.");
+            Debug.LogError($"{name}ï¿½ï¿½ IHitBoxShapeInitializerï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
             return;
         }
 
         shapeInitializer.Initialize(data);
-    } 
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (hitBoxData.damageMode == HitBoxDamageMode.OncePerTarget)
+            TryHit(other);
+    }
 
     private void OnTriggerStay(Collider other)
     {
+        if (hitBoxData.damageMode != HitBoxDamageMode.TickDamage)
+            return;
+
+        TryTickDamage(other);
+
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        Monster monster = other.GetComponentInParent<Monster>();
+
+        if (monster == null)
+            return;
+
+        damageTimers.Remove(monster);
+
+        if (hitBoxData.damageMode != HitBoxDamageMode.TickDamage)
+            return;
+
+        if (!activeHitEffects.TryGetValue(monster, out PoolableObject effect))
+            return;
+
+        if (effectDespawnRoutines.TryGetValue(monster, out Coroutine routine))
+        {
+            StopCoroutine(routine);
+            effectDespawnRoutines.Remove(monster);
+        }
+
+        effectDespawnRoutines[monster] = StartCoroutine
+            (DespawnLoopEffectAfterDelay(monster, effect, hitBoxData.effectDespawnDelay));
+
+    }
+
+    private void TryHit(Collider other)
+    {
+        if (((1 << other.gameObject.layer) & monsterLayer) == 0)
+            return;
+
+        Monster monster = other.GetComponentInParent<Monster>();
+
+        if (monster == null || monster.isDead)
+            return;
+
+        if (hitBoxData.damageMode == HitBoxDamageMode.OncePerTarget)
+        {
+            if (hitTargets.Contains(monster))
+                return;
+
+            hitTargets.Add(monster);
+
+            ApplyDamage(monster);
+
+            ApplySlows(monster);
+
+            SpawnOnceEffect(monster);
+        }
+        else if (hitBoxData.damageMode == HitBoxDamageMode.TickDamage)
+        {
+            SpawnOrKeepLoopEffect(monster);
+
+            ApplyDamage(monster);
+            damageTimers[monster] = GetTickInterval();
+        }
+    }
+
+    private void TryTickDamage(Collider other)
+    {
+
         if (((1 << other.gameObject.layer) & monsterLayer) == 0)
             return;
 
@@ -59,17 +147,10 @@ public class AreaHitBox : PoolableObject
 
         Debug.Log($"[HitBox Trigger] other={other.name}, monster={(monster == null ? "NULL" : monster.name)}");
 
-        if (monster == null || monster.isDead) 
+        if (monster == null || monster.isDead)
             return;
 
-        float tickInterval = hitBoxData.damageInterval / Mathf.Max(0.01f, attackSpeed);
-
-
-        if (monster == null)
-        {
-            Debug.LogError("[HitBox] damageTimers Á¢±Ù Á÷Àü monster NULL");
-            return;
-        }
+        SpawnOrKeepLoopEffect(monster);
 
         if (!damageTimers.ContainsKey(monster))
         {
@@ -90,29 +171,87 @@ public class AreaHitBox : PoolableObject
 
     private void ApplyDamage(Monster monster)
     {
+        if (monster == null || hitBoxData == null)
+            return;
+
+        monster.TakeDamage(damage);
+    }
+
+    private void ApplySlows(Monster monster)
+    {
         if (monster == null)
             return;
 
-        if (hitBoxData == null)
+        if (hitBoxData.debuffs == null || hitBoxData.debuffs.Count == 0)
             return;
 
+        MonsterStatus status = monster.GetComponent<MonsterStatus>();
 
-        monster.TakeDamage(damage);
+        if (status == null)
+            return;
+
+    }
+
+
+    private void SpawnOrKeepLoopEffect(Monster monster)
+    {
+        if (activeHitEffects.ContainsKey(monster))
+        {
+            if(effectDespawnRoutines.TryGetValue(monster, out Coroutine routine))
+            {
+                StopCoroutine(routine);
+                effectDespawnRoutines.Remove(monster);
+            }
+
+            return;
+        }
+
+        PoolableObject effect = SpawnHitEffect(monster);
+
+        if (effect == null)
+            return;
+
+        activeHitEffects.Add(monster, effect);
+    }
+
+    private void SpawnOnceEffect(Monster monster)
+    {
+        PoolableObject effect = SpawnHitEffect(monster);
+
+        if (effect == null) 
+            return;
+
+        // TODO:
+        // Monster ï¿½ï¿½ ï¿½ï¿½ï¿½Î¿ï¿½ ï¿½ï¿½ï¿½Ó½Ã°ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ ï¿½ï¿½
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì·ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.
+        MonsterStatus status = monster.GetComponent<MonsterStatus>();
+           
+
+         float lifeTime = 1f;
+
+        EffectLifeTimeDespawner despawner = effect.GetComponent<EffectLifeTimeDespawner>();
+
+        if (despawner != null)
+            despawner.StartLifeTime(lifeTime);
+        else
+            Debug.LogWarning($"{effect.name}ï¿½ï¿½ EffectLifetimeDespawnerï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
+    }
+
+    private PoolableObject SpawnHitEffect(Monster monster)
+    {
+        if (monster == null)
+            return null;
 
         if (hitBoxData.hitEffectData == null)
-            return;
+            return null;
 
         if (ObjectPoolManager.Instance == null)
-            return;
-
-        if (activeHitEffects.ContainsKey(monster))
-            return;
+            return null;
 
         GameObject effectPF = ObjectPoolManager.Instance.GetEffect(hitBoxData.hitEffectData.effectID);
 
-
         if (effectPF == null)
-            return;
+            return null;
 
         PoolableObject effect = ObjectPoolManager.Instance.Spawn<PoolableObject>(
             effectPF,
@@ -122,47 +261,66 @@ public class AreaHitBox : PoolableObject
         );
 
         if (effect == null)
-            return;
+            return null;
 
         effect.transform.SetParent(monster.transform);
         effect.transform.localPosition = Vector3.zero;
         effect.transform.localRotation = Quaternion.identity;
 
-        activeHitEffects[monster] = effect;
+        return effect;
     }
 
-    private void OnTriggerExit(Collider other)
+    private IEnumerator DespawnLoopEffectAfterDelay(Monster monster, PoolableObject effect, float delay)
     {
-        Monster monster = other.GetComponent<Monster>();
+        yield return new WaitForSeconds(delay);
 
-        if (monster != null)
-            return;
-
-        if (!activeHitEffects.TryGetValue(monster, out PoolableObject effect))
-            return;
-
-        if (effect != null)
+        if (effect != null && ObjectPoolManager.Instance != null)
         {
             effect.transform.SetParent(ObjectPoolManager.Instance.GetEffectParent());
             ObjectPoolManager.Instance.Despawn(effect);
         }
 
         activeHitEffects.Remove(monster);
-        damageTimers.Remove(monster);
+        effectDespawnRoutines.Remove(monster);
     }
 
+    private float GetTickInterval()
+    {
+        return hitBoxData.damageInterval / Math.Max(0.01f, attackSpeed);
+    }
+
+    public void DisableHitCollider()
+    {
+        if (Collider != null)
+            Collider.enabled = false;
+    }
 
     public override void OnDespawned()
     {
         target = null;
-        foreach (var effect in activeHitEffects.Values)
+
+        foreach (var routine in effectDespawnRoutines.Values)
         {
-            if (effect == null) continue;
+            if (routine != null)
+                StopCoroutine(routine);
+        }
+
+        damageTimers.Clear();
+        hitTargets.Clear();
+        effectDespawnRoutines.Clear();
+
+        foreach(var pair in activeHitEffects)
+        {
+            PoolableObject effect = pair.Value;
+
+            if(effect == null)
+                continue;
 
             effect.transform.SetParent(ObjectPoolManager.Instance.GetEffectParent());
             ObjectPoolManager.Instance.Despawn(effect);
         }
-        damageTimers.Clear();
+
+        activeHitEffects.Clear();
         //hitBoxData = null;
         base.OnDespawned();
     }

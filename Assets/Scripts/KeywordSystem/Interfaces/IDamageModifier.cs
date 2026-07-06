@@ -2,5 +2,5 @@ using UnityEngine;
 
 public interface IDamageModifier
 {
-    int ModifyDamage(int baseDamage);
+    int ModifyDamage(int currentDamage, Transform target);
 }

@@ -1,6 +1,8 @@
 ﻿
 using IGameInterface;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Tower : BuildingBase
@@ -20,7 +22,9 @@ public class Tower : BuildingBase
     private float attackTimer;
     private bool isAttacking;
     private ITowerTargetFinder targetFinder;
+
     private KeywordController keywordController;
+    private Dictionary<StatType, RuntimeStat> stats = new Dictionary<StatType, RuntimeStat>();
 
     private void Awake()
     {
@@ -36,18 +40,33 @@ public class Tower : BuildingBase
             enabled = false;
         }
 
+        if (towerData != null)
+        {
+            foreach (var kvp in towerData.GetInitialStats())
+            {
+                stats[kvp.Key] = new RuntimeStat(kvp.Value);
+            }
+        }
+
         keywordController = GetComponent<KeywordController>();
         targetFinder = GetComponent<ITowerTargetFinder>();
+
+        if(keywordController != null)
+            keywordController.OnKeywordChanged += UpdateAllStats;
+    }
+
+    private void OnDestroy()
+    {
+        if (keywordController != null)
+            keywordController.OnKeywordChanged -= UpdateAllStats;
     }
 
     private void Start()
     {
-        if (keywordController != null && towerData.keywords != null)
+        if (towerData.defaultKeywords != null)
         {
-            foreach (var kw in towerData.keywords)
-            {
+            foreach (KeywordData kw in towerData.defaultKeywords)
                 keywordController.AddKeyword(kw);
-            }
         }
     }
 
@@ -113,11 +132,17 @@ public class Tower : BuildingBase
     #region 공격 메서드
     private void Attack(Transform target)
     {
-        int finalDamage = towerData.damage;
+        int finalDamage = Mathf.RoundToInt(GetStat(StatType.AttackDamage));
+
+        var damageModifiers = keywordController.GetKeywords<IDamageModifier>();
+        foreach (var mod in damageModifiers)
+        {
+            finalDamage = mod.ModifyDamage(finalDamage, target);
+        }
 
         if (towerData.attackMechanism is ProjectileData projData)
         {
-            ShootProjectile(target, projData); // 기존 ShootProjectile이 파라미터를 받게 수정
+            ShootProjectile(target, projData);
         }
         // 2. 만약 장착된 부품이 '히트박스' 타입이라면?
         else if (towerData.attackMechanism is HitBoxData hitBoxData)
@@ -158,7 +183,7 @@ public class Tower : BuildingBase
             //Debug.LogError($"{prefab.name}에 Projectile 컴포넌트가 없음");
             return;
         }
-        projectile.Initialize(target, towerData.damage, projectileData);
+        projectile.Initialize(target, towerData.damage, projectileData, this);
 
     }
     #endregion
@@ -190,13 +215,6 @@ public class Tower : BuildingBase
         }
 
         Debug.Log($"[HitBox] 로드 결과 = {(prefab == null ? "NULL" : prefab.name)}");
-
-
-        if (prefab == null)
-        {
-            //Debug.LogError($"{name} : hitBoxPrefab 없음");
-            yield break;
-        }
         
         AreaHitBox hitBox = ObjectPoolManager.Instance.Spawn<AreaHitBox>(
             prefab,
@@ -208,6 +226,7 @@ public class Tower : BuildingBase
         if (hitBox == null)
         {
             //Debug.LogError($"{prefab.name} : AreaHitBox Spawn 실패");
+            isAttacking = false;
             yield break;
         }
 
@@ -221,27 +240,42 @@ public class Tower : BuildingBase
             towerData.damage,
             towerData.monsterLayer,
             hitBoxData,
-            towerData.attackSpeed
+            towerData.attackSpeed,
+            this
         );
 
-        float timer = 0f;
-
-        while (timer < hitBoxData.activeTime)
+        //float timer = 0f;
+        if (hitBoxData.damageMode == HitBoxDamageMode.TickDamage)
         {
-            if (target == null)
-                break;
+            while (target != null)
+            {
+                Monster monster = target.GetComponent<Monster>();
 
-            float distance = Vector3.Distance(transform.position, target.position);
+                if (monster != null && monster.isDead)
+                    break;
 
-            if (distance > towerData.attackRange)
-                break;
+                float distance = Vector3.Distance(transform.position, target.position);
 
-            RotateToTarget(target);
+                if (distance > towerData.attackRange)
+                    break;
 
-            timer += Time.deltaTime;
-            yield return null;
+                RotateToTarget(target);
+                yield return null;
+            }
+        }
+        else if (hitBoxData.damageMode == HitBoxDamageMode.OncePerTarget)
+        {
+            yield return new WaitForSeconds(hitBoxData.colliderActiveTime);
+
+            hitBox.DisableHitCollider();
+
+            float remainTime = Mathf.Max(0f, hitBoxData.activeTime - hitBoxData.colliderActiveTime);
+
+            if (remainTime > 0f)
+                yield return new WaitForSeconds(remainTime);
         }
 
+        hitBox.DisableHitCollider();
         hitBox.transform.SetParent(ObjectPoolManager.Instance.GetEffectParent());
 
         ObjectPoolManager.Instance.Despawn(hitBox);
@@ -266,6 +300,7 @@ public class Tower : BuildingBase
     }
     #endregion
 
+
     #region 범위 표시 Gizmos
     private void OnDrawGizmos()
     {
@@ -276,4 +311,19 @@ public class Tower : BuildingBase
         Gizmos.DrawWireSphere(transform.position, towerData.attackRange);
     }
     #endregion
+
+    #region 스텟
+    public float GetStat(StatType type) => stats.TryGetValue(type, out var stat) ? stat.CurrentValue : 0f;
+
+    private void UpdateAllStats()
+    {
+        var allModifiers = keywordController.GetKeywords<IStatModifier>();
+        foreach (var kvp in stats)
+        {
+            var targetModifiers = allModifiers.Where(m => m.TargetStat == kvp.Key).ToList();
+            kvp.Value.RecalculateStat(targetModifiers);
+        }
+    }
+    #endregion
+
 }

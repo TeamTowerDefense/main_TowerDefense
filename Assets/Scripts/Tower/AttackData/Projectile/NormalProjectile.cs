@@ -1,6 +1,5 @@
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Projectile/Normal")]
 public class NormalProjectile : Projectile
 {
     protected override void OnHit()
@@ -14,7 +13,11 @@ public class NormalProjectile : Projectile
         Monster monster = target.GetComponent<Monster>();
 
         if (monster != null)
+        {
+            TriggerOnHitEffects(monster);
             monster.TakeDamage(damage);
+        }
+
     }
     #endregion
 }

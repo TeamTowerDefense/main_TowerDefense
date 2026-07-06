@@ -4,9 +4,9 @@ public class ExplosiveProjectile : Projectile
 {
     private ExplosiveProjectileData explosiveData;
 
-    public override void Initialize(Transform target, int damage, ProjectileData projectileData)
+    public override void Initialize(Transform target, int damage, ProjectileData projectileData, Tower owner)
     {
-        base.Initialize(target, damage, projectileData);
+        base.Initialize(target, damage, projectileData, owner);
 
         explosiveData = projectileData as ExplosiveProjectileData;
     }
@@ -27,7 +27,10 @@ public class ExplosiveProjectile : Projectile
             Monster monster = hit.GetComponentInParent<Monster>();
 
             if (monster != null)
+            {
+                TriggerOnHitEffects(monster);
                 monster.TakeDamage(damage);
+            }
         }
     }
 
