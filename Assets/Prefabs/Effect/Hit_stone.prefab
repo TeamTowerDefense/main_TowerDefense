@@ -4881,6 +4881,9 @@ GameObject:
   - component: {fileID: 6474562328260966960}
   - component: {fileID: 202644707145319968}
   - component: {fileID: 1365217916090228066}
+  - component: {fileID: 2328108212340581587}
+  - component: {fileID: -1583567768876799157}
+  - component: {fileID: -8001225578000451250}
   m_Layer: 0
   m_Name: Hit_stone
   m_TagString: Untagged
@@ -4939,7 +4942,7 @@ ParticleSystem:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 1
+        value: 0
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -4948,7 +4951,7 @@ ParticleSystem:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 1
-        value: 1
+        value: 0
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -9710,6 +9713,42 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
+--- !u!114 &2328108212340581587
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2449093359157288976}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 746f403e695b81d41abd102c0e963401, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PoolEffect
+--- !u!114 &-1583567768876799157
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2449093359157288976}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c6e2605147fd7242bd143ea40e4b6a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EffectAutoDespawn
+--- !u!114 &-8001225578000451250
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2449093359157288976}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4772c3d3f2819ba458201afcefdc662b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EffectLifeTimeDespawner
 --- !u!1 &3754693291963451324
 GameObject:
   m_ObjectHideFlags: 0

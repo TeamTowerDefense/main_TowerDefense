@@ -15,9 +15,9 @@ MonoBehaviour:
   hitBoxID: 1006
   hitEffectID: 1006
   activeTime: 4
-  damageInterval: 0.2
+  damageInterval: 2
   hitEffectData: {fileID: 11400000, guid: 3a8e6fa632856624d9a84fae53a125f7, type: 2}
-  center: {x: 0, y: 3, z: 0}
+  center: {x: 0, y: 0, z: 0}
   damageMode: 1
   stopEffectOutOfRange: 0
   colliderActiveTime: 3
@@ -27,7 +27,7 @@ MonoBehaviour:
   debuffApplyInterval: 0.5
   isMortar: 1
   impactDelay: 1.2
-  hitColliderActiveTime: 2
+  hitColliderActiveTime: 3
   warningEffectID: -1
   launchEffectID: -1
   hitboxPF:
@@ -37,4 +37,4 @@ MonoBehaviour:
     m_SubObjectGUID: 
     m_EditorAssetChanged: 0
   loadedPrefab: {fileID: 4349695444788124133, guid: 30efe4539f55b9d49bd9b3731b3337d3, type: 3}
-  sphereRadius: 5
+  sphereRadius: 3.2

@@ -135,7 +135,7 @@ public class AreaHitBox : PoolableObject
         }
         else if (hitBoxData.damageMode == HitBoxDamageMode.TickDamage)
         {
-            SpawnOrKeepLoopEffect(monster);
+            SpawnTickHeatEffect(monster);
 
             ApplyDamage(monster);
             damageTimers[monster] = GetTickInterval();
@@ -155,7 +155,7 @@ public class AreaHitBox : PoolableObject
         if (monster == null || monster.isDead)
             return;
 
-        SpawnOrKeepLoopEffect(monster);
+        SpawnTickHeatEffect(monster);
 
         if (!damageTimers.ContainsKey(monster))
         {
@@ -199,11 +199,11 @@ public class AreaHitBox : PoolableObject
     }
 
 
-    private void SpawnOrKeepLoopEffect(Monster monster)
+    private void SpawnTickHeatEffect(Monster monster)
     {
         if (activeHitEffects.ContainsKey(monster))
         {
-            if(effectDespawnRoutines.TryGetValue(monster, out Coroutine routine))
+            if (effectDespawnRoutines.TryGetValue(monster, out Coroutine routine))
             {
                 StopCoroutine(routine);
                 effectDespawnRoutines.Remove(monster);
@@ -216,6 +216,20 @@ public class AreaHitBox : PoolableObject
 
         if (effect == null)
             return;
+
+        EffectLifeTimeDespawner despawner = effect.GetComponent<EffectLifeTimeDespawner>();
+
+        if (despawner != null)
+        {
+            float lifeTime = 1f;
+            if (hitBoxData.hitEffectData != null && hitBoxData.hitEffectData.lifeTime > 0)
+            {
+                lifeTime = hitBoxData.hitEffectData.lifeTime;
+            }
+
+            despawner.StartLifeTime(lifeTime);
+        }
+
 
         activeHitEffects.Add(monster, effect);
     }
@@ -259,11 +273,9 @@ public class AreaHitBox : PoolableObject
         if (effectPF == null)
             return null;
 
-        Vector3 effectPos = monster.transform.position + Vector3.up * 0.2f;
-
         PoolableObject effect = ObjectPoolManager.Instance.Spawn<PoolableObject>(
             effectPF,
-            effectPos,
+            monster.transform.position,
             Quaternion.identity,
             ObjectPoolManager.Instance.GetEffectParent()
         );

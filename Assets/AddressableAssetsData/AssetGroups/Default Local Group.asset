@@ -58,6 +58,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - Tower
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 30efe4539f55b9d49bd9b3731b3337d3
+    m_Address: Assets/Prefabs/HitBox/HowizerHitBox.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - HitBox
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 324d0803b52fb8a479b4018ed350935d
     m_Address: Assets/SO/StageDataSO/Stage_004.asset
     m_ReadOnly: 0
