@@ -1086,15 +1086,21 @@ MonoBehaviour:
   useEdgeMove: 1
   edgePixels: 24
   edgeMoveStartDelay: 0.2
+  zoomMode: 1
   zoomSpeed: 50
   zoomSmoothSpeed: 8
-  startZoomRate: 1
-  nearTargetY: 1
-  farTargetY: 15
-  nearFollowOffsetZ: -3
-  farFollowOffsetZ: 0
+  startZoomRate: 0.3
+  nearTargetY: 5
+  farTargetY: 18
+  nearFollowOffsetZ: -8
+  farFollowOffsetZ: -24
   nearRotOffset: {x: 0, y: 0, z: 0}
-  farRotOffset: {x: 0, y: -1, z: 0}
+  farRotOffset: {x: 0, y: 0, z: 0}
+  fixedViewAngle: 55
+  nearZoomDistance: 5
+  farZoomDistance: 15
+  fixedTargetY: 0
+  fixedTargetOffset: {x: 0, y: 0, z: 0}
 --- !u!4 &158826440
 Transform:
   m_ObjectHideFlags: 0
@@ -12882,6 +12888,7 @@ MonoBehaviour:
   moveActionName: Move
   scrollActionName: Scroll
   rotateActionName: PointerDelta
+  blockInputOnStageEnd: 1
   inactivePriority: 10
   activePriority: 20
 --- !u!4 &1648864666
@@ -13411,7 +13418,7 @@ MonoBehaviour:
     AngularDampingMode: 0
     RotationDamping: {x: 1, y: 1, z: 1}
     QuaternionDamping: 1
-  FollowOffset: {x: 0, y: 0, z: 0}
+  FollowOffset: {x: 0, y: 0, z: -0.5}
 --- !u!4 &1739038663
 Transform:
   m_ObjectHideFlags: 0
@@ -13420,8 +13427,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1739038660}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.7009093, y: 0.00000006235463, z: -0.00000006127573, w: 0.71325046}
-  m_LocalPosition: {x: 0, y: 15, z: 0}
+  m_LocalRotation: {x: 0.52573115, y: -0.00000013379608, z: 0.00000008269051, w: 0.85065085}
+  m_LocalPosition: {x: 0, y: 15, z: -0.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -14139,8 +14146,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1861183096}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.7009094, y: 0.00000006235506, z: -0.00000006127616, w: 0.7132504}
-  m_LocalPosition: {x: 0, y: 15, z: 0}
+  m_LocalRotation: {x: 0.5257311, y: 0, z: 0, w: 0.85065085}
+  m_LocalPosition: {x: 0, y: 15, z: -0.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
