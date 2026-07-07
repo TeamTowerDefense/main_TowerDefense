@@ -15,3 +15,4 @@ MonoBehaviour:
   hitBoxes:
   - {fileID: 11400000, guid: cdf1c43bdf483754f82191a777161750, type: 2}
   - {fileID: 11400000, guid: d9b0691295123c04cb32769a8b746258, type: 2}
+  - {fileID: 11400000, guid: e76284b64316c8945b7a3f5311a87bb2, type: 2}

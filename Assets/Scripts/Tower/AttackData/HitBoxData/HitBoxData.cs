@@ -40,6 +40,13 @@ public class HitBoxData : AttackBaseData
     [Header("Debuff Tick")]
     public float debuffApplyInterval = 0.5f;
 
+    [Header("Synchronized Attack(Howitzer Only)")]
+    public bool isMortar;
+    public float impactDelay = 1.2f;
+    public float hitColliderActiveTime = 0.2f;
+    public int warningEffectID;
+    public int launchEffectID;
+
     public AssetReferenceGameObject hitboxPF;
 
     [HideInInspector] public GameObject loadedPrefab;

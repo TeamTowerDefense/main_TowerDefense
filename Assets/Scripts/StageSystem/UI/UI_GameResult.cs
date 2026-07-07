@@ -1,4 +1,5 @@
 using IGameFlowInterface;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -10,6 +11,10 @@ public class UI_GameResult : MonoBehaviour
     [SerializeField] StageController stageController;
     [SerializeField] GameObject panelRoot;
     [SerializeField] CanvasGroup canvasGroup;
+
+    [Header("별 연출")]
+    [SerializeField] GameObject[] starObjects;
+    [SerializeField] float starDelay = 0.35f;
 
     [Header("텍스트")]
     [SerializeField] TextMeshProUGUI titleText;
@@ -145,11 +150,15 @@ public class UI_GameResult : MonoBehaviour
 
         if (titleText) titleText.text = result.Cleared ? clearTitle : failTitle;
         if (resultText) resultText.text = result.Cleared ? "클리어 성공" : "스테이지 실패";
-        if (hpText) hpText.text = $"기지 체력: {result.CurrentBaseHp} / {result.MaxBaseHp}";
-        if (timeText) timeText.text = $"진행 시간: {FormatTime(result.ElapsedTime)}";
-        if (killText) killText.text = $"처치 수: {result.KilledEnemyCount}";
-        if (leakText) leakText.text = $"누수 수: {result.LeakedEnemyCount}";
-        if (starText) starText.text = $"획득 별: {earnedStarCount} / {maxStarCount}";
+        if (hpText) hpText.text = $"{result.CurrentBaseHp}";
+        if (timeText) timeText.text = $"{FormatTime(result.ElapsedTime)}";
+        if (killText) killText.text = $"{result.KilledEnemyCount}";
+        if (leakText) leakText.text = $"{result.LeakedEnemyCount}";
+
+        if (gameObject.activeInHierarchy)
+        {
+            StartCoroutine(AnimateStarsRoutine(earnedStarCount));
+        }
 
         RefreshStarConditions(stageData, result, starMask);
 
@@ -280,6 +289,7 @@ public class UI_GameResult : MonoBehaviour
         gameFlowService.FinishStageRun(currentResult, request);
     }
 
+
     #endregion
 
     #region 시간
@@ -318,6 +328,69 @@ public class UI_GameResult : MonoBehaviour
         int sec = total % 60;
 
         return $"{min:00}:{sec:00}";
+    }
+
+    #endregion
+
+    #region 별 연출 (애니메이션)
+
+    private IEnumerator AnimateStarsRoutine(int earnedStarCount)
+    {
+        if(starObjects == null)
+            yield break;
+
+        foreach (var star in starObjects)
+        {
+            if (star != null)
+            {
+                star.SetActive(false);
+                star.transform.localScale = Vector3.zero;
+            }
+        }
+
+        yield return new WaitForSecondsRealtime(0.5f);
+
+        for (int i = 0; i < earnedStarCount; i++)
+        {
+            if (i >= starObjects.Length || starObjects[i] == null) break;
+
+            GameObject star = starObjects[i];
+            star.SetActive(true);
+
+            yield return StartCoroutine(PopScaleRoutine(star.transform));
+
+            yield return new WaitForSecondsRealtime(starDelay);
+        }
+    }
+
+    private IEnumerator PopScaleRoutine(Transform target)
+    {
+        float duration = 0.3f;
+        float time = 0f;
+        Vector3 defaultScale = Vector3.one;
+
+        while (time < duration)
+        {
+            // TimeScale이 0일 때도 애니메이션이 재생되도록 unscaledDeltaTime 사용!
+            time += Time.unscaledDeltaTime;
+            float t = time / duration;
+
+            if (t < 0.6f)
+            {
+                // 앞의 60% 시간 동안은 원래 크기의 1.3배까지 튀어 오름
+                target.localScale = Vector3.Lerp(Vector3.zero, defaultScale * 1.3f, t / 0.6f);
+            }
+            else
+            {
+                // 나머지 40% 시간 동안 1.3배에서 원래 크기(1.0)로 안착
+                target.localScale = Vector3.Lerp(defaultScale * 1.3f, defaultScale, (t - 0.6f) / 0.4f);
+            }
+
+            yield return null;
+        }
+
+        // 오차 방지를 위해 최종 스케일 고정
+        target.localScale = defaultScale;
     }
 
     #endregion

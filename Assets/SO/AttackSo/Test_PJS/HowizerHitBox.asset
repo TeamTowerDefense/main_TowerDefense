@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26e3e730365611d4bbf8a0de75bd7d02, type: 3}
+  m_Name: HowizerHitBox
+  m_EditorClassIdentifier: Assembly-CSharp::SphereHitboxData
+  hitBoxID: 1006
+  hitEffectID: 1006
+  activeTime: 4
+  damageInterval: 2
+  hitEffectData: {fileID: 11400000, guid: 3a8e6fa632856624d9a84fae53a125f7, type: 2}
+  center: {x: 0, y: 0, z: 0}
+  damageMode: 1
+  stopEffectOutOfRange: 0
+  colliderActiveTime: 3
+  effectDespawnDelay: 1
+  applyDebuff: 0
+  debuffs: []
+  debuffApplyInterval: 0.5
+  isMortar: 1
+  impactDelay: 1.2
+  hitColliderActiveTime: 3
+  warningEffectID: -1
+  launchEffectID: -1
+  hitboxPF:
+    m_AssetGUID: 30efe4539f55b9d49bd9b3731b3337d3
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_SubObjectGUID: 
+    m_EditorAssetChanged: 0
+  loadedPrefab: {fileID: 4349695444788124133, guid: 30efe4539f55b9d49bd9b3731b3337d3, type: 3}
+  sphereRadius: 3.2

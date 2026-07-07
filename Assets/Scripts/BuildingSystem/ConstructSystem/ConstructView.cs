@@ -74,11 +74,11 @@ public class ConstructView : MonoBehaviour
     #endregion
 
     #region 타워 정보 UI 제어
-    public void ShowTowerInfo(BuildingData data, EnemyTargetMode targetMode)
+    public void ShowTowerInfo(Tower tower)
     {
-        if (towerInfoUI != null && data is TowerData towerData)
+        if (tower != null)
         {
-            towerInfoUI.SetInfo(towerData, targetMode);
+            towerInfoUI.SetTowerInfo(tower);
             towerInfoUI.Show();
         }
     }
