@@ -108,7 +108,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TowerTargetFinder
   searchInterval: 0.15
-  targetMode: 3
+  targetMode: 2
 --- !u!114 &7947375095304547199
 MonoBehaviour:
   m_ObjectHideFlags: 0
