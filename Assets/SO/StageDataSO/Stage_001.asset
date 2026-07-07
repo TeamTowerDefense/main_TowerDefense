@@ -25,11 +25,6 @@ MonoBehaviour:
     PrepareTime: 10
     CanSkipPrepare: 0
     AllowBuildDuringWave: 1
-  - DisplayName: Test Wave
-    SpawnData: {fileID: 11400000, guid: 49be76b0f7d6ffc4d951eb4bbb0ef058, type: 2}
-    PrepareTime: 10
-    CanSkipPrepare: 0
-    AllowBuildDuringWave: 1
   NextStageIds:
   - Stage_002
   StarConditions:

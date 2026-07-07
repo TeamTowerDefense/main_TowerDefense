@@ -26,14 +26,12 @@ public class DebuffEffect_Slow : KeywordEffectBase, IStatModifier, IUpdateModifi
 
     public override void OnApply()
     {
-        base.OnApply();
         Debug.Log($"[디버프] {owner.name}에게 슬로우 디버프가 적용되었습니다. (속도 {Value * 100}%)");
         // TODO: 몬스터 렌더러 컬러를 푸른색으로 변경하거나 파란 이펙트 부착
     }
 
     public override void OnRemove()
     {
-        base.OnRemove();
         Debug.Log($"[디버프 해제] {owner.name}의 슬로우 디버프가 해제되었습니다.");
         // TODO: 몬스터 원래 색상으로 복구
     }
