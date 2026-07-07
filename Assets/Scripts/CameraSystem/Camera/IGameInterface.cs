@@ -379,6 +379,11 @@ namespace IGameInterface
         void StartWave();
         void TakeBaseDamage(int damage);
     }
-
+    public interface IStageMonsterTracker : ISceneService
+    {
+        void Register(GameObject monsterObj);
+        void Unregister(GameObject monsterObj);
+        void DespawnAllImmediate();
+    }
 
 }
