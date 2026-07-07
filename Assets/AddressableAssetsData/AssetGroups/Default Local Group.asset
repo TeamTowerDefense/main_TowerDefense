@@ -58,12 +58,6 @@ MonoBehaviour:
     m_SerializedLabels:
     - Tower
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 30efe4539f55b9d49bd9b3731b3337d3
-    m_Address: Assets/Prefabs/HitBox/HowizerHitBox.prefab
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - HitBox
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 324d0803b52fb8a479b4018ed350935d
     m_Address: Assets/SO/StageDataSO/Stage_004.asset
     m_ReadOnly: 0
@@ -105,30 +99,17 @@ MonoBehaviour:
     m_SerializedLabels:
     - Projectile
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 666f1634bd2302241915e233cfdc57b6
-    m_Address: Assets/Prefabs/Tower/TestHowizerTower.prefab
+  - m_GUID: 6b42a58e1d069a94d917ddfa1ebf1e94
+    m_Address: Assets/SO/EffectSo/HitLuncher.asset
     m_ReadOnly: 0
     m_SerializedLabels:
-    - Tower
+    - Effect_Projectile
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 6bb5d459c8ae1a7438ec6c9e684d87b1
     m_Address: Assets/Prefabs/Tower/TestTower.prefab
     m_ReadOnly: 0
     m_SerializedLabels:
     - Tower
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 733578bafa28d9e4c95a09a3b505f397
-    m_Address: Assets/Prefabs/Tower/TestSniperTower.prefab
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Tower
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 738f37fd5c1bc5344853ffd42343c37f
-    m_Address: Assets/Prefabs/Effect/Hit_stone.prefab
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Effect
-    - Effect_HitBox
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 829fd095e4270ee48a4002de72905758
     m_Address: Assets/Prefabs/Tower/TestStunTower.prefab
@@ -177,6 +158,12 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e2e5b904d2903e946998f4a2fe28bf7e
+    m_Address: Assets/SO/EffectSo/HitSlow.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Effect_HitBox
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: e393610002f3f1e42bed2f10b03ed509
     m_Address: Assets/SO/TowerDataSO/TestBulletTower.asset
     m_ReadOnly: 0
@@ -214,6 +201,12 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - StageData
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fbb927ef055cf184bbf79724a14bc75f
+    m_Address: Assets/SO/EffectSo/HitBullet.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Effect_Projectile
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: febdbf95396b5bb4eaba5cfad2225585
     m_Address: Assets/SO/MonsterDataSO/HealMonsterData.asset
