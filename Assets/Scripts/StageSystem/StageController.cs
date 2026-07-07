@@ -215,7 +215,7 @@ public class StageController : MonoBehaviour, IStageService, IAutoSceneService
 
         spawnManager?.StopWave();
         SetState(StageState.StageFailed);
-        CreateStageResult(true);
+        CreateStageResult(false);
     }
 
     void SetState(StageState state)

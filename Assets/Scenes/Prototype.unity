@@ -330,7 +330,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ObjectPoolManager
   projectileParent: {fileID: 2117202368}
   effectParent: {fileID: 246296665}
-  monsterParent: {fileID: 0}
+  monsterParent: {fileID: 1207981170}
   projectileDB: {fileID: 11400000, guid: 3c4462417c642af4d9a7889e574a2c69, type: 2}
   hitBoxDB: {fileID: 11400000, guid: 7bd5e7b9f7293da4bb9abd845e969ffe, type: 2}
   effectDatabase: {fileID: 11400000, guid: cab9c7b7d3d57864692e990903c9a450, type: 2}
@@ -349,6 +349,7 @@ Transform:
   m_Children:
   - {fileID: 2117202368}
   - {fileID: 246296665}
+  - {fileID: 1207981170}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &49294431
@@ -2638,6 +2639,50 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8719739787567930251, guid: 341e51ffcacc4a3419e517763508953d, type: 3}
   m_PrefabInstance: {fileID: 413574841}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &414977652
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 414977654}
+  - component: {fileID: 414977653}
+  m_Layer: 0
+  m_Name: StageTrackerSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &414977653
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 414977652}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11366f0a1c1eab94c928acda24118c6a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StageMonsterTracker
+--- !u!4 &414977654
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 414977652}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &416061128
 GameObject:
   m_ObjectHideFlags: 0
@@ -10035,6 +10080,37 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1202380726}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1207981169
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1207981170}
+  m_Layer: 0
+  m_Name: Monster
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1207981170
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1207981169}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 42908341}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1213794833
 GameObject:
   m_ObjectHideFlags: 0
@@ -12069,7 +12145,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MonsterManager
   useAutoSpawn: 1
-  monsterPrefab: {fileID: 4253210182481893339, guid: d71c56f2e6af1ba449a0a11217b143a4, type: 3}
   spawnY: -0.1
   separationRadius: 1
   separationStrength: 1
@@ -12196,6 +12271,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MonsterManagerStageProvider
   monsterManager: {fileID: 1527857570}
   pathIndex: 0
+  useUnscaledSpawnDelay: 0
 --- !u!1 &1534489432
 GameObject:
   m_ObjectHideFlags: 0
@@ -18511,6 +18587,7 @@ SceneRoots:
   - {fileID: 290137807}
   - {fileID: 1527857571}
   - {fileID: 315520727}
+  - {fileID: 414977654}
   - {fileID: 37933753}
   - {fileID: 158826440}
   - {fileID: 1612529925}

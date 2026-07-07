@@ -1,4 +1,4 @@
-using IGameFlowInterface;
+ï»¿using IGameFlowInterface;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -6,12 +6,12 @@ using UnityEngine.UI;
 
 public class UI_GameResult : MonoBehaviour
 {
-    [Header("ÂüÁ¶")]
+    [Header("ì°¸ì¡°")]
     [SerializeField] StageController stageController;
     [SerializeField] GameObject panelRoot;
     [SerializeField] CanvasGroup canvasGroup;
 
-    [Header("ÅØ½ºÆ®")]
+    [Header("í…ìŠ¤íŠ¸")]
     [SerializeField] TextMeshProUGUI titleText;
     [SerializeField] TextMeshProUGUI resultText;
     [SerializeField] TextMeshProUGUI hpText;
@@ -20,23 +20,23 @@ public class UI_GameResult : MonoBehaviour
     [SerializeField] TextMeshProUGUI leakText;
     [SerializeField] TextMeshProUGUI starText;
 
-    [Header("º° Á¶°Ç ¸ñ·Ï")]
+    [Header("ë³„ ì¡°ê±´ ëª©ë¡")]
     [SerializeField] Transform starConditionRoot;
     [SerializeField] UI_StageStarConditionRow starConditionRowPrefab;
     [SerializeField] bool showFallbackConditions = true;
 
-    [Header("¹öÆ°")]
+    [Header("ë²„íŠ¼")]
     [SerializeField] Button retryButton;
     [SerializeField] Button lobbyButton;
     [SerializeField] Button stageSelectButton;
 
-    [Header("¿É¼Ç")]
+    [Header("ì˜µì…˜")]
     [SerializeField] bool pauseOnShow = true;
     [SerializeField] string clearTitle = "STAGE CLEAR";
     [SerializeField] string failTitle = "GAME OVER";
 
 
-    #region ÇÊµå
+    #region í•„ë“œ
 
     readonly List<UI_StageStarConditionRow> spawnedRows = new();
 
@@ -50,7 +50,7 @@ public class UI_GameResult : MonoBehaviour
 
     #endregion
 
-    #region »ı¸íÁÖ±â
+    #region ìƒëª…ì£¼ê¸°
 
     void Awake()
     {
@@ -94,7 +94,7 @@ public class UI_GameResult : MonoBehaviour
 
     #endregion
 
-    #region ±¸µ¶
+    #region êµ¬ë…
 
     void Subscribe()
     {
@@ -121,7 +121,7 @@ public class UI_GameResult : MonoBehaviour
 
     #endregion
 
-    #region Ç¥½Ã
+    #region í‘œì‹œ
 
     public void Show(StageResultContext result)
     {
@@ -144,12 +144,12 @@ public class UI_GameResult : MonoBehaviour
         int maxStarCount = StageStarEvaluator.GetMaxStarCount(stageData);
 
         if (titleText) titleText.text = result.Cleared ? clearTitle : failTitle;
-        if (resultText) resultText.text = result.Cleared ? "Å¬¸®¾î ¼º°ø" : "½ºÅ×ÀÌÁö ½ÇÆĞ";
-        if (hpText) hpText.text = $"±âÁö Ã¼·Â: {result.CurrentBaseHp} / {result.MaxBaseHp}";
-        if (timeText) timeText.text = $"ÁøÇà ½Ã°£: {FormatTime(result.ElapsedTime)}";
-        if (killText) killText.text = $"Ã³Ä¡ ¼ö: {result.KilledEnemyCount}";
-        if (leakText) leakText.text = $"´©¼ö ¼ö: {result.LeakedEnemyCount}";
-        if (starText) starText.text = $"È¹µæ º°: {earnedStarCount} / {maxStarCount}";
+        if (resultText) resultText.text = result.Cleared ? "í´ë¦¬ì–´ ì„±ê³µ" : "ìŠ¤í…Œì´ì§€ ì‹¤íŒ¨";
+        if (hpText) hpText.text = $"ê¸°ì§€ ì²´ë ¥:\n{result.CurrentBaseHp} / {result.MaxBaseHp}";
+        if (timeText) timeText.text = $"ì§„í–‰ ì‹œê°„: {FormatTime(result.ElapsedTime)}";
+        if (killText) killText.text = $"ì²˜ì¹˜ ìˆ˜: {result.KilledEnemyCount}";
+        if (leakText) leakText.text = $"ëˆ„ìˆ˜ ìˆ˜: {result.LeakedEnemyCount}";
+        if (starText) starText.text = $"íšë“ ë³„: {earnedStarCount} / {maxStarCount}";
 
         RefreshStarConditions(stageData, result, starMask);
 
@@ -192,9 +192,9 @@ public class UI_GameResult : MonoBehaviour
 
     void CreateFallbackStarConditionRows(StageResultContext result, int starMask)
     {
-        CreateStarConditionRow("½ºÅ×ÀÌÁö Å¬¸®¾î", "½ºÅ×ÀÌÁö¸¦ Å¬¸®¾îÇÕ´Ï´Ù.", (starMask & (1 << 0)) != 0);
-        CreateStarConditionRow("±âÁö Ã¼·Â 50% ÀÌ»ó", "Å¬¸®¾î ½Ã ±âÁö Ã¼·ÂÀ» 50% ÀÌ»ó À¯ÁöÇÕ´Ï´Ù.", (starMask & (1 << 1)) != 0);
-        CreateStarConditionRow("±âÁö Ã¼·Â 100% À¯Áö", "Å¬¸®¾î ½Ã ±âÁö Ã¼·ÂÀ» ¸ğµÎ À¯ÁöÇÕ´Ï´Ù.", (starMask & (1 << 2)) != 0);
+        CreateStarConditionRow("ìŠ¤í…Œì´ì§€ í´ë¦¬ì–´", "ìŠ¤í…Œì´ì§€ë¥¼ í´ë¦¬ì–´í•©ë‹ˆë‹¤.", (starMask & (1 << 0)) != 0);
+        CreateStarConditionRow("ê¸°ì§€ ì²´ë ¥ 50% ì´ìƒ", "í´ë¦¬ì–´ ì‹œ ê¸°ì§€ ì²´ë ¥ì„ 50% ì´ìƒ ìœ ì§€í•©ë‹ˆë‹¤.", (starMask & (1 << 1)) != 0);
+        CreateStarConditionRow("ê¸°ì§€ ì²´ë ¥ 100% ìœ ì§€", "í´ë¦¬ì–´ ì‹œ ê¸°ì§€ ì²´ë ¥ì„ ëª¨ë‘ ìœ ì§€í•©ë‹ˆë‹¤.", (starMask & (1 << 2)) != 0);
     }
 
     void CreateStarConditionRow(string displayName, string description, bool achieved)
@@ -230,7 +230,7 @@ public class UI_GameResult : MonoBehaviour
 
     #endregion
 
-    #region ¹öÆ°
+    #region ë²„íŠ¼
 
     void OnClickRetry()
     {
@@ -241,7 +241,7 @@ public class UI_GameResult : MonoBehaviour
 
         if (gameFlowService == null)
         {
-            Debug.LogError("[StageResultTempPanel] IGameFlowService¸¦ Ã£Áö ¸øÇØ ÀçµµÀüÀ» ½ÇÇàÇÒ ¼ö ¾ø½À´Ï´Ù.", this);
+            Debug.LogError("[StageResultTempPanel] IGameFlowServiceë¥¼ ì°¾ì§€ ëª»í•´ ì¬ë„ì „ì„ ì‹¤í–‰í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤.", this);
             return;
         }
 
@@ -262,7 +262,7 @@ public class UI_GameResult : MonoBehaviour
     {
         if (!hasResult)
         {
-            Debug.LogWarning("[StageResultTempPanel] Á¦ÃâÇÒ StageResult°¡ ¾ø½À´Ï´Ù.", this);
+            Debug.LogWarning("[StageResultTempPanel] ì œì¶œí•  StageResultê°€ ì—†ìŠµë‹ˆë‹¤.", this);
             return;
         }
 
@@ -273,7 +273,7 @@ public class UI_GameResult : MonoBehaviour
 
         if (gameFlowService == null)
         {
-            Debug.LogError("[StageResultTempPanel] IGameFlowService¸¦ Ã£Áö ¸øÇØ °á°ú¸¦ Á¦ÃâÇÒ ¼ö ¾ø½À´Ï´Ù.", this);
+            Debug.LogError("[StageResultTempPanel] IGameFlowServiceë¥¼ ì°¾ì§€ ëª»í•´ ê²°ê³¼ë¥¼ ì œì¶œí•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤.", this);
             return;
         }
 
@@ -282,7 +282,7 @@ public class UI_GameResult : MonoBehaviour
 
     #endregion
 
-    #region ½Ã°£
+    #region ì‹œê°„
 
     void PauseTime()
     {
@@ -303,7 +303,7 @@ public class UI_GameResult : MonoBehaviour
 
     #endregion
 
-    #region À¯Æ¿
+    #region ìœ í‹¸
 
     void ResolveServices()
     {
