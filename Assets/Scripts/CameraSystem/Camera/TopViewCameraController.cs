@@ -2,6 +2,12 @@
 using Unity.Cinemachine;
 using UnityEngine;
 
+public enum TopViewZoomMode
+{
+    BlendTargetAndOffset,
+    FixedAngleDistance
+}
+
 public class TopViewCameraController : MonoBehaviour, ICameraModule
 {
     [Header("시네머신 카메라")]
@@ -17,16 +23,26 @@ public class TopViewCameraController : MonoBehaviour, ICameraModule
     [SerializeField] float edgePixels = 24f;
     [SerializeField] float edgeMoveStartDelay = 0.2f;
 
-    [Header("줌")]
+    [Header("줌 공통")]
+    [SerializeField] TopViewZoomMode zoomMode = TopViewZoomMode.FixedAngleDistance;
     [SerializeField] float zoomSpeed = 50f;
     [SerializeField] float zoomSmoothSpeed = 8f;
-    [SerializeField] float startZoomRate = 1f;
+    [SerializeField, Range(0f, 1f)] float startZoomRate = 1f;
+
+    [Header("줌 - 인아웃 회전")]
     [SerializeField] float nearTargetY = 5f;
     [SerializeField] float farTargetY = 20f;
     [SerializeField] float nearFollowOffsetZ = -3f;
     [SerializeField] float farFollowOffsetZ = 0f;
     [SerializeField] Vector3 nearRotOffset = Vector3.zero;
     [SerializeField] Vector3 farRotOffset = Vector3.zero;
+
+    [Header("줌 - 고정 각도")]
+    [SerializeField, Range(25f, 80f)] float fixedViewAngle = 55f;
+    [SerializeField, Min(1f)] float nearZoomDistance = 10f;
+    [SerializeField, Min(1f)] float farZoomDistance = 26f;
+    [SerializeField] float fixedTargetY = 0f;
+    [SerializeField] Vector3 fixedTargetOffset = Vector3.zero;
 
     IInputService inputService;
 
@@ -40,6 +56,7 @@ public class TopViewCameraController : MonoBehaviour, ICameraModule
     public CinemachineCamera Camera => topViewCam;
 
     #region 생명 주기
+
     void Awake()
     {
         currentZoomRate = Mathf.Clamp01(startZoomRate);
@@ -62,14 +79,22 @@ public class TopViewCameraController : MonoBehaviour, ICameraModule
         currentZoomRate = Mathf.Lerp(
             currentZoomRate,
             targetZoomRate,
-            1f - Mathf.Exp(-zoomSmoothSpeed * Time.unscaledDeltaTime)
-        );
+            1f - Mathf.Exp(-zoomSmoothSpeed * Time.unscaledDeltaTime));
 
         ApplyZoomRate(currentZoomRate);
     }
+
+    void OnValidate()
+    {
+        startZoomRate = Mathf.Clamp01(startZoomRate);
+        nearZoomDistance = Mathf.Max(1f, nearZoomDistance);
+        farZoomDistance = Mathf.Max(1f, farZoomDistance);
+    }
+
     #endregion
 
     #region ICameraModule
+
     public void Activate()
     {
         active = true;
@@ -85,7 +110,6 @@ public class TopViewCameraController : MonoBehaviour, ICameraModule
     public void Deactivate()
     {
         active = false;
-
         Cursor.lockState = CursorLockMode.None;
     }
 
@@ -111,9 +135,11 @@ public class TopViewCameraController : MonoBehaviour, ICameraModule
     public void Rotate(Vector2 input)
     {
     }
+
     #endregion
 
     #region 내부 함수
+
     void ResolveServices()
     {
         if (inputService == null) ServiceLocator.TryGet(out inputService);
@@ -180,6 +206,21 @@ public class TopViewCameraController : MonoBehaviour, ICameraModule
         if (!topViewCam.TryGetComponent(out CinemachineFollow follower) ||
             !topViewCam.TryGetComponent(out CinemachineRotationComposer rotComposer)) return;
 
+        switch (zoomMode)
+        {
+            case TopViewZoomMode.FixedAngleDistance:
+                ApplyFixedAngleZoom(zoomRate, follower, rotComposer);
+                break;
+
+            case TopViewZoomMode.BlendTargetAndOffset:
+            default:
+                ApplyBlendTargetZoom(zoomRate, follower, rotComposer);
+                break;
+        }
+    }
+
+    void ApplyBlendTargetZoom(float zoomRate, CinemachineFollow follower, CinemachineRotationComposer rotComposer)
+    {
         Vector3 targetPos = topViewTarget.position;
         targetPos.y = Mathf.Lerp(nearTargetY, farTargetY, zoomRate);
         topViewTarget.position = targetPos;
@@ -190,5 +231,23 @@ public class TopViewCameraController : MonoBehaviour, ICameraModule
 
         rotComposer.TargetOffset = Vector3.Lerp(nearRotOffset, farRotOffset, zoomRate);
     }
+
+    void ApplyFixedAngleZoom(float zoomRate, CinemachineFollow follower, CinemachineRotationComposer rotComposer)
+    {
+        Vector3 targetPos = topViewTarget.position;
+        targetPos.y = fixedTargetY;
+        topViewTarget.position = targetPos;
+
+        float distance = Mathf.Lerp(nearZoomDistance, farZoomDistance, zoomRate);
+        float angleRad = fixedViewAngle * Mathf.Deg2Rad;
+
+        follower.FollowOffset = new Vector3(
+            0f,
+            Mathf.Sin(angleRad) * distance,
+            -Mathf.Cos(angleRad) * distance);
+
+        rotComposer.TargetOffset = fixedTargetOffset;
+    }
+
     #endregion
 }

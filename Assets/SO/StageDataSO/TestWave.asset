@@ -26,4 +26,8 @@ MonoBehaviour:
     Count: 5
     Interval: 3
     StartDelay: 0.2
+  - MonsterData: {fileID: 11400000, guid: febdbf95396b5bb4eaba5cfad2225585, type: 2}
+    Count: 1
+    Interval: 3
+    StartDelay: 0.2
   Reward: 2

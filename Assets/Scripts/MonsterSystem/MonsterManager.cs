@@ -34,7 +34,6 @@ public class MonsterManager : MonoBehaviour
             return _instance;
         }
     }
-    public GameObject monsterPrefab;
     public float spawnY = -1f;
 
     public float separationRadius = 1.5f, separationStrength = 2.0f;
