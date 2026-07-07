@@ -17,6 +17,7 @@ public abstract class KeywordData : ScriptableObject
 {
     [Header("기본 정보")]
     public string keywordName;
+    public string displayName;
     public KeywordType type;
     [TextArea] public string description;
     [Header("중첩 설정")]

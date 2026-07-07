@@ -13,8 +13,10 @@ MonoBehaviour:
   m_Name: TraitDataSO_Berserker
   m_EditorClassIdentifier: Assembly-CSharp::KWData_Berserker
   keywordName: Berserker
+  displayName: "\uAD11\uC804\uC0AC"
   type: 0
+  description: 
   isStackable: 0
   maxStack: 1
-  description: 
+  visualEffectPrefab: {fileID: 0}
   adBonusRatio: 0.5
