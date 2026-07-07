@@ -355,10 +355,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ObjectPoolManager
   projectileParent: {fileID: 1265479572}
   effectParent: {fileID: 374759510}
+  monsterParent: {fileID: 1868422549}
   projectileDB: {fileID: 11400000, guid: 3c4462417c642af4d9a7889e574a2c69, type: 2}
   hitBoxDB: {fileID: 11400000, guid: 7bd5e7b9f7293da4bb9abd845e969ffe, type: 2}
   effectDatabase: {fileID: 11400000, guid: cab9c7b7d3d57864692e990903c9a450, type: 2}
-  prewarmPerFrame: 2
 --- !u!4 &733053682
 Transform:
   m_ObjectHideFlags: 0
@@ -374,6 +374,7 @@ Transform:
   m_Children:
   - {fileID: 1265479572}
   - {fileID: 374759510}
+  - {fileID: 1868422549}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &856731027
@@ -856,6 +857,37 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
+--- !u!1 &1868422548
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1868422549}
+  m_Layer: 0
+  m_Name: Monster
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1868422549
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1868422548}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 733053682}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1997671912
 GameObject:
   m_ObjectHideFlags: 0
@@ -918,6 +950,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameBootstrapper
   autoEnterTitleOnStart: 1
   startDelay: 0
+  waitGlobalServices: 1
+  serviceReadyTimeout: 5
   destroyAfterStartFlow: 0
   logBootstrap: 1
 --- !u!4 &2036849733

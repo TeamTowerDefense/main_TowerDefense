@@ -7,11 +7,16 @@ public class MonsterManagerStageProvider : MonoBehaviour, IMonsterSpawnManager, 
 {
     [SerializeField] MonsterManager monsterManager;
     [SerializeField] int pathIndex = 0;
+    [SerializeField] bool useUnscaledSpawnDelay = false;
 
     Coroutine waveRoutine;
+    IStageService stageService;
+    IStageMonsterTracker monsterTracker;
 
     public bool IsSpawning { get; private set; }
     public bool SpawnFinished { get; private set; } = true;
+
+    #region 생명주기
 
     void Awake()
     {
@@ -19,21 +24,37 @@ public class MonsterManagerStageProvider : MonoBehaviour, IMonsterSpawnManager, 
         ((IAutoSceneService)this).RegisterSceneServices();
     }
 
+    void Start()
+    {
+        BindServices();
+    }
+
     void OnDestroy()
     {
+        UnbindStageService();
+        StopWave();
         ((IAutoSceneService)this).UnregisterSceneServices();
     }
+
+    #endregion
+
+    #region 웨이브
 
     public void StartWave(MonsterSpawnDataSO spawnData)
     {
         StopWave();
 
-        if (monsterManager == null || spawnData == null)
+        if (!monsterManager || spawnData == null || spawnData.IsEmpty)
         {
+            IsSpawning = false;
             SpawnFinished = true;
             return;
         }
 
+        BindServices();
+
+        IsSpawning = true;
+        SpawnFinished = false;
         waveRoutine = StartCoroutine(WaveRoutine(spawnData));
     }
 
@@ -46,24 +67,22 @@ public class MonsterManagerStageProvider : MonoBehaviour, IMonsterSpawnManager, 
         }
 
         IsSpawning = false;
+        SpawnFinished = true;
     }
 
     IEnumerator WaveRoutine(MonsterSpawnDataSO spawnData)
     {
-        IsSpawning = true;
-        SpawnFinished = false;
-
         Queue<MonsterSpawnGroup> queue = spawnData.CreateQueue();
 
         while (queue.Count > 0)
         {
             MonsterSpawnGroup group = queue.Dequeue();
-
-            if (group == null || group.MonsterData == null || group.Count <= 0) continue;
+            if (!CanSpawnGroup(group)) continue;
 
             yield return SpawnGroupRoutine(group);
         }
 
+        waveRoutine = null;
         IsSpawning = false;
         SpawnFinished = true;
     }
@@ -73,16 +92,73 @@ public class MonsterManagerStageProvider : MonoBehaviour, IMonsterSpawnManager, 
         PathData path = GetPath();
         if (path == null) yield break;
 
-        monsterManager.SpawnPathGroup(path,group.Count, 0.2f);
+        if (group.StartDelay > 0f)
+            yield return Wait(group.StartDelay);
 
-        if (group.Interval > 0f) yield return new WaitForSeconds(group.Interval);
+        for (int i = 0; i < group.Count; i++)
+        {
+            path.monsterData = group.MonsterData;
+            monsterManager.SpawnPathGroup(group.MonsterData, path, 1, 0f);
+        }
+
+        if (group.Interval > 0f)
+            yield return Wait(group.Interval);
+    }
+
+    IEnumerator Wait(float seconds)
+    {
+        if (useUnscaledSpawnDelay) yield return new WaitForSecondsRealtime(seconds);
+        else yield return new WaitForSeconds(seconds);
+    }
+
+    bool CanSpawnGroup(MonsterSpawnGroup group)
+    {
+        if (group == null) return false;
+        if (group.MonsterData == null) return false;
+        if (group.Count <= 0) return false;
+        return true;
     }
 
     PathData GetPath()
     {
-        if (monsterManager.paths == null || monsterManager.paths.Count <= 0) return null;
+        if (!monsterManager || monsterManager.paths == null || monsterManager.paths.Count <= 0) return null;
 
         int index = Mathf.Clamp(pathIndex, 0, monsterManager.paths.Count - 1);
         return monsterManager.paths[index];
     }
+
+    #endregion
+
+    #region 스테이지 종료
+
+    void BindServices()
+    {
+        ServiceLocator.TryGet(out monsterTracker);
+
+        if (stageService != null) return;
+        if (!ServiceLocator.TryGet(out stageService) || stageService == null) return;
+
+        stageService.StateChanged -= OnStageStateChanged;
+        stageService.StateChanged += OnStageStateChanged;
+    }
+
+    void UnbindStageService()
+    {
+        if (stageService == null) return;
+
+        stageService.StateChanged -= OnStageStateChanged;
+        stageService = null;
+    }
+
+    void OnStageStateChanged(StageState state)
+    {
+        if (state != StageState.StageClear && state != StageState.StageFailed) return;
+
+        StopWave();
+
+        ServiceLocator.TryGet(out monsterTracker);
+        monsterTracker?.DespawnAllImmediate();
+    }
+
+    #endregion
 }

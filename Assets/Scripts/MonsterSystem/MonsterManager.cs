@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using IGameInterface;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -32,7 +34,6 @@ public class MonsterManager : MonoBehaviour
             return _instance;
         }
     }
-    public GameObject monsterPrefab;
     public float spawnY = -1f;
 
     public float separationRadius = 1.5f, separationStrength = 2.0f;
@@ -41,6 +42,9 @@ public class MonsterManager : MonoBehaviour
 
     private Dictionary<Vector2Int, List<Monster>> gridBuckets = new Dictionary<Vector2Int, List<Monster>>();
     private List<Monster> activeMonsters = new List<Monster>();
+    private IStageService stageService;
+
+    private Coroutine spawnRoutine;
 
     void Awake()
     {
@@ -48,34 +52,44 @@ public class MonsterManager : MonoBehaviour
     }
     private void Start()
     {
+        if (stageService == null) ServiceLocator.TryGet(out stageService);
+        if (stageService != null) stageService.StateChanged += OnGameEnd;
         // 게임 시작 시 한 번만 실행
-        StartCoroutine(DelayedInitialization());
+        if (spawnRoutine != null) StopCoroutine(spawnRoutine);
+        spawnRoutine = StartCoroutine(DelayedInitialization());
     }
+
     void Update()
     {
         UpdateGridBuckets();
         ProcessMonsters();
     }
-    public void SpawnPathGroup(PathData pathData, int count, float interval)
+    private void OnDestroy()
     {
-        StartCoroutine(SpawnMonsterGroup(pathData, count, interval));
+        if (stageService != null) stageService.StateChanged -= OnGameEnd;
+    }
+    public void SpawnPathGroup(MonsterData data, PathData pathData, int count, float interval)
+    {
+        StartCoroutine(SpawnMonsterGroup(data, pathData, count, interval));
     }
 
-    private IEnumerator SpawnMonsterGroup(PathData pathData, int count, float interval)
+    private IEnumerator SpawnMonsterGroup(MonsterData data, PathData pathData, int count, float interval)
     {
         for (int i = 0; i < count; i++)
         {
             Monster m = ObjectPoolManager.Instance.Spawn<Monster>(
-                pathData.monsterData.Prefab,
+                data.Prefab,
                 pathData.waypoints[0].position,
                 Quaternion.identity
             );
 
+            m.transform.SetParent(ObjectPoolManager.Instance.GetMonsterParent());
+
             if (m != null)
             {
-                
-                
                 m.Setup(pathData.waypoints, spawnY, pathData.monsterData, separationRadius, separationStrength);
+                if (m.TryGetComponent(out IMonsterSpawnContextReceiver receiver))
+                    receiver.BindSpawnContext(m, pathData.monsterData, pathData.waypoints);
                 m.UpdateGridPosition();
                 m.OnMonsterDie += HandleMonsterDeath;
                 m.gameObject.SetActive(true);
@@ -231,5 +245,18 @@ public class MonsterManager : MonoBehaviour
             }
         }
         return force;
+    }
+    private void OnGameEnd(StageState state)
+    {
+        if (state == StageState.StageClear || state == StageState.StageFailed)
+        {
+            if (spawnRoutine != null) StopCoroutine(spawnRoutine);
+
+            for (int i = 0; i < activeMonsters.Count; i++)
+            {
+                if (!activeMonsters[i].TryGetComponent(out PoolableObject pool)) continue;
+                ObjectPoolManager.Instance.Despawn(pool);
+            }
+        }
     }
 }

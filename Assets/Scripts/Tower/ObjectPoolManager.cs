@@ -16,6 +16,7 @@ public class ObjectPoolManager : MonoBehaviour
     [Header("Pool Parents")]
     [SerializeField] private Transform projectileParent;
     [SerializeField] private Transform effectParent;
+    [SerializeField] private Transform monsterParent;
 
     [Header("DataBase")]
     [SerializeField] private ProjectileDB projectileDB;
@@ -29,9 +30,10 @@ public class ObjectPoolManager : MonoBehaviour
     private Dictionary<int, ProjectileData> projectileTable = new();
     private Dictionary<int, HitBoxData> hitBoxTable = new();
     private Dictionary<int, EffectData> effectTable = new();
+    private Dictionary<int, MonsterEffectData> monsterEffectTable = new();
+    private Dictionary<int, MonsterData> monsterTable = new();
 
     private Dictionary<string, GameObject> loadedPrefabs = new();
-
 
     private void Awake()
     {
@@ -49,6 +51,9 @@ public class ObjectPoolManager : MonoBehaviour
         yield return LoadProjectileAssets();
         yield return LoadHitBoxAssets();
         yield return LoadEffectAssets();
+        yield return LoadMonsterEffectAssets();
+        yield return LoadMonsterAssets();
+
 
         Debug.Log("모든 Addressable 로드 완료");
     }
@@ -78,7 +83,6 @@ public class ObjectPoolManager : MonoBehaviour
     {
         foreach (HitBoxData data in hitBoxDB.hitBoxes)
         {
-
             AsyncOperationHandle handle =
                 data.hitboxPF.LoadAssetAsync<GameObject>();
             yield return handle;
@@ -126,6 +130,53 @@ public class ObjectPoolManager : MonoBehaviour
             Debug.Log($"[EffectTable 등록] ID: {data.effectID}, Data: {data.name}, Prefab: {data.loadedPrefab.name}");
         }
     }
+
+    private IEnumerator LoadMonsterEffectAssets()
+    {
+        // effectDatabase 안에 Monstereffects 리스트가 있다고 가정합니다.
+        foreach (var data in effectDatabase.monsterEffects)
+        {
+            if (data == null)
+                continue;
+
+            if (data.effectPF == null || !data.effectPF.RuntimeKeyIsValid())
+            {
+                Debug.LogError($"[MonsterEffect] AssetReference 유효하지 않음: {data.name}");
+                continue;
+            }
+
+            var handle = data.effectPF.LoadAssetAsync<GameObject>();
+            yield return handle;
+
+            if (handle.Status != AsyncOperationStatus.Succeeded)
+            {
+                Debug.LogError($"[MonsterEffect Load 실패] Data: {data.name}");
+                continue;
+            }
+
+            data.loadedPrefab = handle.Result;
+
+            // 같은 테이블에 등록하므로 GetEffect(id)를 그대로 사용할 수 있습니다.
+            monsterEffectTable[data.effectID] = data;
+
+            Debug.Log($"[MonsterEffectTable 등록] ID: {data.effectID}, Data: {data.name}, Prefab: {data.loadedPrefab.name}");
+        }
+    }
+
+    private async Task LoadMonsterAssets()
+    {
+        AsyncOperationHandle<IList<MonsterData>> handler =
+            Addressables.LoadAssetsAsync<MonsterData>("MonsterData");
+
+        await handler.Task;
+
+        foreach (MonsterData data in handler.Result)
+        {
+            monsterTable.Add(data.monsterId, data);
+        }
+
+        Addressables.Release(handler);
+    }
     public ProjectileData GetProjectileData(int id)
     {
         if (projectileTable.TryGetValue(id, out ProjectileData data))
@@ -133,7 +184,7 @@ public class ObjectPoolManager : MonoBehaviour
 
         return null;
     }
-    public GameObject GetProjectile(int id)
+    public GameObject   GetProjectile(int id)
     {
         ProjectileData data = GetProjectileData(id);
         return data != null ? data.loadedPrefab : null;
@@ -179,7 +230,19 @@ public class ObjectPoolManager : MonoBehaviour
         EffectData data = GetEffectData(id);
         return data != null ? data.loadedPrefab : null;
     }
+    public MonsterEffectData GetMonsterEffectData(int id)
+    {
+        if (monsterEffectTable.TryGetValue(id, out MonsterEffectData data))
+            return data;
 
+        return null;
+    }
+
+    public GameObject GetMonsterEffect(int id)
+    {
+        MonsterEffectData data = GetMonsterEffectData(id);
+        return data != null ? data.loadedPrefab : null;
+    }
     public async Task<GameObject> LoadPrefabAsync(AssetReferenceGameObject reference)
     {
         if (reference == null || !reference.RuntimeKeyIsValid())
@@ -290,6 +353,13 @@ public class ObjectPoolManager : MonoBehaviour
         return effectParent != null ? effectParent : transform;
     }
     #endregion
+
+    public Transform GetMonsterParent()
+    {
+        return monsterParent != null ? monsterParent : transform;
+    }
+
+    
 
     #region 코루틴용 로드 메서드
     public IEnumerator LoadPrefabCoroutine(

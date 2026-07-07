@@ -1,4 +1,5 @@
 using IGameInterface;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -13,7 +14,7 @@ public class UI_TowerInfo : MonoBehaviour
     [SerializeField] private TextMeshProUGUI damageText;
     [SerializeField] private TextMeshProUGUI rangeText;
     [SerializeField] private TextMeshProUGUI attackSpeedText;
-    [SerializeField] private TextMeshProUGUI targetModeText;
+    [SerializeField] private TextMeshProUGUI keywordText;
 
 
     private void OnEnable()
@@ -21,45 +22,42 @@ public class UI_TowerInfo : MonoBehaviour
         Hide();
     }
 
-    public void SetInfo(TowerData towerData, EnemyTargetMode enemyTargetMode)
+    public void SetTowerInfo(Tower selectedTower)
     {
-        if (towerData == null) return;
+        if (selectedTower == null) return;
 
-        if (nameText != null) nameText.text = towerData.buildingName;
+        BuildingData data = selectedTower.BuildingData;
+        if (data != null && nameText != null)
+        {
+            nameText.text = data.buildingName;
+        }
 
-        if (damageText != null) damageText.text = $"공격력 : {towerData.damage}";
-        if (rangeText != null) rangeText.text = $"사거리 : {towerData.attackRange}";
+        if (damageText != null)
+            damageText.text = $"공격력 : {selectedTower.GetStat(StatType.AttackDamage)}";
+
+        if (rangeText != null)
+            rangeText.text = $"사거리 : {selectedTower.GetStat(StatType.AttackRange)}";
 
         if (attackSpeedText != null)
         {
-            string atkRateText = (towerData.attackInterval * Mathf.Max(0.01f, towerData.attackSpeed)).ToString();
-            attackSpeedText.text = $"공격속도 : {atkRateText} / s";
+            float currentAtkSpeed = selectedTower.GetStat(StatType.AttackSpeed);
+            attackSpeedText.text = $"공격속도 : {currentAtkSpeed} / s";
         }
 
-        if(targetModeText != null)
+        KeywordController keywordController = selectedTower.GetComponent<KeywordController>();
+        Debug.Log(keywordController == null);
+        Debug.Log(keywordText == null);
+        if (keywordController != null && keywordText != null)
         {
-            string targetModeStr = "";
+            List<string> keywordNames = keywordController.GetActiveKeywordNames();
+            Debug.Log(keywordNames.Count);
 
-            switch (enemyTargetMode)
-            { 
-                case EnemyTargetMode.ClosestToTower:
-                    targetModeStr = "가까운 적 우선";
-                    break;
-                case EnemyTargetMode.FarthestFromTower:
-                    targetModeStr = "먼 적 우선";
-                    break;
-                case EnemyTargetMode.FrontMost:
-                    targetModeStr = "목적지에 가까운 적 우선";
-                    break;
-                case EnemyTargetMode.BackMost:
-                    targetModeStr = "목적지에 먼 적 우선";
-                    break;
-            }
-
-            targetModeText.text = targetModeStr;
+            if (keywordNames.Count > 0)
+                keywordText.text = "<color=#FFD700>#" + string.Join(" #", keywordNames) + "</color>";
+            else
+                keywordText.text = "<color=#888888>특성 없음</color>";
         }
     }
-
     public void Show()
     {
         canvasGroup.alpha = 1;

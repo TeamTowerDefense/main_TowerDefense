@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4db155bf894d96c41a060ad48c5cf716, type: 3}
+  m_Name: HealMonsterData
+  m_EditorClassIdentifier: Assembly-CSharp::MonsterData
+  monsterName: HealMonster1
+  Prefab: {fileID: 6012647353202847045, guid: 903d63fff4348ab4790c4193d8e90046, type: 3}
+  maxHP: 100
+  speed: 1
+  defense: 0
+  Att: 0
+  LeakDamage: 1
+  scale: {x: 0.5, y: 0.5, z: 0.5}
+  useUniformScale: 1
+  StunGauge: 10
+  moveWeight: 1
+  separationWeight: 0.3
+  boundaryWeight: 3
+  containmentMultiplier: 5
+  abilities:
+  - {fileID: 11400000, guid: 72baa0d7923bcd248baa4fb18da071f2, type: 2}
+  heightOffset: 0
+  amount: 10

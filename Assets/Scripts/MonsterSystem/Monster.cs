@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
+using System.Linq;
 using UnityEngine;
 
 public class Monster : PoolableObject
@@ -10,10 +10,10 @@ public class Monster : PoolableObject
     private Animator anim;
     private Collider col;
 
-
     public float currentHp { get; private set; }
-    public float maxHp { get; private set; }    
+    public float maxHp { get; private set; }
     private float speed;
+
     private float moveWeight ;
     private float separationWeight;
     private float boundaryWeight; 
@@ -31,32 +31,81 @@ public class Monster : PoolableObject
 
     private EnemyInfoProvider enemyInfoProvider;
 
+    // HP 바
     [SerializeField]
     private HpBar hpBar;
 
     private IAbility[] allAbilities;
     private MonsterStatus status;
+
+    // 키워드 시스템 적용
+    private KeywordController keywordController;
+    private Dictionary<StatType, RuntimeStat> stats = new Dictionary<StatType, RuntimeStat>();
+    private List<IStatModifier> cachedModifiers = new List<IStatModifier>();
+
     private void Awake()
     {
         anim = GetComponent<Animator>();
         col = GetComponent<Collider>();
-        enemyInfoProvider = GetComponent<EnemyInfoProvider>();
-        allAbilities = GetComponents<IAbility>();
         status = GetComponent<MonsterStatus>();
+
+        keywordController = GetComponent<KeywordController>();
+        if (keywordController != null)
+        {
+            keywordController.OnKeywordChanged += UpdateAllStats;
+        }
     }
+
     private void OnDisable()
     {
         ClearCurrentTile();
+        if (keywordController != null)
+        {
+            keywordController.OnKeywordChanged -= UpdateAllStats;
+        }
     }
+
     // 초기화 로직 통합
     public void Setup(List<Transform> path, float spawnY, MonsterData data,float separationRadius, float separationStrength)
     {
-        foreach (var ability in allAbilities)
+        Debug.Log($"{allAbilities}");
+        // 런타임 스텟 적용 및 초기 특성 키워드 적용
+        stats.Clear();
+        keywordController.ClearAllKeywords();
+
+        if (data != null)
         {
-            ability.DisableAbility();
+            foreach (var kvp in data.GetInitialStats())
+            {
+                stats[kvp.Key] = new RuntimeStat(kvp.Value);
+            }
+
+            if (data.defaultKeywords != null)
+            {
+                foreach (var kw in data.defaultKeywords)
+                    keywordController.AddKeyword(kw);
+            }
         }
+        //allAbilities = data.abilities.Select(abilityData => GetComponents<IAbility>().FirstOrDefault(a => CanHandle(a, abilityData))).Where(a => a != null).ToArray();
+        // 1. 미리 한 번만 가져와서 변수에 담아둠 (최적화)
+        var allScripts = GetComponents<IAbility>();
+
+        // 2. 그 변수를 사용해서 매칭
+        allAbilities = data.abilities
+            .Select(abilityData => allScripts.FirstOrDefault(a => CanHandle(a, abilityData)))
+            .Where(a => a != null)
+            .ToArray();
+        if (TryGetComponent(out MonsterRuntimeBridge bridge))
+            bridge.BindPath(movePath);
+
+        if (allAbilities != null)
+            foreach (var ability in allAbilities)
+            {
+                ability.DisableAbility();
+            }
         foreach (var abilityData in data.abilities)
         {
+            Debug.Log($"Processing ability data {abilityData.name} for monster {data.name}");
             // 몬스터에 붙어있는 능력들 중에서 데이터 타입이 맞는 놈을 찾아서 켭니다.
             foreach (var ability in allAbilities)
             {
@@ -64,20 +113,23 @@ public class Monster : PoolableObject
                 // (간단하게 하려면 타입 비교 후 EnableAbility 호출)
                 if (CanHandle(ability, abilityData))
                 {
+                    Debug.Log($"Enabling ability {ability.GetType().Name} for monster {data.name}");
                     ability.EnableAbility(abilityData);
                 }
             }
         }
+
         transform.localScale = data.scale;
-        currentHp = data.maxHP;
-        maxHp = data.maxHP;
-        speed = data.speed;
+
+        maxHp = GetStat(StatType.MaxHealth);
+        currentHp = maxHp;
+        speed = GetStat(StatType.MoveSpeed);
+
         moveWeight = data.moveWeight;
         separationWeight = data.separationWeight;
         boundaryWeight = data.boundaryWeight;
         containmentMultiplier = data.containmentMultiplier;
         status.Setup(data.StunGauge);
-
 
         isDead = false;
 
@@ -97,9 +149,7 @@ public class Monster : PoolableObject
             transform.position = movePath[0].position + new Vector3(pathOffset.x, spawnY, pathOffset.z);
         }
 
-        if (TryGetComponent(out MonsterRuntimeBridge bridge))
-            bridge.BindPath(movePath);
-
+   
         gameObject.SetActive(true);
         
     }
@@ -159,8 +209,10 @@ public class Monster : PoolableObject
 
         // 4. 최종 방향 (가중치 기반 계산)
         Vector3 finalDir = (moveDir * moveWeight + effectiveSeparation + (boundaryForce * boundaryWeight)).normalized;
+
         // 5. 최종 속도
-        float finalSpeed = speed * speedMultiplier * status.SlowMultiplier;
+        float currentSpeed = GetStat(StatType.MoveSpeed);
+        float finalSpeed = currentSpeed * speedMultiplier * status.SlowMultiplier;
         transform.position += finalDir * finalSpeed * deltaTime;
 
         if (finalDir != Vector3.zero)
@@ -210,8 +262,8 @@ public class Monster : PoolableObject
     {
         if (isDead || !gameObject.activeInHierarchy) return;
         isDead = true;
-        enemyInfoProvider.SetAlive(false);
-        enemyInfoProvider.SetTargetable(false);
+        OnMonsterDie?.Invoke(this);
+        hpBar.gameObject.SetActive(false);
         if (currentTile != null)
         {
             currentTile.RemoveMonster(this);
@@ -221,7 +273,6 @@ public class Monster : PoolableObject
         if (col != null) col.enabled = false;
        
         StartCoroutine(DieCoroutine());
-
     }
 
     private IEnumerator DieCoroutine()
@@ -230,9 +281,6 @@ public class Monster : PoolableObject
         // 애니메이션 재생되는 시간 동안
         yield return new WaitForSeconds(2f);
         ObjectPoolManager.Instance.Despawn(this);
-        OnMonsterDie?.Invoke(this);
-
-
     }
     public Vector3 GetSeparationForce(Monster other, float radius, float strength)
     {
@@ -275,4 +323,36 @@ public class Monster : PoolableObject
     {
         base.OnDespawned();
     }
+
+    #region 스텟
+    public float GetStat(StatType type) => stats.TryGetValue(type, out var stat) ? stat.CurrentValue : 0f;
+
+    private void UpdateAllStats()
+    {
+        // IStatModifer를 상속하는 모든 키워드 저장
+        List<IStatModifier> allModifiers = keywordController.GetKeywords<IStatModifier>();
+
+        // 2. 스탯 서랍장(Dictionary)을 순회합니다.
+        foreach (var kvp in stats)
+        {
+            // LINQ의 .ToList() 역할을 할 빈 리스트를 직접 만듭니다.
+            cachedModifiers.Clear();
+
+            // LINQ의 .Where(...) 역할을 할 수동 반복문을 돌립니다.
+            foreach (var modifier in allModifiers)
+            {
+                // 모디파이어의 타겟 스탯이 현재 순회 중인 스탯(kvp.Key)과 같다면
+                if (modifier.TargetStat == kvp.Key)
+                {
+                    // 리스트에 추가합니다.
+                    cachedModifiers.Add(modifier);
+                }
+            }
+
+            // 완성된 리스트를 재계산 함수로 넘겨줍니다.
+            kvp.Value.RecalculateStat(cachedModifiers);
+        }
+
+    }
+    #endregion
 }

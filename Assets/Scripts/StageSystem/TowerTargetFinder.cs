@@ -12,15 +12,47 @@ public class TowerTargetFinder : MonoBehaviour, ITowerTargetFinder
 
     public EnemyInfo CurrentTarget => currentTarget;
     public bool HasTarget => currentTarget != null;
-    public EnemyTargetMode ChaseMode => targetMode;
+    public EnemyTargetMode ChaseMode => activeTargetMode;
+
+    private EnemyTargetMode activeTargetMode;
+    private KeywordController keywordController;
 
     void Start()
     {
         ServiceLocator.TryGet(out mapService);
+        keywordController = GetComponent<KeywordController>();
+        if (keywordController != null)
+        {
+            keywordController.OnKeywordChanged += UpdateTargetMode;
+            UpdateTargetMode(); // 시작할 때 한 번 갱신
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (keywordController != null)
+        {
+            keywordController.OnKeywordChanged -= UpdateTargetMode;
+        }
+    }
+
+    private void UpdateTargetMode()
+    {
+        var targetingMods = keywordController.GetKeywords<ITargetingModifier>();
+
+        Debug.Log(targetingMods.Count);
+        if (targetingMods.Count > 0)
+        {
+            activeTargetMode = targetingMods[0].GetTargetMode();
+        }
+        else
+        {
+            activeTargetMode = targetMode;
+        }
     }
 
     public bool TryGetTarget(Vector3 origin, float range, out EnemyInfo target)
-        => TryGetTarget(origin, range, targetMode, out target);
+        => TryGetTarget(origin, range, activeTargetMode, out target);
 
     public bool TryGetTarget(Vector3 origin, float range, EnemyTargetMode mode, out EnemyInfo target)
     {
@@ -67,6 +99,7 @@ public class TowerTargetFinder : MonoBehaviour, ITowerTargetFinder
     }
 
     public void SetChaseMode(EnemyTargetMode mode) => targetMode = mode;
+
     public void ClearTarget()
     {
         currentTarget = null;

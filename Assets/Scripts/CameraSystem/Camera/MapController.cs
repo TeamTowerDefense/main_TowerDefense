@@ -65,6 +65,15 @@ public class MapController : MonoBehaviour, IMapService, IAutoSceneService
 
     void OnDestroy()
     {
+        if (enemies.Count > 0)
+        {
+            foreach (var enemy in enemies)
+            {
+                if (!enemy.Transform.TryGetComponent(out PoolableObject pool)) continue;
+                ObjectPoolManager.Instance.Despawn(pool);
+            }
+        }
+
         enemyGrid.Clear();
         enemyInfoByProvider.Clear();
 

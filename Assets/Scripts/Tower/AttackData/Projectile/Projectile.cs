@@ -6,15 +6,17 @@ public abstract class Projectile : PoolableObject
     protected int damage;
     protected float attackSpeed;
     protected Transform target;
+    protected Tower ownerTower;
 
     [SerializeField] private Vector3 rotationOffset;
 
     #region projectile 생성
-    public virtual void Initialize(Transform target, int damage, ProjectileData projectileData)
+    public virtual void Initialize(Transform target, int damage, ProjectileData projectileData, Tower owner)
     {
         this.target = target;
         this.damage = damage;
         this.projectileData = projectileData;
+        ownerTower = owner;
 
         //Debug.Log(
         //      $"[Projectile Init] Data={projectileData.name}, " +
@@ -121,6 +123,32 @@ public abstract class Projectile : PoolableObject
     private void DespawnSelf()
     {
         ObjectPoolManager.Instance.Despawn(this);
+    }
+    #endregion
+
+    #region 히트 시 키워드 적용
+    protected void TriggerOnHitEffects(Monster targetMonster)
+    {
+        if (ownerTower == null || targetMonster == null) return;
+
+        KeywordController monsterKW = targetMonster.GetComponent<KeywordController>();
+        KeywordController towerKW = ownerTower.GetComponent<KeywordController>();
+
+        if (monsterKW == null) Debug.Log("에러: 몬스터한테 KeywordController가 없습니다!");
+        if (towerKW == null) Debug.Log("에러: 타워한테 KeywordController가 없습니다!");
+
+        if (monsterKW != null && towerKW != null)
+        {
+            var onHitModifiers = towerKW.GetKeywords<IOnHitModifier>();
+
+            Debug.Log($"타워가 가진 적중 특성 개수: {onHitModifiers.Count}");
+
+            foreach (var mod in onHitModifiers)
+            {
+                mod.OnHit(ownerTower, monsterKW);
+                Debug.Log("슬로우 묻히기 성공!");
+            }
+        }
     }
     #endregion
 }

@@ -1,70 +1,124 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class KeywordController : MonoBehaviour
 {
-    // 현재 오브젝트에 활성화된 키워드 리스트
     private List<KeywordEffectBase> activeKeywords = new List<KeywordEffectBase>();
 
-    /// <summary>
-    /// 키워드 추가 함수
-    /// </summary>
-    public void AddKeyword(KeywordData data)
-    {
-        // 원래는 팩토리(Factory) 패턴을 써서 data 타입에 맞는 클래스를 
-        // 동적 생성해야 하지만, 이해를 돕기 위해 임시 서술합니다.
-        KeywordEffectBase effect = CreateEffectInstance(data);
+    // 스탯 갱신을 타워/몬스터에게 알리는 방송
+    public event Action OnKeywordChanged;
 
-        if (effect != null)
+    private void Update()
+    {
+        // IUpdateModifier 권한이 있는 키워드(디버프 등)에게 매 프레임 시간을 전달
+        for (int i = activeKeywords.Count - 1; i >= 0; i--)
         {
-            effect.Initialize(data, this.GetComponent<MonoBehaviour>());
-            activeKeywords.Add(effect);
-            effect.OnApply();
-            Debug.Log($"{gameObject.name}에 [{data.keywordName}] 키워드가 장착되었습니다.");
+            if (activeKeywords[i] is IUpdateModifier updateMod)
+            {
+                updateMod.OnUpdate(Time.deltaTime);
+            }
         }
     }
 
-    /// <summary>
-    /// 키워드 삭제 함수
-    /// </summary>
+    public void ClearAllKeywords()
+    {
+        foreach (var kw in activeKeywords)
+        {
+            kw.OnRemove(); // 이펙트 꺼주기
+        }
+        activeKeywords.Clear();
+    }
+
+    public void AddKeyword(KeywordData data)
+    {
+        var existingStacks = activeKeywords.Where(k => k.DataOrigin == data).ToList();
+
+        if (existingStacks.Count > 0)
+        {
+            // 중첩 불가능하거나, 이미 최대 중첩이라면? -> 시간만 리셋!
+            if (!data.isStackable || (data.maxStack > 0 && existingStacks.Count >= data.maxStack))
+            {
+                foreach (var stack in existingStacks)
+                {
+                    stack.OnRefresh();
+                }
+                return; // 입구 컷
+            }
+        }
+
+        KeywordEffectBase effect = data.CreateEffect();
+        if (effect == null)
+            return;
+
+        if (effect is ITargetingModifier)
+        {
+            var existingTargetingMods = GetKeywords<ITargetingModifier>();
+
+            foreach (var mod in existingTargetingMods)
+            {
+                RemoveKeyword(mod as KeywordEffectBase);
+            }
+        }
+
+        effect.Initialize(data, this);
+        activeKeywords.Add(effect);
+        effect.OnApply();
+
+        OnKeywordChanged?.Invoke(); // 스탯 재계산 지시
+    }
+
     public void RemoveKeyword(KeywordEffectBase effect)
     {
         if (activeKeywords.Contains(effect))
         {
             effect.OnRemove();
             activeKeywords.Remove(effect);
-            Debug.Log($"{gameObject.name}에서 키워드가 제거되었습니다.");
+
+            OnKeywordChanged?.Invoke(); // 스탯 재계산 지시
         }
     }
 
-    /// <summary>
-    /// 특정 인터페이스를 가진 키워드들만 골라서 리턴
-    /// </summary>
+    // 특정 인터페이스(권한)를 가진 키워드들만 쏙쏙 뽑아주는 헬퍼 함수
     public List<T> GetKeywords<T>() where T : class
     {
         List<T> results = new List<T>();
         foreach (var kw in activeKeywords)
         {
-            if (kw is T targetInterface)
-            {
-                results.Add(targetInterface);
-            }
+            if (kw is T target) results.Add(target);
         }
         return results;
     }
 
-    // 임시 팩토리 함수
-    private KeywordEffectBase CreateEffectInstance(KeywordData data)
+    public List<string> GetActiveKeywordNames()
     {
-        if (data is KWData_Berserker)
+        List<string> resultNames = new List<string>();
+
+        for (int i = 0; i < activeKeywords.Count; i++)
         {
-            return new BerserkerEffect();
+            var keyword = activeKeywords[i];
+
+            if (keyword != null && keyword.DataOrigin != null)
+            {
+                string dName = keyword.DataOrigin.displayName;
+
+                if (!string.IsNullOrEmpty(dName))
+                {
+                    resultNames.Add(dName);
+                }
+                else
+                {
+                    Debug.LogWarning($"[{gameObject.name}] '{keyword.DataOrigin.name}' 데이터의 displayName 칸이 비어있습니다!");
+                }
+            }
         }
 
-        // 나중에 언데드, 상처 같은 키워드를 만들면 여기에 한 줄씩 추가하시면 됩니다.
-        // else if (data is UndeadData) return new UndeadEffect();
-        // else if (data is WoundData) return new WoundEffect();
+        if (activeKeywords.Count > 0 && resultNames.Count == 0)
+        {
+            Debug.LogWarning($"[{gameObject.name}] 장착된 키워드는 {activeKeywords.Count}개 인데, 이름이 있는 키워드가 하나도 없습니다.");
+        }
 
-        return null; // 매칭되는 게 없으면 null 반환[cite: 3]
+        return resultNames;
     }
 }

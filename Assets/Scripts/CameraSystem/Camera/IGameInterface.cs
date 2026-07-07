@@ -248,6 +248,11 @@ namespace IGameInterface
         void SetPathProgress(float value);
         void SetAttackTarget(IAttackTarget target);
     }
+    public interface IMonsterSpawnContextReceiver
+    {
+        void BindSpawnContext(Monster owner, MonsterData data, List<Transform> waypoints);
+        void ClearSpawnContext();
+    }
 
     public interface IAttackTarget
     {
@@ -374,6 +379,11 @@ namespace IGameInterface
         void StartWave();
         void TakeBaseDamage(int damage);
     }
-
+    public interface IStageMonsterTracker : ISceneService
+    {
+        void Register(GameObject monsterObj);
+        void Unregister(GameObject monsterObj);
+        void DespawnAllImmediate();
+    }
 
 }
