@@ -37,4 +37,5 @@ MonoBehaviour:
     m_SubObjectType: 
     m_SubObjectGUID: 
     m_EditorAssetChanged: 1
-  defaultKeywords: []
+  defaultKeywords:
+  - {fileID: 11400000, guid: f0817589ffd4c574cb6a77e3f7f3ac41, type: 2}

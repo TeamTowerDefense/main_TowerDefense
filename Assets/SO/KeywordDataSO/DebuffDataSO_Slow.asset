@@ -14,8 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DebuffData_Slow
   keywordName: Slow
   type: 2
+  description: "\uC2AC\uB85C\uC6B0"
   isStackable: 0
   maxStack: 1
-  description: "\uC2AC\uB85C\uC6B0"
+  visualEffectPrefab: {fileID: 8476858034194145137, guid: c7435c30891b2074380f683b7ea8e9c6, type: 3}
   speedDecreaseRatio: -0.4
   duration: 3
