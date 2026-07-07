@@ -5,4 +5,6 @@ using UnityEngine;
 public class EffectDB : ScriptableObject
 {
     public List<EffectData> effects;
+
+    public List<MonsterEffectData> monsterEffects;  
 }

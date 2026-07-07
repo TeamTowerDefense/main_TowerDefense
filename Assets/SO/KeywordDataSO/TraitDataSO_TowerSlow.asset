@@ -13,6 +13,10 @@ MonoBehaviour:
   m_Name: TraitDataSO_TowerSlow
   m_EditorClassIdentifier: Assembly-CSharp::TraitData_TowerSlow
   keywordName: TowerSlow
+  displayName: "\uB454\uD654 \uC801\uC6A9"
   type: 0
   description: 
+  isStackable: 0
+  maxStack: 1
+  visualEffectPrefab: {fileID: 0}
   slowDebuffData: {fileID: 11400000, guid: 32b96230a8e38974c8b270bdbc6c613e, type: 2}

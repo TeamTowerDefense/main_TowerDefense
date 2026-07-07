@@ -47,7 +47,6 @@ public class Monster : PoolableObject
     {
         anim = GetComponent<Animator>();
         col = GetComponent<Collider>();
-        allAbilities = GetComponents<IAbility>();
         status = GetComponent<MonsterStatus>();
 
         keywordController = GetComponent<KeywordController>();
@@ -69,6 +68,7 @@ public class Monster : PoolableObject
     // 초기화 로직 통합
     public void Setup(List<Transform> path, float spawnY, MonsterData data,float separationRadius, float separationStrength)
     {
+        Debug.Log($"{allAbilities}");
         // 런타임 스텟 적용 및 초기 특성 키워드 적용
         stats.Clear();
         keywordController.ClearAllKeywords();
@@ -86,13 +86,26 @@ public class Monster : PoolableObject
                     keywordController.AddKeyword(kw);
             }
         }
+        //allAbilities = data.abilities.Select(abilityData => GetComponents<IAbility>().FirstOrDefault(a => CanHandle(a, abilityData))).Where(a => a != null).ToArray();
+        // 1. 미리 한 번만 가져와서 변수에 담아둠 (최적화)
+        var allScripts = GetComponents<IAbility>();
 
-        foreach (var ability in allAbilities)
-        {
-            ability.DisableAbility();
-        }
+        // 2. 그 변수를 사용해서 매칭
+        allAbilities = data.abilities
+            .Select(abilityData => allScripts.FirstOrDefault(a => CanHandle(a, abilityData)))
+            .Where(a => a != null)
+            .ToArray();
+        if (TryGetComponent(out MonsterRuntimeBridge bridge))
+            bridge.BindPath(movePath);
+
+        if (allAbilities != null)
+            foreach (var ability in allAbilities)
+            {
+                ability.DisableAbility();
+            }
         foreach (var abilityData in data.abilities)
         {
+            Debug.Log($"Processing ability data {abilityData.name} for monster {data.name}");
             // 몬스터에 붙어있는 능력들 중에서 데이터 타입이 맞는 놈을 찾아서 켭니다.
             foreach (var ability in allAbilities)
             {
@@ -100,6 +113,7 @@ public class Monster : PoolableObject
                 // (간단하게 하려면 타입 비교 후 EnableAbility 호출)
                 if (CanHandle(ability, abilityData))
                 {
+                    Debug.Log($"Enabling ability {ability.GetType().Name} for monster {data.name}");
                     ability.EnableAbility(abilityData);
                 }
             }
@@ -135,9 +149,7 @@ public class Monster : PoolableObject
             transform.position = movePath[0].position + new Vector3(pathOffset.x, spawnY, pathOffset.z);
         }
 
-        if (TryGetComponent(out MonsterRuntimeBridge bridge))
-            bridge.BindPath(movePath);
-
+   
         gameObject.SetActive(true);
         
     }

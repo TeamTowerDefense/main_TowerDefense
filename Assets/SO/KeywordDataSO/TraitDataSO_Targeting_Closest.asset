@@ -12,9 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74d33c7e03e506a4dac1a63e4d8e46de, type: 3}
   m_Name: TraitDataSO_Targeting_Closest
   m_EditorClassIdentifier: Assembly-CSharp::TraitData_TowerTargeting
-  keywordName: BackMost
+  keywordName: Block
+  displayName: "\uC800\uC9C0"
   type: 0
+  description: 
   isStackable: 0
   maxStack: 1
-  description: 
+  visualEffectPrefab: {fileID: 0}
   overrideTargetMode: 0

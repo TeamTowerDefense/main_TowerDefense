@@ -141,6 +141,13 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a3e2c3406e02f2c4ba86cfb1604277bd
+    m_Address: Assets/Travis Game Assets/Hit Impact Effects/Prefabs/Guards/Guard_01.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Effect
+    - Effect_Projectile
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: ab9ec2005f982ee4bb4d9551842f18aa
     m_Address: Assets/SO/StageDataSO/Stage_002.asset
     m_ReadOnly: 0
