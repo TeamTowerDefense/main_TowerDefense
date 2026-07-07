@@ -1,9 +1,5 @@
-<<<<<<< Updated upstream
-ï»¿using IGameFlowInterface;
-=======
 using IGameFlowInterface;
 using System.Collections;
->>>>>>> Stashed changes
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -11,20 +7,16 @@ using UnityEngine.UI;
 
 public class UI_GameResult : MonoBehaviour
 {
-    [Header("ì°¸ì¡°")]
+    [Header("ÂüÁ¶")]
     [SerializeField] StageController stageController;
     [SerializeField] GameObject panelRoot;
     [SerializeField] CanvasGroup canvasGroup;
 
-<<<<<<< Updated upstream
-    [Header("í…ìŠ¤íŠ¸")]
-=======
     [Header("º° ¿¬Ãâ")]
     [SerializeField] GameObject[] starObjects;
     [SerializeField] float starDelay = 0.35f;
 
     [Header("ÅØ½ºÆ®")]
->>>>>>> Stashed changes
     [SerializeField] TextMeshProUGUI titleText;
     [SerializeField] TextMeshProUGUI resultText;
     [SerializeField] TextMeshProUGUI hpText;
@@ -33,23 +25,23 @@ public class UI_GameResult : MonoBehaviour
     [SerializeField] TextMeshProUGUI leakText;
     [SerializeField] TextMeshProUGUI starText;
 
-    [Header("ë³„ ì¡°ê±´ ëª©ë¡")]
+    [Header("º° Á¶°Ç ¸ñ·Ï")]
     [SerializeField] Transform starConditionRoot;
     [SerializeField] UI_StageStarConditionRow starConditionRowPrefab;
     [SerializeField] bool showFallbackConditions = true;
 
-    [Header("ë²„íŠ¼")]
+    [Header("¹öÆ°")]
     [SerializeField] Button retryButton;
     [SerializeField] Button lobbyButton;
     [SerializeField] Button stageSelectButton;
 
-    [Header("ì˜µì…˜")]
+    [Header("¿É¼Ç")]
     [SerializeField] bool pauseOnShow = true;
     [SerializeField] string clearTitle = "STAGE CLEAR";
     [SerializeField] string failTitle = "GAME OVER";
 
 
-    #region í•„ë“œ
+    #region ÇÊµå
 
     readonly List<UI_StageStarConditionRow> spawnedRows = new();
 
@@ -63,7 +55,7 @@ public class UI_GameResult : MonoBehaviour
 
     #endregion
 
-    #region ìƒëª…ì£¼ê¸°
+    #region »ı¸íÁÖ±â
 
     void Awake()
     {
@@ -107,7 +99,7 @@ public class UI_GameResult : MonoBehaviour
 
     #endregion
 
-    #region êµ¬ë…
+    #region ±¸µ¶
 
     void Subscribe()
     {
@@ -134,7 +126,7 @@ public class UI_GameResult : MonoBehaviour
 
     #endregion
 
-    #region í‘œì‹œ
+    #region Ç¥½Ã
 
     public void Show(StageResultContext result)
     {
@@ -157,14 +149,6 @@ public class UI_GameResult : MonoBehaviour
         int maxStarCount = StageStarEvaluator.GetMaxStarCount(stageData);
 
         if (titleText) titleText.text = result.Cleared ? clearTitle : failTitle;
-<<<<<<< Updated upstream
-        if (resultText) resultText.text = result.Cleared ? "í´ë¦¬ì–´ ì„±ê³µ" : "ìŠ¤í…Œì´ì§€ ì‹¤íŒ¨";
-        if (hpText) hpText.text = $"ê¸°ì§€ ì²´ë ¥:\n{result.CurrentBaseHp} / {result.MaxBaseHp}";
-        if (timeText) timeText.text = $"ì§„í–‰ ì‹œê°„: {FormatTime(result.ElapsedTime)}";
-        if (killText) killText.text = $"ì²˜ì¹˜ ìˆ˜: {result.KilledEnemyCount}";
-        if (leakText) leakText.text = $"ëˆ„ìˆ˜ ìˆ˜: {result.LeakedEnemyCount}";
-        if (starText) starText.text = $"íšë“ ë³„: {earnedStarCount} / {maxStarCount}";
-=======
         if (resultText) resultText.text = result.Cleared ? "Å¬¸®¾î ¼º°ø" : "½ºÅ×ÀÌÁö ½ÇÆĞ";
         if (hpText) hpText.text = $"{result.CurrentBaseHp}";
         if (timeText) timeText.text = $"{FormatTime(result.ElapsedTime)}";
@@ -175,7 +159,6 @@ public class UI_GameResult : MonoBehaviour
         {
             StartCoroutine(AnimateStarsRoutine(earnedStarCount));
         }
->>>>>>> Stashed changes
 
         RefreshStarConditions(stageData, result, starMask);
 
@@ -218,9 +201,9 @@ public class UI_GameResult : MonoBehaviour
 
     void CreateFallbackStarConditionRows(StageResultContext result, int starMask)
     {
-        CreateStarConditionRow("ìŠ¤í…Œì´ì§€ í´ë¦¬ì–´", "ìŠ¤í…Œì´ì§€ë¥¼ í´ë¦¬ì–´í•©ë‹ˆë‹¤.", (starMask & (1 << 0)) != 0);
-        CreateStarConditionRow("ê¸°ì§€ ì²´ë ¥ 50% ì´ìƒ", "í´ë¦¬ì–´ ì‹œ ê¸°ì§€ ì²´ë ¥ì„ 50% ì´ìƒ ìœ ì§€í•©ë‹ˆë‹¤.", (starMask & (1 << 1)) != 0);
-        CreateStarConditionRow("ê¸°ì§€ ì²´ë ¥ 100% ìœ ì§€", "í´ë¦¬ì–´ ì‹œ ê¸°ì§€ ì²´ë ¥ì„ ëª¨ë‘ ìœ ì§€í•©ë‹ˆë‹¤.", (starMask & (1 << 2)) != 0);
+        CreateStarConditionRow("½ºÅ×ÀÌÁö Å¬¸®¾î", "½ºÅ×ÀÌÁö¸¦ Å¬¸®¾îÇÕ´Ï´Ù.", (starMask & (1 << 0)) != 0);
+        CreateStarConditionRow("±âÁö Ã¼·Â 50% ÀÌ»ó", "Å¬¸®¾î ½Ã ±âÁö Ã¼·ÂÀ» 50% ÀÌ»ó À¯ÁöÇÕ´Ï´Ù.", (starMask & (1 << 1)) != 0);
+        CreateStarConditionRow("±âÁö Ã¼·Â 100% À¯Áö", "Å¬¸®¾î ½Ã ±âÁö Ã¼·ÂÀ» ¸ğµÎ À¯ÁöÇÕ´Ï´Ù.", (starMask & (1 << 2)) != 0);
     }
 
     void CreateStarConditionRow(string displayName, string description, bool achieved)
@@ -256,7 +239,7 @@ public class UI_GameResult : MonoBehaviour
 
     #endregion
 
-    #region ë²„íŠ¼
+    #region ¹öÆ°
 
     void OnClickRetry()
     {
@@ -267,7 +250,7 @@ public class UI_GameResult : MonoBehaviour
 
         if (gameFlowService == null)
         {
-            Debug.LogError("[StageResultTempPanel] IGameFlowServiceë¥¼ ì°¾ì§€ ëª»í•´ ì¬ë„ì „ì„ ì‹¤í–‰í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤.", this);
+            Debug.LogError("[StageResultTempPanel] IGameFlowService¸¦ Ã£Áö ¸øÇØ ÀçµµÀüÀ» ½ÇÇàÇÒ ¼ö ¾ø½À´Ï´Ù.", this);
             return;
         }
 
@@ -288,7 +271,7 @@ public class UI_GameResult : MonoBehaviour
     {
         if (!hasResult)
         {
-            Debug.LogWarning("[StageResultTempPanel] ì œì¶œí•  StageResultê°€ ì—†ìŠµë‹ˆë‹¤.", this);
+            Debug.LogWarning("[StageResultTempPanel] Á¦ÃâÇÒ StageResult°¡ ¾ø½À´Ï´Ù.", this);
             return;
         }
 
@@ -299,16 +282,17 @@ public class UI_GameResult : MonoBehaviour
 
         if (gameFlowService == null)
         {
-            Debug.LogError("[StageResultTempPanel] IGameFlowServiceë¥¼ ì°¾ì§€ ëª»í•´ ê²°ê³¼ë¥¼ ì œì¶œí•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤.", this);
+            Debug.LogError("[StageResultTempPanel] IGameFlowService¸¦ Ã£Áö ¸øÇØ °á°ú¸¦ Á¦ÃâÇÒ ¼ö ¾ø½À´Ï´Ù.", this);
             return;
         }
 
         gameFlowService.FinishStageRun(currentResult, request);
     }
 
+
     #endregion
 
-    #region ì‹œê°„
+    #region ½Ã°£
 
     void PauseTime()
     {
@@ -329,7 +313,7 @@ public class UI_GameResult : MonoBehaviour
 
     #endregion
 
-    #region ìœ í‹¸
+    #region À¯Æ¿
 
     void ResolveServices()
     {
