@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24e837c49ec25184c8721677fe5a1c20, type: 3}
+  m_Name: TestHowizerTower
+  m_EditorClassIdentifier: Assembly-CSharp::TowerData
+  buildingID: 6
+  buildingName: "\uBA67\uB3FC\uC9C0"
+  buildingPrefab: {fileID: 100362392977836183, guid: 666f1634bd2302241915e233cfdc57b6, type: 3}
+  cost: 20
+  isDestructible: 1
+  baseFootprint:
+  - {x: 0, y: 0}
+  previewPF: {fileID: 4359769396864575908, guid: 060a1b163f1ae7c4b974e31ed1473a40, type: 3}
+  validStateMaterial: {fileID: 2100000, guid: 4eaf14d00b5b02d4786058d19d124e39, type: 2}
+  inValidStateMaterial: {fileID: 2100000, guid: 4a85c9e89378a73489c64b9eede43a1b, type: 2}
+  placeVFX: {fileID: -7969546562051743012, guid: 201eafd12c4c6b34396a2be032e4a7c9, type: 3}
+  damage: 3
+  attackRange: 15
+  attackInterval: 3
+  attackSpeed: 1
+  monsterLayer:
+    serializedVersion: 2
+    m_Bits: 512
+  attackMechanism: {fileID: 11400000, guid: e76284b64316c8945b7a3f5311a87bb2, type: 2}
+  towerPrefab:
+    m_AssetGUID: 666f1634bd2302241915e233cfdc57b6
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_SubObjectGUID: 
+    m_EditorAssetChanged: 0
+  defaultKeywords:
+  - {fileID: 11400000, guid: deaae35f7266bff4296103207e880f72, type: 2}

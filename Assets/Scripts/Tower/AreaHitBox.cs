@@ -259,9 +259,11 @@ public class AreaHitBox : PoolableObject
         if (effectPF == null)
             return null;
 
+        Vector3 effectPos = monster.transform.position + Vector3.up * 0.2f;
+
         PoolableObject effect = ObjectPoolManager.Instance.Spawn<PoolableObject>(
             effectPF,
-            monster.transform.position,
+            effectPos,
             Quaternion.identity,
             ObjectPoolManager.Instance.GetEffectParent()
         );

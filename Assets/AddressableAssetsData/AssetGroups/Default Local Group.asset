@@ -20,6 +20,7 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - Tower
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 1421d28de288a2f47bf38b21df6b4e54
     m_Address: Assets/SO/StageDataSO/Stage_003.asset
     m_ReadOnly: 0
@@ -57,25 +58,40 @@ MonoBehaviour:
     m_SerializedLabels:
     - Tower
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 3b1c54572b2e58243a5f71c24a4900fe
-    m_Address: Assets/Prefabs/HitBox/SlowArea.prefab
+  - m_GUID: 2e308f621a78e2f4287953a499db3bc7
+    m_Address: Assets/Prefabs/Projectile/Howizer_Bullet.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Projectile
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 30efe4539f55b9d49bd9b3731b3337d3
+    m_Address: Assets/Prefabs/HitBox/HowizerHitBox.prefab
     m_ReadOnly: 0
     m_SerializedLabels:
     - HitBox
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 48c63f0bad0fd664c87ac2a224b8a4a1
-    m_Address: Assets/Prefabs/Projectile/Projectile_Normal.prefab
   - m_GUID: 324d0803b52fb8a479b4018ed350935d
     m_Address: Assets/SO/StageDataSO/Stage_004.asset
     m_ReadOnly: 0
     m_SerializedLabels:
     - StageData
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3b1c54572b2e58243a5f71c24a4900fe
+    m_Address: Assets/Prefabs/HitBox/SlowArea.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - HitBox
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 484f1224dfd9712459a4464283612b0c
     m_Address: Assets/SO/StageDataSO/Stage_001.asset
     m_ReadOnly: 0
     m_SerializedLabels:
     - StageData
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 48c63f0bad0fd664c87ac2a224b8a4a1
+    m_Address: Assets/Prefabs/Projectile/Projectile_Normal.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 4df76543a904f20458827d0e99690400
     m_Address: Assets/SO/AttackSo/TestProjectileLuncher.asset
@@ -95,17 +111,37 @@ MonoBehaviour:
     m_SerializedLabels:
     - Projectile
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 666f1634bd2302241915e233cfdc57b6
+    m_Address: Assets/Prefabs/Tower/TestHowizerTower.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Tower
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 6bb5d459c8ae1a7438ec6c9e684d87b1
     m_Address: Assets/Prefabs/Tower/TestTower.prefab
     m_ReadOnly: 0
     m_SerializedLabels:
     - Tower
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 733578bafa28d9e4c95a09a3b505f397
+    m_Address: Assets/Prefabs/Tower/TestSniperTower.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Tower
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 738f37fd5c1bc5344853ffd42343c37f
+    m_Address: Assets/Prefabs/Effect/Hit_stone.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Effect
+    - Effect_HitBox
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 829fd095e4270ee48a4002de72905758
     m_Address: Assets/Prefabs/Tower/TestStunTower.prefab
     m_ReadOnly: 0
     m_SerializedLabels:
     - Tower
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 8e445a0834199bb449e407d0a9f18ca6
     m_Address: Assets/SO/TowerDataSO/HitFlame.asset
     m_ReadOnly: 0
@@ -131,10 +167,17 @@ MonoBehaviour:
     - Effect
     - Effect_Projectile
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ccb11473b2cf5b2439f0edd3b4d28434
+    m_Address: Assets/SO/AttackSo/TestBulletData.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Projectile
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: d71c56f2e6af1ba449a0a11217b143a4
     m_Address: Assets/Scripts/MonsterSystem/Skeleton_110.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: e393610002f3f1e42bed2f10b03ed509
     m_Address: Assets/SO/TowerDataSO/TestBulletTower.asset
     m_ReadOnly: 0
@@ -153,11 +196,6 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - Tower
-  - m_GUID: ccb11473b2cf5b2439f0edd3b4d28434
-    m_Address: Assets/SO/AttackSo/TestBulletData.asset
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Projectile
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: f43d546f448decb41af66526a7f44009
     m_Address: Assets/Prefabs/HitBox/Flamethrower.prefab
