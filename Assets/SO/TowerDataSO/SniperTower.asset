@@ -26,7 +26,7 @@ MonoBehaviour:
   damage: 50
   attackRange: 7
   attackInterval: 1
-  attackSpeed: 1.5
+  attackSpeed: 2
   monsterLayer:
     serializedVersion: 2
     m_Bits: 512
