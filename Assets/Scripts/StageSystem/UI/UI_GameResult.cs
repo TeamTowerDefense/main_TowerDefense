@@ -1,4 +1,9 @@
+<<<<<<< Updated upstream
 Ôªøusing IGameFlowInterface;
+=======
+using IGameFlowInterface;
+using System.Collections;
+>>>>>>> Stashed changes
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -11,7 +16,15 @@ public class UI_GameResult : MonoBehaviour
     [SerializeField] GameObject panelRoot;
     [SerializeField] CanvasGroup canvasGroup;
 
+<<<<<<< Updated upstream
     [Header("ÌÖçÏä§Ìä∏")]
+=======
+    [Header("∫∞ ø¨√‚")]
+    [SerializeField] GameObject[] starObjects;
+    [SerializeField] float starDelay = 0.35f;
+
+    [Header("≈ÿΩ∫∆Æ")]
+>>>>>>> Stashed changes
     [SerializeField] TextMeshProUGUI titleText;
     [SerializeField] TextMeshProUGUI resultText;
     [SerializeField] TextMeshProUGUI hpText;
@@ -144,12 +157,25 @@ public class UI_GameResult : MonoBehaviour
         int maxStarCount = StageStarEvaluator.GetMaxStarCount(stageData);
 
         if (titleText) titleText.text = result.Cleared ? clearTitle : failTitle;
+<<<<<<< Updated upstream
         if (resultText) resultText.text = result.Cleared ? "ÌÅ¥Î¶¨Ïñ¥ ÏÑ±Í≥µ" : "Ïä§ÌÖåÏù¥ÏßÄ Ïã§Ìå®";
         if (hpText) hpText.text = $"Í∏∞ÏßÄ Ï≤¥Î†•:\n{result.CurrentBaseHp} / {result.MaxBaseHp}";
         if (timeText) timeText.text = $"ÏßÑÌñâ ÏãúÍ∞Ñ: {FormatTime(result.ElapsedTime)}";
         if (killText) killText.text = $"Ï≤òÏπò Ïàò: {result.KilledEnemyCount}";
         if (leakText) leakText.text = $"ÎàÑÏàò Ïàò: {result.LeakedEnemyCount}";
         if (starText) starText.text = $"ÌöçÎìù Î≥Ñ: {earnedStarCount} / {maxStarCount}";
+=======
+        if (resultText) resultText.text = result.Cleared ? "≈¨∏ÆæÓ º∫∞¯" : "Ω∫≈◊¿Ã¡ˆ Ω«∆–";
+        if (hpText) hpText.text = $"{result.CurrentBaseHp}";
+        if (timeText) timeText.text = $"{FormatTime(result.ElapsedTime)}";
+        if (killText) killText.text = $"{result.KilledEnemyCount}";
+        if (leakText) leakText.text = $"{result.LeakedEnemyCount}";
+
+        if (gameObject.activeInHierarchy)
+        {
+            StartCoroutine(AnimateStarsRoutine(earnedStarCount));
+        }
+>>>>>>> Stashed changes
 
         RefreshStarConditions(stageData, result, starMask);
 
@@ -318,6 +344,66 @@ public class UI_GameResult : MonoBehaviour
         int sec = total % 60;
 
         return $"{min:00}:{sec:00}";
+    }
+
+    #endregion
+
+    #region ∫∞ ø¨√‚ (æ÷¥œ∏ﬁ¿Ãº«)
+
+    private IEnumerator AnimateStarsRoutine(int earnedStarCount)
+    {
+        foreach (var star in starObjects)
+        {
+            if (star != null)
+            {
+                star.SetActive(false);
+                star.transform.localScale = Vector3.zero;
+            }
+        }
+
+        yield return new WaitForSecondsRealtime(0.5f);
+
+        for (int i = 0; i < earnedStarCount; i++)
+        {
+            if (i >= starObjects.Length || starObjects[i] == null) break;
+
+            GameObject star = starObjects[i];
+            star.SetActive(true);
+
+            yield return StartCoroutine(PopScaleRoutine(star.transform));
+
+            yield return new WaitForSecondsRealtime(starDelay);
+        }
+    }
+
+    private IEnumerator PopScaleRoutine(Transform target)
+    {
+        float duration = 0.3f;
+        float time = 0f;
+        Vector3 defaultScale = Vector3.one;
+
+        while (time < duration)
+        {
+            // TimeScale¿Ã 0¿œ ∂ßµµ æ÷¥œ∏ﬁ¿Ãº«¿Ã ¿Áª˝µ«µµ∑œ unscaledDeltaTime ªÁøÎ!
+            time += Time.unscaledDeltaTime;
+            float t = time / duration;
+
+            if (t < 0.6f)
+            {
+                // æ’¿« 60% Ω√∞£ µøæ»¿∫ ø¯∑° ≈©±‚¿« 1.3πË±Ó¡ˆ ∆¢æÓ ø¿∏ß
+                target.localScale = Vector3.Lerp(Vector3.zero, defaultScale * 1.3f, t / 0.6f);
+            }
+            else
+            {
+                // ≥™∏”¡ˆ 40% Ω√∞£ µøæ» 1.3πËø°º≠ ø¯∑° ≈©±‚(1.0)∑Œ æ»¬¯
+                target.localScale = Vector3.Lerp(defaultScale * 1.3f, defaultScale, (t - 0.6f) / 0.4f);
+            }
+
+            yield return null;
+        }
+
+        // ø¿¬˜ πÊ¡ˆ∏¶ ¿ß«ÿ √÷¡æ Ω∫ƒ…¿œ ∞Ì¡§
+        target.localScale = defaultScale;
     }
 
     #endregion
