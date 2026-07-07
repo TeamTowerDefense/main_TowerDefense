@@ -2,7 +2,6 @@
 using IGameInterface;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class Tower : BuildingBase
@@ -135,7 +134,7 @@ public class Tower : BuildingBase
     {
         int finalDamage = Mathf.RoundToInt(GetStat(StatType.AttackDamage));
 
-        var damageModifiers = keywordController.GetKeywords<IDamageModifier>();
+        List<IDamageModifier> damageModifiers = keywordController.GetKeywords<IDamageModifier>();
         foreach (var mod in damageModifiers)
         {
             finalDamage = mod.ModifyDamage(finalDamage, target);
@@ -148,7 +147,12 @@ public class Tower : BuildingBase
         // 2. 만약 장착된 부품이 '히트박스' 타입이라면?
         else if (towerData.attackMechanism is HitBoxData hitBoxData)
         {
-            if (!isAttacking)
+            if (isAttacking)
+                return;
+
+            if (hitBoxData.isMortar)
+                StartCoroutine(UseMortarHitBoxAttack(target, hitBoxData));
+            else
                 StartCoroutine(UseHitBoxAttack(target, hitBoxData));
         }
 
@@ -298,6 +302,148 @@ public class Tower : BuildingBase
         Quaternion lookRotation = Quaternion.LookRotation(dir);
 
         body.rotation = Quaternion.Slerp(body.rotation, lookRotation, Time.deltaTime * rotateSpeed);
+    }
+    #endregion
+
+    #region 곡사포 메서드
+    private IEnumerator UseMortarHitBoxAttack(Transform target, HitBoxData hitBoxData)
+    {
+        if (ObjectPoolManager.Instance == null)
+            yield break;
+
+        if (target == null || hitBoxData == null)
+            yield break;
+
+        isAttacking = true;
+
+        Vector3 impactPosition = target.position;
+
+        RotateToTarget(transform);
+
+        SpawnLunchEffect(impactPosition, hitBoxData);
+
+        SpawnWarningEffect(impactPosition, hitBoxData);
+
+        yield return new WaitForSeconds(hitBoxData.impactDelay);
+
+        SpawnMortarHitBox(impactPosition, hitBoxData);
+
+        isAttacking = false;
+    }
+    #endregion
+
+    #region 곡사포 발사 메서드
+    private void SpawnLunchEffect(Vector3 impactPosition, HitBoxData hitBoxData)
+    {
+        if (hitBoxData.launchEffectID < 0)
+            return;
+
+        if (hitBoxData.hitEffectData == null)
+        {
+            Debug.LogWarning("[Mortar] hitEffectData NULL");
+            return;
+        }
+        Debug.Log($"[Mortar] impact effectID = {hitBoxData.hitEffectData.effectID}");
+
+        GameObject effectPF = ObjectPoolManager.Instance.GetEffect(hitBoxData.launchEffectID);
+
+        if (effectPF == null)
+        {
+            Debug.LogWarning($"[Mortar] impact effect prefab NULL ID={hitBoxData.hitEffectData.effectID}");
+            return;
+        }
+
+        Vector3 startPos = firePoint.position;
+        Vector3 dir = impactPosition - startPos;
+
+        PoolableObject effect = ObjectPoolManager.Instance.Spawn<PoolableObject>
+            (effectPF, startPos, Quaternion.LookRotation(dir.normalized), ObjectPoolManager.Instance.GetEffectParent());
+
+        if (effect == null) 
+            return;
+
+        LineRenderer line = effect.GetComponent<LineRenderer>();
+
+        if (line != null)
+        {
+            line.SetPosition(0, startPos);
+            line.SetPosition(1, impactPosition);
+        }
+        
+        EffectLifeTimeDespawner despawner = effect.GetComponent<EffectLifeTimeDespawner>();
+
+        if (despawner != null)
+            despawner.StartLifeTime(hitBoxData.impactDelay);
+    }
+    #endregion
+
+    #region 착탄 범위 표시 메서드
+    private void SpawnWarningEffect(Vector3 impactPosition, HitBoxData hitBoxData)
+    {
+        if (hitBoxData.warningEffectID < 0)
+            return;
+
+        GameObject effectPF = ObjectPoolManager.Instance.GetEffect(hitBoxData.warningEffectID);
+
+        if (effectPF == null)
+            return;
+
+        Vector3 effectPos = impactPosition + Vector3.up * 0.2f;
+
+        PoolableObject effect = ObjectPoolManager.Instance.Spawn<PoolableObject>
+            (effectPF, effectPos, Quaternion.identity, ObjectPoolManager.Instance.GetEffectParent());
+
+        if (effect == null) 
+            return;
+
+        effect.transform.position = effectPos;
+        effect.transform.SetParent(ObjectPoolManager.Instance.GetEffectParent());
+
+        EffectLifeTimeDespawner despawner = effect.GetComponent<EffectLifeTimeDespawner>();
+
+        if (despawner != null)
+            despawner.StartLifeTime(hitBoxData.impactDelay + 0.2f);
+    }
+    #endregion
+
+    #region 착탄 HitBox 생성 메서드
+    private void SpawnMortarHitBox(Vector3 impactPosition, HitBoxData hitBoxData)
+    {
+        GameObject prefab = ObjectPoolManager.Instance.GetHitBox(hitBoxData.hitBoxID);
+    
+        if (prefab == null) 
+        {
+            Debug.LogError($"[MortarHitBox] 프리팹 없음 ID : {hitBoxData.hitBoxID}");
+            return; 
+        }
+
+        Vector3 effectPos = impactPosition + Vector3.up * 0.2f;
+
+        AreaHitBox hitBox = ObjectPoolManager.Instance.Spawn<AreaHitBox>
+            (prefab, effectPos, Quaternion.identity, ObjectPoolManager.Instance.GetEffectParent());
+
+        if (hitBox == null) 
+            return;
+
+        hitBox.transform.position = effectPos;
+        hitBox.transform.SetParent(ObjectPoolManager.Instance.GetEffectParent());
+
+        hitBox.Initialize(null, towerData.damage, towerData.monsterLayer, hitBoxData, towerData.attackSpeed, this);
+
+        StartCoroutine(DespawnMortarHitBox(hitBox, hitBoxData.hitColliderActiveTime));
+    }
+
+    private IEnumerator DespawnMortarHitBox(AreaHitBox hitBox, float activeTime)
+    {
+        yield return new WaitForSeconds(activeTime);
+
+        if (hitBox == null)
+            yield break;
+
+        hitBox.DisableHitCollider();
+
+        hitBox.transform.SetParent(ObjectPoolManager.Instance.GetEffectParent());
+        ObjectPoolManager.Instance.Despawn(hitBox);
     }
     #endregion
 

@@ -15,12 +15,13 @@ MonoBehaviour:
   hitBoxID: 1003
   hitEffectID: 1003
   activeTime: 0.3
-  damageInterval: 0.2
+  damageInterval: 1
   hitEffectData: {fileID: 11400000, guid: 8e445a0834199bb449e407d0a9f18ca6, type: 2}
   center: {x: 0, y: 0, z: 3}
   damageMode: 1
   stopEffectOutOfRange: 0
   colliderActiveTime: 0.2
+  effectDespawnDelay: 1
   applyDebuff: 0
   debuffs: []
   debuffApplyInterval: 0.5
