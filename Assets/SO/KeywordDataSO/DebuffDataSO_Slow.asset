@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: DebuffDataSO_Slow
   m_EditorClassIdentifier: Assembly-CSharp::DebuffData_Slow
   keywordName: Slow
+  displayName: "\uB454\uD654"
   type: 2
   description: "\uC2AC\uB85C\uC6B0"
   isStackable: 0

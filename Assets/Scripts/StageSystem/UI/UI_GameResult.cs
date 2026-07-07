@@ -336,6 +336,9 @@ public class UI_GameResult : MonoBehaviour
 
     private IEnumerator AnimateStarsRoutine(int earnedStarCount)
     {
+        if(starObjects == null)
+            yield break;
+
         foreach (var star in starObjects)
         {
             if (star != null)

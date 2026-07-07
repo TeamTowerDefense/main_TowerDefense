@@ -90,4 +90,35 @@ public class KeywordController : MonoBehaviour
         }
         return results;
     }
+
+    public List<string> GetActiveKeywordNames()
+    {
+        List<string> resultNames = new List<string>();
+
+        for (int i = 0; i < activeKeywords.Count; i++)
+        {
+            var keyword = activeKeywords[i];
+
+            if (keyword != null && keyword.DataOrigin != null)
+            {
+                string dName = keyword.DataOrigin.displayName;
+
+                if (!string.IsNullOrEmpty(dName))
+                {
+                    resultNames.Add(dName);
+                }
+                else
+                {
+                    Debug.LogWarning($"[{gameObject.name}] '{keyword.DataOrigin.name}' 데이터의 displayName 칸이 비어있습니다!");
+                }
+            }
+        }
+
+        if (activeKeywords.Count > 0 && resultNames.Count == 0)
+        {
+            Debug.LogWarning($"[{gameObject.name}] 장착된 키워드는 {activeKeywords.Count}개 인데, 이름이 있는 키워드가 하나도 없습니다.");
+        }
+
+        return resultNames;
+    }
 }

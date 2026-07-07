@@ -21,12 +21,11 @@ public class SelectState : IConstructMode
         if (model.SelectedBuilding != null)
         {
             Tower towerMono = model.SelectedBuilding as Tower;
-            ITowerTargetFinder targetFinder = towerMono.GetComponent<ITowerTargetFinder>();
 
-            if (towerMono != null && targetFinder != null)
+            if (towerMono != null)
             {
                 view.ShowTowerMenu(towerMono.transform.position);
-                view.ShowTowerInfo(model.SelectedBuilding.BuildingData, targetFinder.ChaseMode);
+                view.ShowTowerInfo(towerMono);
             }
         }
     }
