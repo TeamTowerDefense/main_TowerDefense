@@ -12069,7 +12069,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MonsterManager
   useAutoSpawn: 1
-  monsterPrefab: {fileID: 4253210182481893339, guid: d71c56f2e6af1ba449a0a11217b143a4, type: 3}
   spawnY: -0.1
   separationRadius: 1
   separationStrength: 1
