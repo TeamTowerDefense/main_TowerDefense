@@ -183,7 +183,9 @@ namespace IGameInterface
         ClosestToTower,
         FarthestFromTower,
         FrontMost,
-        BackMost
+        BackMost,
+        MaxHp,
+        MinHp
     }
 
     public interface IGameService : ISceneService
@@ -288,6 +290,8 @@ namespace IGameInterface
         public Transform Transform;
         public IAttackTarget AttackTarget;
 
+        public float MaxHp;
+        public float MinHp;
         public bool IsAlive;
         public bool IsTargetable;
         public float PathProgress;
@@ -298,6 +302,7 @@ namespace IGameInterface
         public EnemyInfo(
             Transform transform,
             Vector3 position,
+            float maxHp,
             bool isAlive = true,
             bool isTargetable = true,
             float pathProgress = 0f,
@@ -305,6 +310,7 @@ namespace IGameInterface
         {
             Transform = transform;
             fallbackPosition = position;
+            MaxHp = maxHp;
             IsAlive = isAlive;
             IsTargetable = isTargetable;
             PathProgress = pathProgress;

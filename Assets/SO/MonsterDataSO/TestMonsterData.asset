@@ -22,7 +22,7 @@ MonoBehaviour:
   LeakDamage: 1
   scale: {x: 0.5, y: 0.5, z: 0.5}
   useUniformScale: 1
-  StunGauge: 10
+  StunGauge: 1
   moveWeight: 1
   separationWeight: 0.3
   boundaryWeight: 3

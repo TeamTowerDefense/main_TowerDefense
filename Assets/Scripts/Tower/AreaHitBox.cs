@@ -201,8 +201,10 @@ public class AreaHitBox : PoolableObject
 
     private void SpawnTickHeatEffect(Monster monster)
     {
-        if (activeHitEffects.ContainsKey(monster))
+        if (activeHitEffects.TryGetValue(monster, out PoolableObject effect))
         {
+            PlayParticles(effect);
+
             if (effectDespawnRoutines.TryGetValue(monster, out Coroutine routine))
             {
                 StopCoroutine(routine);
@@ -212,26 +214,27 @@ public class AreaHitBox : PoolableObject
             return;
         }
 
-        PoolableObject effect = SpawnHitEffect(monster);
+        if (effect == null)
+            return;
+
+        effect = SpawnHitEffect(monster);
 
         if (effect == null)
             return;
 
-        EffectLifeTimeDespawner despawner = effect.GetComponent<EffectLifeTimeDespawner>();
-
-        if (despawner != null)
-        {
-            float lifeTime = 1f;
-            if (hitBoxData.hitEffectData != null && hitBoxData.hitEffectData.lifeTime > 0)
-            {
-                lifeTime = hitBoxData.hitEffectData.lifeTime;
-            }
-
-            despawner.StartLifeTime(lifeTime);
-        }
-
-
         activeHitEffects.Add(monster, effect);
+        PlayParticles(effect);
+    }
+
+    private void PlayParticles(PoolableObject effect)
+    {
+        ParticleSystem[] particles = effect.GetComponentsInChildren<ParticleSystem>();
+
+        foreach(ParticleSystem ps in particles)
+        {
+            if (!ps.isPlaying)
+                ps.Play(true);
+        }
     }
 
     private void SpawnOnceEffect(Monster monster)

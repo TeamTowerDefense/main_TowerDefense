@@ -13,15 +13,16 @@ MonoBehaviour:
   m_Name: HealMonsterData
   m_EditorClassIdentifier: Assembly-CSharp::MonsterData
   monsterName: HealMonster1
+  monsterId: 0
   Prefab: {fileID: 6012647353202847045, guid: 903d63fff4348ab4790c4193d8e90046, type: 3}
-  maxHP: 100
+  maxHP: 110
   speed: 1
   defense: 0
   Att: 0
   LeakDamage: 1
   scale: {x: 0.5, y: 0.5, z: 0.5}
   useUniformScale: 1
-  StunGauge: 10
+  StunGauge: 1
   moveWeight: 1
   separationWeight: 0.3
   boundaryWeight: 3
@@ -30,3 +31,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 72baa0d7923bcd248baa4fb18da071f2, type: 2}
   heightOffset: 0
   amount: 10
+  defaultKeywords: []
