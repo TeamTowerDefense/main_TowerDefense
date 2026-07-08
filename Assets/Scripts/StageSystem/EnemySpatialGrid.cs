@@ -132,8 +132,8 @@ sealed class EnemySpatialGrid
             EnemyTargetMode.FarthestFromTower => float.MinValue,
             EnemyTargetMode.FrontMost => float.MinValue,
             EnemyTargetMode.BackMost => float.MaxValue,
-            EnemyTargetMode.MaxHp => float.MaxValue,
-            EnemyTargetMode.MinHp => float.MinValue,
+            EnemyTargetMode.MaxHp => float.MinValue,
+            EnemyTargetMode.MinHp => float.MaxValue,
             _ => float.MaxValue
         };
     static float GetScore(EnemyInfo enemy, float distanceSqr, EnemyTargetMode mode)
