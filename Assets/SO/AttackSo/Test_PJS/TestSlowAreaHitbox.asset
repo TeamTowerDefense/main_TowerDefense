@@ -22,7 +22,7 @@ MonoBehaviour:
   stopEffectOutOfRange: 1
   colliderActiveTime: 0.2
   effectDespawnDelay: 1
-  applyDebuff: 1
+  applyDebuff: 0
   debuffs:
   - debuffType: 2
     duration: 0

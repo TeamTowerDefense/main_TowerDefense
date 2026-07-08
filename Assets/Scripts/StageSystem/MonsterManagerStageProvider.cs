@@ -95,10 +95,21 @@ public class MonsterManagerStageProvider : MonoBehaviour, IMonsterSpawnManager, 
         if (group.StartDelay > 0f)
             yield return Wait(group.StartDelay);
 
-        for (int i = 0; i < group.Count; i++)
+        foreach (MonsterSpawnElement element in group.Elements)
         {
-            path.monsterData = group.MonsterData;
-            monsterManager.SpawnPathGroup(group.MonsterData, path, 1, 0f);
+            if(element == null) 
+                continue;
+            if(element.MonsterData == null) 
+                continue;
+
+            path.monsterData = element.MonsterData;
+            for (int i = 0; i < element.Count; i++)
+            {
+                monsterManager.SpawnPathGroup(path.monsterData, path, 1, 0f);
+            }
+
+            if (group.elementInterval > 0f)
+                yield return Wait(group.elementInterval);
         }
 
         if (group.Interval > 0f)
@@ -113,9 +124,12 @@ public class MonsterManagerStageProvider : MonoBehaviour, IMonsterSpawnManager, 
 
     bool CanSpawnGroup(MonsterSpawnGroup group)
     {
-        if (group == null) return false;
-        if (group.MonsterData == null) return false;
-        if (group.Count <= 0) return false;
+        if (group == null) 
+            return false;
+        if (group.Elements == null)
+            return false;
+        if (group.Elements.Count == 0) 
+            return false;
         return true;
     }
 

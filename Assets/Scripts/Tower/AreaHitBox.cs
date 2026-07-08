@@ -188,9 +188,6 @@ public class AreaHitBox : PoolableObject
         if (monster == null)
             return;
 
-        if (hitBoxData.debuffs == null || hitBoxData.debuffs.Count == 0)
-            return;
-
         MonsterStatus status = monster.GetComponent<MonsterStatus>();
 
         if (status == null)
