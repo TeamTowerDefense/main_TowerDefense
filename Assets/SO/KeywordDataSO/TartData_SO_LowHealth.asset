@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 74d33c7e03e506a4dac1a63e4d8e46de, type: 3}
-  m_Name: TriatDataSO_Targeting_MaxHp
+  m_Name: TartData_SO_LowHealth
   m_EditorClassIdentifier: Assembly-CSharp::TraitData_TowerTargeting
-  keywordName: Challenge
-  displayName: "\uB3C4\uC804"
+  keywordName: Snipe
+  displayName: "\uC800\uACA9"
   type: 0
   description: 
   isStackable: 0

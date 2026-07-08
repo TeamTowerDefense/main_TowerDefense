@@ -132,7 +132,7 @@ sealed class EnemySpatialGrid
             EnemyTargetMode.FarthestFromTower => float.MinValue,
             EnemyTargetMode.FrontMost => float.MinValue,
             EnemyTargetMode.BackMost => float.MaxValue,
-            EnemyTargetMode.MaxHp => float.MinValue,
+            EnemyTargetMode.MaxHp => float.MaxValue,
             EnemyTargetMode.MinHp => float.MinValue,
             _ => float.MaxValue
         };
