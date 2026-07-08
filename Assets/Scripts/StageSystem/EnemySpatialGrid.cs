@@ -74,6 +74,7 @@ sealed class EnemySpatialGrid
     void FindBestInBucket(List<EnemyInfo> bucket, Vector3 origin, float rangeSqr,
         EnemyTargetMode mode, ref float bestScore, ref EnemyInfo bestEnemy)
     {
+        Debug.Log(bucket.Count);
         for (int i = bucket.Count - 1; i >= 0; i--)
         {
             EnemyInfo candidate = bucket[i];
@@ -97,9 +98,6 @@ sealed class EnemySpatialGrid
             bestScore = score;
             bestEnemy = candidate;
             Debug.Log($"[TargetFinder] mode={mode}, enemy={candidate.Transform.name}, MaxHp={candidate.MaxHp}, score={score}, best={bestScore}");
-            {
-
-            }
         }
     }
 
@@ -133,7 +131,7 @@ sealed class EnemySpatialGrid
             EnemyTargetMode.FrontMost => float.MinValue,
             EnemyTargetMode.BackMost => float.MaxValue,
             EnemyTargetMode.MaxHp => float.MinValue,
-            EnemyTargetMode.MinHp => float.MinValue,
+            EnemyTargetMode.MinHp => float.MaxValue,
             _ => float.MaxValue
         };
     static float GetScore(EnemyInfo enemy, float distanceSqr, EnemyTargetMode mode)

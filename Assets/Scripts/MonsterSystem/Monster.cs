@@ -128,7 +128,6 @@ public class Monster : PoolableObject, IEnemyHealth
 
         maxHp = GetStat(StatType.MaxHealth);
         currentHp = maxHp;
-        speed = GetStat(StatType.MoveSpeed);
 
         moveWeight = data.moveWeight;
         separationWeight = data.separationWeight;
