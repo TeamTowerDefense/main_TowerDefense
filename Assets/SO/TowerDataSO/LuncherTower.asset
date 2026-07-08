@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 24e837c49ec25184c8721677fe5a1c20, type: 3}
-  m_Name: TestLuncher
+  m_Name: LuncherTower
   m_EditorClassIdentifier: Assembly-CSharp::TowerData
   buildingID: 1
   buildingName: "\uACE0\uC591\uC774"
@@ -23,10 +23,10 @@ MonoBehaviour:
   validStateMaterial: {fileID: 2100000, guid: 4eaf14d00b5b02d4786058d19d124e39, type: 2}
   inValidStateMaterial: {fileID: 2100000, guid: 4a85c9e89378a73489c64b9eede43a1b, type: 2}
   placeVFX: {fileID: -7969546562051743012, guid: 201eafd12c4c6b34396a2be032e4a7c9, type: 3}
-  damage: 40
+  damage: 80
   attackRange: 5
   attackInterval: 1
-  attackSpeed: 0.5
+  attackSpeed: 0.33
   monsterLayer:
     serializedVersion: 2
     m_Bits: 512
@@ -38,4 +38,4 @@ MonoBehaviour:
     m_SubObjectGUID: 
     m_EditorAssetChanged: 1
   defaultKeywords:
-  - {fileID: 11400000, guid: 70b13f0f1ed15e749950b9a499ea0cb0, type: 2}
+  - {fileID: 11400000, guid: 6c9a643a45f1ba942b8f41106db57847, type: 2}

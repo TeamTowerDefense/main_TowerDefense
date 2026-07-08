@@ -10,33 +10,32 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 24e837c49ec25184c8721677fe5a1c20, type: 3}
-  m_Name: TestStunTower
+  m_Name: FlameTower
   m_EditorClassIdentifier: Assembly-CSharp::TowerData
-  buildingID: 3
-  buildingName: "\uB3FC\uC9C0"
-  buildingPrefab: {fileID: 7107717812107533692, guid: 829fd095e4270ee48a4002de72905758, type: 3}
-  cost: 30
+  buildingID: 2
+  buildingName: "\uB2ED"
+  buildingPrefab: {fileID: 3697426809127930414, guid: 2c7b0fb24cff0e2458092d232d40c493, type: 3}
+  cost: 20
   isDestructible: 1
   baseFootprint:
   - {x: 0, y: 0}
-  previewPF: {fileID: 7107717812107533692, guid: 9fc307e9417429046bdbd98ee002a923, type: 3}
+  previewPF: {fileID: 3697426809127930414, guid: 4852ce388538770489b960d833e7fdc5, type: 3}
   validStateMaterial: {fileID: 2100000, guid: 4eaf14d00b5b02d4786058d19d124e39, type: 2}
   inValidStateMaterial: {fileID: 2100000, guid: 4a85c9e89378a73489c64b9eede43a1b, type: 2}
   placeVFX: {fileID: -7969546562051743012, guid: 201eafd12c4c6b34396a2be032e4a7c9, type: 3}
-  damage: 0
-  attackRange: 4
+  damage: 5
+  attackRange: 2
   attackInterval: 1
-  attackSpeed: 1
+  attackSpeed: 2
   monsterLayer:
     serializedVersion: 2
     m_Bits: 512
-  attackMechanism: {fileID: 11400000, guid: 67fe410dfeb47034096f7df39fd9e08e, type: 2}
+  attackMechanism: {fileID: 11400000, guid: 7e6266507622e4f4e865ea304e54937c, type: 2}
   towerPrefab:
-    m_AssetGUID: 829fd095e4270ee48a4002de72905758
+    m_AssetGUID: 2c7b0fb24cff0e2458092d232d40c493
     m_SubObjectName: 
     m_SubObjectType: 
     m_SubObjectGUID: 
-    m_EditorAssetChanged: 0
+    m_EditorAssetChanged: 1
   defaultKeywords:
-  - {fileID: 11400000, guid: 5bbd05eae28f9a24a98087d3a856b4bc, type: 2}
-  - {fileID: 11400000, guid: 6c9a643a45f1ba942b8f41106db57847, type: 2}
+  - {fileID: 11400000, guid: f0817589ffd4c574cb6a77e3f7f3ac41, type: 2}

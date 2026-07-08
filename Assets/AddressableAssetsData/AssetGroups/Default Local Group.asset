@@ -105,6 +105,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - Projectile
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 666f1634bd2302241915e233cfdc57b6
+    m_Address: Assets/Prefabs/Tower/TestHowizerTower.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Tower
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 6b42a58e1d069a94d917ddfa1ebf1e94
     m_Address: Assets/SO/EffectSo/HitLuncher.asset
     m_ReadOnly: 0
@@ -113,6 +119,12 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 6bb5d459c8ae1a7438ec6c9e684d87b1
     m_Address: Assets/Prefabs/Tower/TestTower.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Tower
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 733578bafa28d9e4c95a09a3b505f397
+    m_Address: Assets/Prefabs/Tower/TestSniperTower.prefab
     m_ReadOnly: 0
     m_SerializedLabels:
     - Tower

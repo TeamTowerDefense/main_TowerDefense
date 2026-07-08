@@ -33,13 +33,6 @@ public class HitBoxData : AttackBaseData
     [Header("TickDamage EffectTime")]
     public float effectDespawnDelay = 1f;
 
-    [Header("Debuff")]
-    public bool applyDebuff;
-    public List<DebuffEffectData> debuffs;
-
-    [Header("Debuff Tick")]
-    public float debuffApplyInterval = 0.5f;
-
     [Header("Synchronized Attack(Howitzer Only)")]
     public bool isMortar;
     public float impactDelay = 1.2f;

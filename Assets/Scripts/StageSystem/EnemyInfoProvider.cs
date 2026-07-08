@@ -76,6 +76,7 @@ public class EnemyInfoProvider : MonoBehaviour, IEnemyInfoProvider, IEnemyInfoWr
     void OnValidate()
     {
         if (!targetTransform) targetTransform = transform;
+        enemyHealth = GetComponent<IEnemyHealth>();
         CacheAttackTarget();
         EnsureInfo();
         RefreshInfo();
