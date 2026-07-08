@@ -4,14 +4,18 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Monster : PoolableObject
+public class Monster : PoolableObject, IEnemyHealth
 {
     [Header("Components")]
     private Animator anim;
     private Collider col;
 
-    public float currentHp { get; private set; }
-    public float maxHp { get; private set; }
+    //public float currentHp { get; private set; }
+    //public float maxHp { get; private set; }
+
+    public float currentHp { get; set; }
+    public float maxHp { get; set; }
+
     private float speed;
 
     private float moveWeight ;
@@ -27,6 +31,7 @@ public class Monster : PoolableObject
     public bool isDead { get; private set; } = false;
     public float cachedSpeedMultiplier = 1.0f;
     public Vector2Int CurrentGridPos { get; private set; }
+    
     public event Action<Monster> OnMonsterDie;
 
     private EnemyInfoProvider enemyInfoProvider;

@@ -96,6 +96,7 @@ sealed class EnemySpatialGrid
 
             bestScore = score;
             bestEnemy = candidate;
+            Debug.Log($"[TargetFinder] mode={mode}, enemy={candidate.Transform.name}, MaxHp={candidate.MaxHp}, score={score}, best={bestScore}");
             {
 
             }
@@ -131,6 +132,8 @@ sealed class EnemySpatialGrid
             EnemyTargetMode.FarthestFromTower => float.MinValue,
             EnemyTargetMode.FrontMost => float.MinValue,
             EnemyTargetMode.BackMost => float.MaxValue,
+            EnemyTargetMode.MaxHp => float.MinValue,
+            EnemyTargetMode.MinHp => float.MinValue,
             _ => float.MaxValue
         };
     static float GetScore(EnemyInfo enemy, float distanceSqr, EnemyTargetMode mode)
@@ -140,6 +143,8 @@ sealed class EnemySpatialGrid
             EnemyTargetMode.FarthestFromTower => distanceSqr,
             EnemyTargetMode.FrontMost => enemy.PathProgress,
             EnemyTargetMode.BackMost => enemy.PathProgress,
+            EnemyTargetMode.MaxHp => enemy.MaxHp,
+            EnemyTargetMode.MinHp => enemy.MaxHp,
             _ => distanceSqr
         };
     static bool IsBetter(float score, float bestScore, EnemyTargetMode mode)
@@ -149,6 +154,8 @@ sealed class EnemySpatialGrid
             EnemyTargetMode.FarthestFromTower => score > bestScore,
             EnemyTargetMode.FrontMost => score > bestScore,
             EnemyTargetMode.BackMost => score < bestScore,
+            EnemyTargetMode.MaxHp => score > bestScore,
+            EnemyTargetMode.MinHp => score < bestScore,
             _ => score < bestScore
         };
 
