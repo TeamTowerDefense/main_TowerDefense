@@ -176,7 +176,7 @@ MonoBehaviour:
   damageText: {fileID: 1115709627}
   rangeText: {fileID: 536914751}
   attackSpeedText: {fileID: 1911623842}
-  targetModeText: {fileID: 982463886}
+  keywordText: {fileID: 0}
 --- !u!225 &4884444
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -5780,6 +5780,8 @@ MonoBehaviour:
   stageController: {fileID: 1627747868}
   panelRoot: {fileID: 757563583}
   canvasGroup: {fileID: 757563589}
+  starObjects: []
+  starDelay: 0.35
   titleText: {fileID: 1428264171}
   resultText: {fileID: 0}
   hpText: {fileID: 2104945708}

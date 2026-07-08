@@ -10,6 +10,8 @@ public class Healer : MonoBehaviour, IAbility
     [SerializeField] private LayerMask allyLayer; // 아군 레이어 선택
     private float timer;
     [SerializeField] private int effectID;
+    [SerializeField] private Transform parent;
+
     public void DisableAbility()
     {
         enabled = false;
@@ -80,7 +82,7 @@ public class Healer : MonoBehaviour, IAbility
                         effectPF,
                         transformPosition,
                         quaternion,
-                        ObjectPoolManager.Instance.GetEffectParent()
+                        parent
                     );
                     Debug.Log("몬스터 힐 이펙트 풀링 스폰 완료!");
                 }

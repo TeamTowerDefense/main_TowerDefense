@@ -678,6 +678,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Monster
   cachedSpeedMultiplier: 1
   hpBar: {fileID: 7846926602333263010}
+  healEffectID: 0
+  parent: {fileID: 541088879437032567}
 --- !u!114 &7251363548928216428
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -742,6 +744,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   effectID: 2001
+  parent: {fileID: 541088879437032567}
 --- !u!136 &-5841765315876453189
 CapsuleCollider:
   m_ObjectHideFlags: 0
