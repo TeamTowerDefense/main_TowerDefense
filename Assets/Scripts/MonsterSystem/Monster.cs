@@ -10,9 +10,6 @@ public class Monster : PoolableObject, IEnemyHealth
     private Animator anim;
     private Collider col;
 
-    //public float currentHp { get; private set; }
-    //public float maxHp { get; private set; }
-
     public float currentHp { get; set; }
     public float maxHp { get; set; }
 
@@ -48,6 +45,8 @@ public class Monster : PoolableObject, IEnemyHealth
     private Dictionary<StatType, RuntimeStat> stats = new Dictionary<StatType, RuntimeStat>();
     private List<IStatModifier> cachedModifiers = new List<IStatModifier>();
 
+    private int healEffectID = 2002;
+    [SerializeField] private Transform parent;
     private void Awake()
     {
         anim = GetComponent<Animator>();
@@ -123,6 +122,8 @@ public class Monster : PoolableObject, IEnemyHealth
                 }
             }
         }
+
+        parent = transform;
 
         transform.localScale = data.scale;
 
@@ -229,7 +230,11 @@ public class Monster : PoolableObject, IEnemyHealth
     public void TakeDamage(int damage)
     {
         if (isDead) return;
-
+        Shield shield = GetComponent<Shield>(); // 나중에 다른데서 shield를 가져오는 로직으로 바꾸면 좋음
+        if (shield != null && shield.TryUseShield())
+        {
+            return;
+        }
         currentHp -= damage;
 
         float ratio = currentHp / maxHp;
@@ -259,8 +264,20 @@ public class Monster : PoolableObject, IEnemyHealth
         float ratio = (float)currentHp / maxHp;
         hpBar.UpdateHp(ratio);
 
-        // 치유 효과 파티클/텍스트 생성 코드 (선택 사항)
-        // Instantiate(healEffect, transform.position, Quaternion.identity);
+        GameObject effectPF = ObjectPoolManager.Instance.GetMonsterEffect(healEffectID);
+
+        if (effectPF != null)
+        {
+            Quaternion quaternion = Quaternion.LookRotation(Vector3.up);
+            Vector3 transformPosition = transform.position + Vector3.up * 0.1f; // 이펙트 위치를 약간 위로 올림
+            ObjectPoolManager.Instance.Spawn<PoolableObject>(
+                effectPF,
+                transformPosition,
+                quaternion,
+                parent
+            );
+            Debug.Log("몬스터 힐 이펙트 풀링 스폰 완료!");
+        }
     }
     public void Die()
     {
@@ -306,9 +323,12 @@ public class Monster : PoolableObject, IEnemyHealth
     // 능력 처리 가능 여부 확인
     private bool CanHandle(IAbility ability, AbilityData data)
     {
-        // 힐러 컴포넌트인지 확인하는 예시
-        if (ability is Healer && data is HealAbilityData) return true;
-        return false;
+        if (ability == null || data == null) return false;
+
+        string abilityName = ability.GetType().Name; // "Shield"
+        string dataName = data.GetType().Name;       // "ShieldAbilityData"
+
+        return dataName.Contains(abilityName);
     }
     public void ClearCurrentTile()
     {

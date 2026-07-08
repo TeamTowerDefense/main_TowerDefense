@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4db155bf894d96c41a060ad48c5cf716, type: 3}
+  m_Name: ShieldMonsterDat
+  m_EditorClassIdentifier: Assembly-CSharp::MonsterData
+  monsterName: New Monster
+  monsterId: 0
+  Prefab: {fileID: 4253210182481893339, guid: a4a371efb423612459856bdf929e6ded, type: 3}
+  maxHP: 100
+  speed: 1
+  defense: 0
+  Att: 0
+  LeakDamage: 1
+  scale: {x: 1, y: 1, z: 1}
+  useUniformScale: 1
+  StunGauge: 10
+  moveWeight: 1
+  separationWeight: 0.3
+  boundaryWeight: 3
+  containmentMultiplier: 5
+  abilities:
+  - {fileID: 11400000, guid: 934697acd4918474c89374964299aaee, type: 2}
+  heightOffset: 0
+  amount: 0
+  defaultKeywords: []
