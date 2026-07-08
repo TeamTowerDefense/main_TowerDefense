@@ -58,5 +58,6 @@ public class ResourceSystem : MonoBehaviour, IResourceSystem, IAutoSceneService
         if (amount <= 0) return;
 
         currentResource = amount;
+        OnResourceChanged?.Invoke(currentResource);
     }
 }

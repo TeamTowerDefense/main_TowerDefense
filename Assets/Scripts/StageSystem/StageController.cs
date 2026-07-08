@@ -197,6 +197,7 @@ public class StageController : MonoBehaviour, IStageService, IAutoSceneService
             return;
         }
 
+        resourceSystem.Earn(CurrentWave.SpawnData.Reward);
         SetState(StageState.WaveClear);
     }
 

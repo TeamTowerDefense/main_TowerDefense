@@ -16,7 +16,9 @@ public class EnemyInfoProvider : MonoBehaviour, IEnemyInfoProvider, IEnemyInfoWr
     IMapService mapService;
     IAttackTarget attackTarget;
     EnemyInfo info;
+    private IEnemyHealth enemyHealth;
     bool registered;
+
 
     public EnemyInfo Info
     {
@@ -30,7 +32,7 @@ public class EnemyInfoProvider : MonoBehaviour, IEnemyInfoProvider, IEnemyInfoWr
 
     #region 생명 주기
     void Reset()
-    {
+    {       
         targetTransform = transform;
         attackTargetSource = GetComponent<MonoBehaviour>();
         CacheAttackTarget();
@@ -38,6 +40,9 @@ public class EnemyInfoProvider : MonoBehaviour, IEnemyInfoProvider, IEnemyInfoWr
 
     void Awake()
     {
+        // 추후 인터페이스 분리 필요합니다 이 방식은 구조 결합도 문제가 있음
+        //monster = GetComponent<Monster>();
+        enemyHealth = GetComponent<IEnemyHealth>();
         CacheAttackTarget();
         EnsureInfo();
     }
@@ -71,6 +76,7 @@ public class EnemyInfoProvider : MonoBehaviour, IEnemyInfoProvider, IEnemyInfoWr
     void OnValidate()
     {
         if (!targetTransform) targetTransform = transform;
+        enemyHealth = GetComponent<IEnemyHealth>();
         CacheAttackTarget();
         EnsureInfo();
         RefreshInfo();
@@ -89,7 +95,7 @@ public class EnemyInfoProvider : MonoBehaviour, IEnemyInfoProvider, IEnemyInfoWr
         result = info;
         return IsValidInfo(info);
     }
-
+    
     public bool TryGetEnemyInfo(out EnemyInfo result) => TryGetInfo(out result);
 
     #endregion
@@ -132,6 +138,7 @@ public class EnemyInfoProvider : MonoBehaviour, IEnemyInfoProvider, IEnemyInfoWr
         info = new EnemyInfo(
             target,
             target.position,
+            enemyHealth.maxHp,
             isAlive && isActiveAndEnabled,
             isTargetable,
             pathProgress,
@@ -145,6 +152,7 @@ public class EnemyInfoProvider : MonoBehaviour, IEnemyInfoProvider, IEnemyInfoWr
         Transform target = GetTarget();
 
         info.Transform = target;
+        info.MaxHp = enemyHealth != null ? enemyHealth.maxHp : 0;
         info.IsAlive = isAlive && isActiveAndEnabled;
         info.IsTargetable = isTargetable;
         info.PathProgress = pathProgress;

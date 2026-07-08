@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JetBrains.Annotations;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -19,10 +20,17 @@ public class MonsterSpawnDataSO : ScriptableObject
 }
 
 [Serializable]
-public class MonsterSpawnGroup
+public class MonsterSpawnElement
 {
     public MonsterData MonsterData;
     public int Count = 1;
+}
+
+[Serializable]
+public class MonsterSpawnGroup
+{
+    public List<MonsterSpawnElement> Elements;
+    public float elementInterval = 0;
     public float Interval = 1f;
     public float StartDelay = 0f;
 }

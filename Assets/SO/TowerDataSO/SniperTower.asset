@@ -23,10 +23,10 @@ MonoBehaviour:
   validStateMaterial: {fileID: 2100000, guid: 4eaf14d00b5b02d4786058d19d124e39, type: 2}
   inValidStateMaterial: {fileID: 2100000, guid: 4a85c9e89378a73489c64b9eede43a1b, type: 2}
   placeVFX: {fileID: -7969546562051743012, guid: 201eafd12c4c6b34396a2be032e4a7c9, type: 3}
-  damage: 50
+  damage: 120
   attackRange: 7
   attackInterval: 1
-  attackSpeed: 1.5
+  attackSpeed: 0.5
   monsterLayer:
     serializedVersion: 2
     m_Bits: 512
@@ -38,4 +38,4 @@ MonoBehaviour:
     m_SubObjectGUID: 
     m_EditorAssetChanged: 0
   defaultKeywords:
-  - {fileID: 11400000, guid: deaae35f7266bff4296103207e880f72, type: 2}
+  - {fileID: 11400000, guid: dcc5cb362b515894a9982540c2c8e023, type: 2}

@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 24e837c49ec25184c8721677fe5a1c20, type: 3}
-  m_Name: TestFlameTower
+  m_Name: FlameTower
   m_EditorClassIdentifier: Assembly-CSharp::TowerData
   buildingID: 2
   buildingName: "\uB2ED"
@@ -23,8 +23,8 @@ MonoBehaviour:
   validStateMaterial: {fileID: 2100000, guid: 4eaf14d00b5b02d4786058d19d124e39, type: 2}
   inValidStateMaterial: {fileID: 2100000, guid: 4a85c9e89378a73489c64b9eede43a1b, type: 2}
   placeVFX: {fileID: -7969546562051743012, guid: 201eafd12c4c6b34396a2be032e4a7c9, type: 3}
-  damage: 2
-  attackRange: 5
+  damage: 5
+  attackRange: 2
   attackInterval: 1
   attackSpeed: 2
   monsterLayer:
