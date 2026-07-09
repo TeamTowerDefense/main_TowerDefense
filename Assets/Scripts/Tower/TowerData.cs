@@ -17,9 +17,14 @@ public enum TowerAttackMode
     HitBox
 }
 
+
+
+
 [CreateAssetMenu(menuName = "TowerDB/Tower Data")]
 public class TowerData : BuildingData
 {
+    public List<KeywordData> keywords;
+
     [Header("Combat")]
     public int damage = 10;
     public float attackRange = 5f;

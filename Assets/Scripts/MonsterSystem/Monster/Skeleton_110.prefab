@@ -1517,6 +1517,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Monster
   cachedSpeedMultiplier: 1
   hpBar: {fileID: 7855567519834823311}
+  parent: {fileID: 8868286918359095940}
 --- !u!114 &977047859170228459
 MonoBehaviour:
   m_ObjectHideFlags: 0

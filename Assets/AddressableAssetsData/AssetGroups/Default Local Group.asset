@@ -15,6 +15,13 @@ MonoBehaviour:
   m_GroupName: Default Local Group
   m_GUID: 4fab432b090318a408423545542942bb
   m_SerializeEntries:
+  - m_GUID: 00142dbaa865a3a4c93494b80ace6fdc
+    m_Address: Assets/Scripts/MonsterSystem/effect/Shield1.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Effect
+    - Effect_Projectile
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 0ce8c047fa7f26248b9e14250a55ec7c
     m_Address: Assets/SO/TowerDataSO/TestFlameTower.asset
     m_ReadOnly: 0
@@ -51,6 +58,12 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - Projectile
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 22b03763742be7549aa6e8d4342a00f9
+    m_Address: Assets/SO/MonsterDataSO/RegenMonsterData.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - MonsterData
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 2c7b0fb24cff0e2458092d232d40c493
     m_Address: Assets/Prefabs/Tower/TestFlameThrower.prefab
@@ -185,6 +198,13 @@ MonoBehaviour:
     m_SerializedLabels:
     - Projectile
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d0e33492ce1ba064291b3ff95ce32e4e
+    m_Address: Assets/Scripts/MonsterSystem/effect/Healing buff.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Effect
+    - Effect_Projectile
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: d71c56f2e6af1ba449a0a11217b143a4
     m_Address: Assets/Scripts/MonsterSystem/Skeleton_110.prefab
     m_ReadOnly: 0
@@ -201,6 +221,12 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - Tower
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e4b4ae75212d9744898d1379a00eb534
+    m_Address: Assets/SO/MonsterDataSO/ShieldMonsterDat.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - MonsterData
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: e7eab914f7d32a244b2f031dcee3e2f4
     m_Address: Assets/Prefabs/HitBox/Fog_speedSlow.prefab
