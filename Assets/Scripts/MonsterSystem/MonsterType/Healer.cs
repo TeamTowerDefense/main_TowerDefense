@@ -16,10 +16,11 @@ public class Healer : MonoBehaviour, IAbility
     {
         enabled = false;
     }
+
     public void EnableAbility(AbilityData data)
     {
         // 여기서 데이터 타입 캐스팅(확인)을 합니다.
-        if (data is HealAbilityData healData)
+        if (data is HealerAbilityData healData)
         {
             healAmount = healData.healAmount;
             healRange = healData.healRange;
@@ -29,6 +30,9 @@ public class Healer : MonoBehaviour, IAbility
     }
     void Update()
     {
+        if (!enabled)
+            return;
+
         timer += Time.deltaTime;
         if (timer >= healCooldown)
         {
@@ -68,6 +72,8 @@ public class Healer : MonoBehaviour, IAbility
             }
             canHealAny = true;
             // 여기까지 왔다면 힐이 되어야 함
+            Debug.Log("힐량: " + healAmount);
+            Debug.Log("힐 간격: " + healCooldown);
             target.TakeHeal(healAmount);
         }
         if (canHealAny)

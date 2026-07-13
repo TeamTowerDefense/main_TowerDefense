@@ -15,7 +15,7 @@ MonoBehaviour:
   monsterName: HealMonster1
   monsterId: 1
   Prefab: {fileID: 6012647353202847045, guid: 903d63fff4348ab4790c4193d8e90046, type: 3}
-  maxHP: 80
+  maxHP: 85
   speed: 2
   defense: 0
   Att: 0

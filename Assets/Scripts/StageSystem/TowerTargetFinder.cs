@@ -56,7 +56,7 @@ public class TowerTargetFinder : MonoBehaviour, ITowerTargetFinder
 
     public bool TryGetTarget(Vector3 origin, float range, EnemyTargetMode mode, out EnemyInfo target)
     {
-        Debug.Log($"[TowerTargetFinder] activeTargetMode={activeTargetMode}");
+        //Debug.Log($"[TowerTargetFinder] activeTargetMode={activeTargetMode}");
 
         if (IsValidTarget(currentTarget, origin, range))
         {
