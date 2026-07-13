@@ -15,14 +15,6 @@ MonoBehaviour:
   WaveName: Test Wave
   SpawnGroups:
   - Elements:
-    - MonsterData: {fileID: 11400000, guid: 180c8cb2b55cb624aa52ef4a16625fa4, type: 2}
-      Count: 1
-    - MonsterData: {fileID: 11400000, guid: 14da851dccbe7334dbd5571a4a181a76, type: 2}
-      Count: 4
-    elementInterval: 0.1
-    Interval: 5
-    StartDelay: 0.2
-  - Elements:
     - MonsterData: {fileID: 11400000, guid: 22b03763742be7549aa6e8d4342a00f9, type: 2}
       Count: 1
     - MonsterData: {fileID: 11400000, guid: e4b4ae75212d9744898d1379a00eb534, type: 2}

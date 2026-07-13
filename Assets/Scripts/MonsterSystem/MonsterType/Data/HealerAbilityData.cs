@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Monster/Abilities/Heal")]
-public class HealAbilityData : AbilityData
+public class HealerAbilityData : AbilityData
 {
     public override AbilityType Type => AbilityType.Heal;
 

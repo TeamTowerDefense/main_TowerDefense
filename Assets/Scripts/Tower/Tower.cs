@@ -18,6 +18,9 @@ public class Tower : BuildingBase
     [SerializeField] private Transform rotateBody;
     [SerializeField] private float rotateSpeed = 10f;
 
+    [Header("Range Indicator")]
+    [SerializeField] private TowerRangeIndicator rangeIndicator;
+
     private float attackTimer;
     private bool isAttacking;
     private ITowerTargetFinder targetFinder;
@@ -459,7 +462,7 @@ public class Tower : BuildingBase
     }
     #endregion
 
-    #region 스텟
+    #region 스탯
     public float GetStat(StatType type) => stats.TryGetValue(type, out var stat) ? stat.CurrentValue : 0f;
 
     private void UpdateAllStats()
@@ -491,4 +494,20 @@ public class Tower : BuildingBase
     }
     #endregion
 
+    #region 타워 사거리 표시
+    public void ShowRange()
+    {
+        if (rangeIndicator != null)
+        {
+            float currentRange = GetStat(StatType.AttackRange);
+            rangeIndicator.Show(currentRange);
+        }
+    }
+
+    public void HideRange()
+    {
+        if (rangeIndicator != null)
+            rangeIndicator.Hide();
+    }
+    #endregion
 }

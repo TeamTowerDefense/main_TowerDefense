@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4faa8ae09507f5e4fa278cecd46ff7e8, type: 3}
   m_Name: Heal Ability Data
   m_EditorClassIdentifier: Assembly-CSharp::HealAbilityData
-  healAmount: 30
-  healRange: 2
-  healCooldown: 0.5
+  healAmount: 80
+  healRange: 3
+  healCooldown: 2
