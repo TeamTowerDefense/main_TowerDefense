@@ -1,0 +1,99 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb5f00ccf5e5d624884e146d07d54237, type: 3}
+  m_Name: TDMapTilePalette_Default
+  m_EditorClassIdentifier: Assembly-CSharp::TDMapTilePaletteSO
+  groundTiles:
+    center: {fileID: 3622670526511579328, guid: 60d65e4eed2ca444d9a5224665294248, type: 3}
+    edge: {fileID: 2900768042314010033, guid: 7459861c1d37ea34b87a556f5a00d8b2, type: 3}
+    corner: {fileID: 6852789893201058033, guid: 989cb3a038b5e8a418f4c15ab40e8e08, type: 3}
+    solo: {fileID: 1270399307217864340, guid: 29e2a1de97b4cbf48bb160e0a3d7707b, type: 3}
+    centerBaseYRotation: 0
+    edgeBaseYRotation: 0
+    cornerBaseYRotation: 0
+    soloBaseYRotation: 0
+  pathTiles:
+    straight: {fileID: 8235233857279082801, guid: 341e51ffcacc4a3419e517763508953d, type: 3}
+    corner: {fileID: 4639806415375766114, guid: 040d94d054ec7e24ab107208a252541c, type: 3}
+    end: {fileID: 154111550685783057, guid: 2f063d1731a14f24eb3d35f5ad829dc1, type: 3}
+    solo: {fileID: 154111550685783057, guid: 2f063d1731a14f24eb3d35f5ad829dc1, type: 3}
+    straightBaseYRotation: 0
+    cornerBaseYRotation: 0
+    endBaseYRotation: 0
+    soloBaseYRotation: 0
+  spawnPrefab: {fileID: 968982258182876294, guid: a09f95ca39f3483479dd1693c94b0939, type: 3}
+  basePrefab: {fileID: 3351010397087084706, guid: 48c4335c9b485ce49a9ab4f4f6f52150, type: 3}
+  specialRules:
+  - ruleName: Road End Edge
+    targetType: 1
+    prefab: {fileID: 3580297741676143486, guid: 32d4f34d7a0cfea47925ec8391fa3b63, type: 3}
+    priority: 500
+    allowRotation: 1
+    baseYRotation: 0
+    requiredTerrain: 7
+    forbiddenTerrain: 8
+    requiredPath: 8
+    forbiddenPath: 7
+  - ruleName: Branch Preview - Inner Corner 3 Edge
+    targetType: 1
+    prefab: {fileID: 6885224428041320919, guid: f3d572f4ed602b646bcd16fa874528cb, type: 3}
+    priority: 600
+    allowRotation: 1
+    baseYRotation: 0
+    requiredTerrain: 2
+    forbiddenTerrain: 13
+    requiredPath: 13
+    forbiddenPath: 2
+  - ruleName: Corner Foundation End
+    targetType: 1
+    prefab: {fileID: 7874178806281506518, guid: 52ff03c2800b502488e0bb6f2ed136e6, type: 3}
+    priority: 450
+    allowRotation: 1
+    baseYRotation: 0
+    requiredTerrain: 0
+    forbiddenTerrain: 15
+    requiredPath: 9
+    forbiddenPath: 6
+  - ruleName: Edge Foundation End
+    targetType: 1
+    prefab: {fileID: 4785222449190270114, guid: 0e3cb3ebe1ec60f45a043c4fd049ff46, type: 3}
+    priority: 450
+    allowRotation: 1
+    baseYRotation: 0
+    requiredTerrain: 0
+    forbiddenTerrain: 15
+    requiredPath: 1
+    forbiddenPath: 14
+  - ruleName: Road Edge End Solo
+    targetType: 1
+    prefab: {fileID: 8427431723743142142, guid: 41cc69c0c889e2f43a43aae35a705a3c, type: 3}
+    priority: 400
+    allowRotation: 1
+    baseYRotation: 0
+    requiredTerrain: 5
+    forbiddenTerrain: 10
+    requiredPath: 10
+    forbiddenPath: 5
+  decorations: []
+  floorLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 1152
+  decorationLayer:
+    serializedVersion: 2
+    m_Bits: 2048
+  gridMaterial: {fileID: 0}
+  visualScale: 0.5
+  waypointYOffset: 0
+  cameraBoundsPadding: 2
