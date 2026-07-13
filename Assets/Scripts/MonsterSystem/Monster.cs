@@ -90,28 +90,32 @@ public class Monster : PoolableObject, IEnemyHealth
                     keywordController.AddKeyword(kw);
             }
         }
-        //allAbilities = data.abilities.Select(abilityData => GetComponents<IAbility>().FirstOrDefault(a => CanHandle(a, abilityData))).Where(a => a != null).ToArray();
+
         // 1. 미리 한 번만 가져와서 변수에 담아둠 (최적화)
-        var allScripts = GetComponents<IAbility>();
+        IAbility[] allScripts = GetComponents<IAbility>();
 
         // 2. 그 변수를 사용해서 매칭
         allAbilities = data.abilities
             .Select(abilityData => allScripts.FirstOrDefault(a => CanHandle(a, abilityData)))
             .Where(a => a != null)
             .ToArray();
+
         if (TryGetComponent(out MonsterRuntimeBridge bridge))
             bridge.BindPath(movePath);
 
-        if (allAbilities != null)
-            foreach (var ability in allAbilities)
+        if (allScripts != null)
+        {
+            foreach (var ability in allScripts)
             {
                 ability.DisableAbility();
             }
-        foreach (var abilityData in data.abilities)
+        }
+
+        foreach (AbilityData abilityData in data.abilities)
         {
             Debug.Log($"Processing ability data {abilityData.name} for monster {data.name}");
             // 몬스터에 붙어있는 능력들 중에서 데이터 타입이 맞는 놈을 찾아서 켭니다.
-            foreach (var ability in allAbilities)
+            foreach (IAbility ability in allScripts)
             {
                 // 이 능력 스크립트가 해당 데이터를 처리할 수 있는지 확인
                 // (간단하게 하려면 타입 비교 후 EnableAbility 호출)
