@@ -15,7 +15,7 @@ MonoBehaviour:
   m_DefaultGroup: 
   m_currentHash:
     serializedVersion: 2
-    Hash: 00000000000000000000000000000000
+    Hash: 994c35ee1732c972467270d3da2691ba
   m_OptimizeCatalogSize: 0
   m_BuildRemoteCatalog: 0
   m_CatalogRequestsTimeout: 0
@@ -110,7 +110,8 @@ MonoBehaviour:
     - MonsterData
     - StageData
   m_SchemaTemplates: []
-  m_GroupTemplateObjects: []
+  m_GroupTemplateObjects:
+  - {fileID: 11400000, guid: 7956ad28e156c3943b85d1c1f11ed898, type: 2}
   m_InitializationObjects: []
   m_CertificateHandlerType:
     m_AssemblyName: 

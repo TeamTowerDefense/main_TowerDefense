@@ -1,4 +1,5 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [DisallowMultipleComponent]
@@ -10,6 +11,8 @@ public sealed class TDMapRoot : MonoBehaviour
     [Header("그리드")]
     [SerializeField, Min(0.1f)] float cellSize = 1f;
     [SerializeField] float tileY;
+
+    [SerializeField] float surfaceYOffset = 0.5f;
 
     [Header("맵 계층")]
     [SerializeField] Transform groundRoot;
@@ -44,6 +47,7 @@ public sealed class TDMapRoot : MonoBehaviour
     public TDMapTilePaletteSO Palette => palette;
     public float CellSize => cellSize;
     public float TileY => tileY;
+    public float SurfaceYOffset => surfaceYOffset;
 
     public Transform GroundRoot => groundRoot;
     public Transform PathRoot => pathRoot;
@@ -84,6 +88,9 @@ public sealed class TDMapRoot : MonoBehaviour
 
     public Vector3 GridToWorld(Vector2Int gridPosition)
         => transform.TransformPoint(GridToLocal(gridPosition));
+
+    public Vector3 GetCellSurfaceWorld(Vector2Int gridPosition)
+        => GridToWorld(gridPosition) + transform.up * surfaceYOffset;
 
     public Vector2Int WorldToGrid(Vector3 worldPosition)
     {
@@ -309,6 +316,22 @@ public sealed class TDMapRoot : MonoBehaviour
 
     public void ClearWaypoints() => waypoints.Clear();
 
+    public void AlignWaypointsToSurface()
+    {
+        float additionalOffset = palette ? palette.WaypointYOffset : 0f;
+
+        for (int i = 0; i < waypoints.Count; i++)
+        {
+            Transform waypoint = waypoints[i];
+            if (!waypoint) continue;
+
+            Vector2Int cell = WorldToGrid(waypoint.position);
+            waypoint.position =
+                GetCellSurfaceWorld(cell) +
+                transform.up * additionalOffset;
+        }
+    }
+
     public void SetBounds(BoxCollider newGridBounds, Collider newMapBounds, Collider newCameraBounds)
     {
         gridBounds = newGridBounds;
@@ -356,6 +379,8 @@ public sealed class TDMapRoot : MonoBehaviour
     void OnValidate()
     {
         cellSize = Mathf.Max(0.1f, cellSize);
+        surfaceYOffset = Mathf.Max(0f, surfaceYOffset);
+
         waypoints ??= new List<Transform>();
         for (int i = waypoints.Count - 1; i >= 0; i--)
             if (!waypoints[i]) waypoints.RemoveAt(i);

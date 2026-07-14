@@ -54,7 +54,7 @@ public static class TDGridMapPainter
     static Vector2 resizeStartMouse;
     static Vector2 resizeStartSize;
     static Vector2 panelScroll;
-    static bool panelVisible = true;
+    static bool panelVisible = false;
     static TDMapRoot mapRoot;
     static TDMapTilePaletteSO palette;
     static TDMapPainterCategory category;
@@ -820,7 +820,14 @@ public static class TDGridMapPainter
 
         Vector3 point = ray.GetPoint(distance);
         cell = mapRoot.WorldToGrid(point);
-        position = mapRoot.GridToWorld(cell) + mapRoot.transform.up * surfaceOffset;
+
+        Vector3 snappedPosition =
+            type is TDMapCellType.Spawn or TDMapCellType.Base
+                ? mapRoot.GetCellSurfaceWorld(cell)
+                : mapRoot.GridToWorld(cell);
+
+        position = snappedPosition + mapRoot.transform.up * surfaceOffset;
+
         normal = mapRoot.transform.up;
         return true;
     }
@@ -836,8 +843,10 @@ public static class TDGridMapPainter
             for (int i = -gridExtent; i <= gridExtent + 1; i++)
             {
                 float offset = (i - 0.5f) * size;
-                Handles.DrawLine(new Vector3(offset, mapRoot.TileY, min), new Vector3(offset, mapRoot.TileY, max));
-                Handles.DrawLine(new Vector3(min, mapRoot.TileY, offset), new Vector3(max, mapRoot.TileY, offset));
+                float gridY = mapRoot.TileY + mapRoot.SurfaceYOffset;
+
+                Handles.DrawLine(new Vector3(offset, gridY, min), new Vector3(offset, gridY, max));
+                Handles.DrawLine(new Vector3(min, gridY, offset), new Vector3(max, gridY, offset));
             }
         }
     }

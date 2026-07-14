@@ -110,6 +110,27 @@ public sealed class TDStageRuntimeBinder : MonoBehaviour
         mapRoot.FindHierarchyReferences();
         mapRoot.RefreshEndpointReferences();
         mapRoot.RebuildCellCache();
+        mapRoot.AlignWaypointsToSurface();
+
+        TDMapBuildGridProvider buildGridProvider =
+            mapRoot.GetComponent<TDMapBuildGridProvider>();
+
+        if (!buildGridProvider)
+            buildGridProvider =
+                mapRoot.gameObject.AddComponent<TDMapBuildGridProvider>();
+
+        buildGridProvider.Configure(mapRoot);
+
+        if (gridDrawer)
+        {
+            Vector3 localPosition = gridDrawer.transform.localPosition;
+            localPosition.y =
+                mapRoot.TileY +
+                mapRoot.SurfaceYOffset +
+                0.02f;
+
+            gridDrawer.transform.localPosition = localPosition;
+        }
 
         if (gridBounds || cameraBounds)
             mapRoot.SetBounds(gridBounds, gridBounds, cameraBounds);
