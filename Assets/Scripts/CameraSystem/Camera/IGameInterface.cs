@@ -291,7 +291,6 @@ namespace IGameInterface
         public IAttackTarget AttackTarget;
 
         public float MaxHp;
-        public float MinHp;
         public bool IsAlive;
         public bool IsTargetable;
         public float PathProgress;
