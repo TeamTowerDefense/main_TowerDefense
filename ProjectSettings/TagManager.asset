@@ -15,8 +15,8 @@ TagManager:
   - EnemyTile
   - Interactable
   - Monster
-  - 
-  - 
+  - MapObstacle
+  - Decoration
   - 
   - 
   - 
