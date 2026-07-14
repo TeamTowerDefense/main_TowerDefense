@@ -192,6 +192,12 @@ MonoBehaviour:
     - Effect
     - Effect_Projectile
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: cca91d7e589f6464fbd64ef1b4c1ca70
+    m_Address: Assets/SO/StageDataSO/Stage_006.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - StageData
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: ccb11473b2cf5b2439f0edd3b4d28434
     m_Address: Assets/SO/AttackSo/TestBulletData.asset
     m_ReadOnly: 0

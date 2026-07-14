@@ -110,7 +110,8 @@ MonoBehaviour:
     - MonsterData
     - StageData
   m_SchemaTemplates: []
-  m_GroupTemplateObjects: []
+  m_GroupTemplateObjects:
+  - {fileID: 11400000, guid: 7956ad28e156c3943b85d1c1f11ed898, type: 2}
   m_InitializationObjects: []
   m_CertificateHandlerType:
     m_AssemblyName: 
