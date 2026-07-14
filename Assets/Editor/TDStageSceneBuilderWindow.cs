@@ -13,7 +13,7 @@ using Object = UnityEngine.Object;
 
 public sealed class TDStageSceneBuilderWindow : EditorWindow
 {
-    const string DefaultOutputFolder = "Assets/Scenes/Stages";
+    const string DefaultOutputFolder = "Assets/Scenes";
     const string StageDataLabel = "StageData";
 
     static readonly string[] ExcludedRootNames =
@@ -398,12 +398,12 @@ public sealed class TDStageSceneBuilderWindow : EditorWindow
         float yOffset = mapRoot.Palette ? mapRoot.Palette.WaypointYOffset : 0f;
         List<Vector3> positions = new();
 
-        AddWaypointPosition(positions, mapRoot.GridToWorld(spawn.GridPosition) + mapRoot.transform.up * yOffset);
+        AddWaypointPosition(positions, spawn.transform.position + mapRoot.transform.up * yOffset);
 
         for (int i = 0; i < orderedPath.Count; i++)
-            AddWaypointPosition(positions, mapRoot.GridToWorld(orderedPath[i]) + mapRoot.transform.up * yOffset);
+            AddWaypointPosition(positions, mapRoot.GetCellSurfaceWorld(orderedPath[i]) + mapRoot.transform.up * yOffset);
 
-        AddWaypointPosition(positions, mapRoot.GridToWorld(targetBase.GridPosition) + mapRoot.transform.up * yOffset);
+        AddWaypointPosition(positions, targetBase.transform.position + mapRoot.transform.up * yOffset);
 
         if (positions.Count < 2)
             throw new InvalidOperationException("생성 가능한 Waypoint가 2개 미만입니다.");
@@ -542,6 +542,13 @@ public sealed class TDStageSceneBuilderWindow : EditorWindow
 
     void ConfigureRuntimeSystems(Scene scene, TDMapRoot mapRoot)
     {
+        TDMapBuildGridProvider buildGridProvider = mapRoot.GetComponent<TDMapBuildGridProvider>();
+
+        if (!buildGridProvider)
+            buildGridProvider = mapRoot.gameObject.AddComponent<TDMapBuildGridProvider>();
+
+        buildGridProvider.Configure(mapRoot);
+
         GridGenerator gridGenerator = mapRoot.GridGenerator
             ? mapRoot.GridGenerator
             : mapRoot.GetComponentInChildren<GridGenerator>(true);
@@ -575,6 +582,7 @@ public sealed class TDStageSceneBuilderWindow : EditorWindow
         mapRoot.SetBounds(gridBounds, gridBounds, cameraBounds);
         mapRoot.SetRuntimeComponents(gridGenerator, gridDrawer, boundsProvider);
         EditorUtility.SetDirty(mapRoot);
+        EditorUtility.SetDirty(buildGridProvider);
 
         ConfigureRuntimeBinder(
             scene,

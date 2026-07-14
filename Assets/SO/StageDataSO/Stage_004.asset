@@ -16,7 +16,7 @@ MonoBehaviour:
   DisplayName: Stage4
   Description: "\uC2A4\uD14C\uC774\uC9C0 4"
   Icon: {fileID: 21300000, guid: de5afc594137f4aceb71a73abfe8a719, type: 3}
-  StartResource: 1000
+  StartResource: 100
   TowerLimit: 10
   BaseHp: 10
   Waves:

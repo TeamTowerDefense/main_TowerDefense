@@ -135,6 +135,7 @@ public static class TDMapPrefabSaver
         ResetLocalTransform(runtimeRoot);
 
         GridGenerator gridGenerator = GetOrAddComponent<GridGenerator>(runtimeRoot.gameObject);
+        TDMapBuildGridProvider buildGridProvider = GetOrAddComponent<TDMapBuildGridProvider>(mapRoot.gameObject);
         MapBoundsInfoProvider boundsProvider = GetOrAddComponent<MapBoundsInfoProvider>(runtimeRoot.gameObject);
         MapController mapController = GetOrAddComponent<MapController>(runtimeRoot.gameObject);
 
@@ -154,11 +155,15 @@ public static class TDMapPrefabSaver
         ConfigureGridGenerator(mapRoot, gridGenerator, gridDrawer, gridBound);
         ConfigureBoundsProvider(boundsProvider, gridBound, cameraBound);
         ConfigureMapController(mapRoot, mapController, boundsProvider);
+        ConfigureGridGenerator(mapRoot, gridGenerator, gridDrawer, gridBound);
+
+        buildGridProvider.Configure(mapRoot);
 
         mapRoot.SetBounds(gridBound, gridBound, cameraBound);
         mapRoot.SetRuntimeComponents(gridGenerator, gridDrawer, boundsProvider);
 
         EditorUtility.SetDirty(gridGenerator);
+        EditorUtility.SetDirty(buildGridProvider);
         EditorUtility.SetDirty(gridDrawer);
         EditorUtility.SetDirty(boundsProvider);
         EditorUtility.SetDirty(mapController);
@@ -204,7 +209,7 @@ public static class TDMapPrefabSaver
         GridDrawer gridDrawer)
     {
         ResetLocalTransform(gridMeshRoot);
-        gridMeshRoot.localPosition = new Vector3(0f, mapRoot.TileY + 0.02f, 0f);
+        gridMeshRoot.localPosition = new Vector3(0f, mapRoot.SurfaceYOffset + 0.02f, 0f);
 
         Material material = ResolveGridMaterial(gridDrawer, meshRenderer);
 

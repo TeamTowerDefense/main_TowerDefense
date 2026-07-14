@@ -94,7 +94,7 @@ public class StageController : MonoBehaviour, IStageService, IAutoSceneService
         CurrentBaseHp = MaxBaseHp;
         TowerLimit = Mathf.Max(0, stageData.TowerLimit);
 
-        stageStartTime = Time.time;
+        stageStartTime = Time.unscaledTime;
         leakedEnemyCount = 0;
         resultCreated = false;
 
@@ -239,7 +239,7 @@ public class StageController : MonoBehaviour, IStageService, IAutoSceneService
             cleared,
             CurrentBaseHp,
             MaxBaseHp,
-            Time.time - stageStartTime,
+            Time.unscaledTime - stageStartTime,
             0, 0, 0,
             leakedEnemyCount);
 
