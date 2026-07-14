@@ -24,7 +24,7 @@ MonoBehaviour:
   useUniformScale: 1
   StunGauge: 10
   moveWeight: 1
-  separationWeight: 0.3
+  separationWeight: 2
   boundaryWeight: 3
   containmentMultiplier: 5
   abilities: []
