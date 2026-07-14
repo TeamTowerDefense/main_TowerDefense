@@ -25,3 +25,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   explosionRadius: 1
+  targetHitEffectYOffset: 0.5
+  targetHitEffectData: {fileID: 11400000, guid: d8e26976f7b629941af5bcf8e05b6ec8, type: 2}
+  targetHitEffectLifetime: 1

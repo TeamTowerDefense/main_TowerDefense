@@ -82,7 +82,7 @@ public abstract class Projectile : PoolableObject
     }
     #endregion
 
-    #region È÷Æ® ÀÌÆåÆ®
+    #region ÂøÅº È÷Æ® ÀÌÆåÆ®
     private void SpawnHitEffect(Vector3 hitPoint)
     {
         int effectID = projectileData.hitEffectID;
@@ -117,7 +117,7 @@ public abstract class Projectile : PoolableObject
         if (effect != null)
             effect.Play();
     }
-    #endregion
+    #endregion  
 
     #region µð½ºÆù
     private void DespawnSelf()
