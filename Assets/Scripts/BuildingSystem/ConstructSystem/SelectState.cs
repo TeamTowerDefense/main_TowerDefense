@@ -6,6 +6,8 @@ public class SelectState : IConstructMode
 {
     private ConstructController controller;
 
+    private Tower selectedTowerMono;
+
     public SelectState(ConstructController controller) 
     {
         this.controller = controller; 
@@ -20,12 +22,13 @@ public class SelectState : IConstructMode
 
         if (model.SelectedBuilding != null)
         {
-            Tower towerMono = model.SelectedBuilding as Tower;
+            selectedTowerMono = model.SelectedBuilding as Tower;
 
-            if (towerMono != null)
+            if (selectedTowerMono != null)
             {
-                view.ShowTowerMenu(towerMono.transform.position);
-                view.ShowTowerInfo(towerMono);
+                selectedTowerMono.ShowRange();
+                view.ShowTowerMenu(selectedTowerMono.transform.position);
+                view.ShowTowerInfo(selectedTowerMono);
             }
         }
     }
@@ -96,5 +99,11 @@ public class SelectState : IConstructMode
         controller.View.HideTowerMenu();
         controller.View.HideTowerInfo();
         controller.Model.SelectedBuilding = null;
+
+        if (selectedTowerMono != null)
+        {
+            selectedTowerMono.HideRange();
+            selectedTowerMono = null;
+        }
     }
 }

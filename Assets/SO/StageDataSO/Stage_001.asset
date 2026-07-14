@@ -20,13 +20,13 @@ MonoBehaviour:
   TowerLimit: 10
   BaseHp: 10
   Waves:
-  - DisplayName: Test Wave
-    SpawnData: {fileID: 11400000, guid: 49be76b0f7d6ffc4d951eb4bbb0ef058, type: 2}
+  - DisplayName: Test Wave 2
+    SpawnData: {fileID: 11400000, guid: bd0f43978dc765d48ae57b2d7e98b477, type: 2}
     PrepareTime: 10
     CanSkipPrepare: 0
     AllowBuildDuringWave: 1
-  - DisplayName: Test Wave 2
-    SpawnData: {fileID: 11400000, guid: bd0f43978dc765d48ae57b2d7e98b477, type: 2}
+  - DisplayName: Test Wave
+    SpawnData: {fileID: 11400000, guid: 49be76b0f7d6ffc4d951eb4bbb0ef058, type: 2}
     PrepareTime: 10
     CanSkipPrepare: 0
     AllowBuildDuringWave: 1
