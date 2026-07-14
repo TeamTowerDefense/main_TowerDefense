@@ -4506,7 +4506,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1277840289}
         m_TargetAssemblyTypeName: StageTimeController, Assembly-CSharp
         m_MethodName: Normal
         m_Mode: 1
@@ -17756,7 +17756,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1277840289}
         m_TargetAssemblyTypeName: StageTimeController, Assembly-CSharp
         m_MethodName: Pause
         m_Mode: 1
@@ -20252,7 +20252,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1277840289}
         m_TargetAssemblyTypeName: StageTimeController, Assembly-CSharp
         m_MethodName: Fast
         m_Mode: 1
@@ -22158,7 +22158,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1277840289}
         m_TargetAssemblyTypeName: StageTimeController, Assembly-CSharp
         m_MethodName: VeryFast
         m_Mode: 1
