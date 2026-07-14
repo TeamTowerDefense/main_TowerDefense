@@ -30,7 +30,7 @@ MonoBehaviour:
     cornerBaseYRotation: 0
     endBaseYRotation: 0
     soloBaseYRotation: 0
-  spawnPrefab: {fileID: 968982258182876294, guid: a09f95ca39f3483479dd1693c94b0939, type: 3}
+  spawnPrefab: {fileID: 989505543394194460, guid: 7677de9ad9d871d4c8cf9c862afa2b60, type: 3}
   basePrefab: {fileID: 3351010397087084706, guid: 48c4335c9b485ce49a9ab4f4f6f52150, type: 3}
   specialRules:
   - ruleName: Road End Edge
