@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class ExplosiveProjectile : Projectile
@@ -30,6 +31,7 @@ public class ExplosiveProjectile : Projectile
             {
                 TriggerOnHitEffects(monster);
                 monster.TakeDamage(damage);
+                StartCoroutine(SpawnTargetHitEffect(monster));
             }
         }
     }
@@ -59,5 +61,53 @@ public class ExplosiveProjectile : Projectile
         Gizmos.DrawWireSphere(transform.position, explosiveData.ExplosionRadius);
     }
 
+    #endregion
+
+    #region 몬스터 광역 피해 이펙트
+    private IEnumerator SpawnTargetHitEffect(Monster monster)
+    {
+        Debug.Log($"[Launcher] SpawnTargetHitEffect : {monster.name}");
+        Debug.Log($"EffectData = {explosiveData.targetHitEffectData}");
+        if (monster == null)
+            yield return null;
+
+        if (ObjectPoolManager.Instance == null)
+            yield return null;
+
+        //int effectID = explosiveData.hitEffectID;
+        int effectID = explosiveData.targetHitEffectData.effectID;
+        Debug.Log($"EffectID = {effectID}");
+        GameObject effectPF = ObjectPoolManager.Instance.GetEffect(effectID);
+
+        if (effectPF == null)
+        {
+            Debug.LogWarning($"[Launcher] Target HitEffect 없음. ID={effectID}");
+            yield return null;
+        }
+
+        Vector3 spawnPosition = monster.transform.position + Vector3.up * explosiveData.targetHitEffectYOffset;
+
+        PoolableObject effect = ObjectPoolManager.Instance.Spawn<PoolableObject>
+            (effectPF, spawnPosition, Quaternion.identity, ObjectPoolManager.Instance.GetEffectParent());
+
+        if (effect == null)
+            yield return null;
+
+        yield return new WaitForSeconds(0.3f);
+
+        effect.transform.SetParent(monster.transform);
+        effect.transform.localPosition = Vector3.up * explosiveData.targetHitEffectYOffset;
+        effect.transform.localRotation = Quaternion.identity;
+
+        EffectLifeTimeDespawner lifeTimeDespawner = effect.GetComponent<EffectLifeTimeDespawner>();
+
+        if (lifeTimeDespawner != null)
+        {
+            float lifeTime = Mathf.Max(0.1f, explosiveData.targetHitEffectLifetime);
+
+            lifeTimeDespawner.StartLifeTime(lifeTime);
+        }
+
+    }
     #endregion
 }

@@ -15,7 +15,7 @@ MonoBehaviour:
   hitBoxID: 1006
   hitEffectID: 1006
   activeTime: 4
-  damageInterval: 2
+  damageInterval: 0.8
   hitEffectData: {fileID: 11400000, guid: 3a8e6fa632856624d9a84fae53a125f7, type: 2}
   center: {x: 0, y: 0, z: 0}
   damageMode: 1
