@@ -33,7 +33,6 @@ public class Monster : PoolableObject, IEnemyHealth
 
     private EnemyInfoProvider enemyInfoProvider;
 
-    // HP 바
     [SerializeField]
     private HpBar hpBar;
 
@@ -47,17 +46,27 @@ public class Monster : PoolableObject, IEnemyHealth
 
     private int healEffectID = 2002;
     [SerializeField] private Transform parent;
+
+    private Renderer[] renderers; // 몬스터의 모든 렌더러 (자식 오브젝트 포함)
+    private MaterialPropertyBlock propertyBlock; // 성능 최적화용 프로퍼티 블록
+    private Coroutine flashCoroutine; // 코루틴 중복 실행 방지용 변수
+
+    // URP 및 일반 메테리얼의 에미션 컬러 속성 키 ID
+    private static readonly int EmissionColorId = Shader.PropertyToID("_EmissionColor");
     private void Awake()
     {
         anim = GetComponent<Animator>();
         col = GetComponent<Collider>();
         status = GetComponent<MonsterStatus>();
-
         keywordController = GetComponent<KeywordController>();
+        renderers = GetComponentsInChildren<Renderer>();
+        propertyBlock = new MaterialPropertyBlock();
+
         if (keywordController != null)
         {
             keywordController.OnKeywordChanged += UpdateAllStats;
         }
+
     }
 
     private void OnDisable()
@@ -162,7 +171,7 @@ public class Monster : PoolableObject, IEnemyHealth
         gameObject.SetActive(true);
         
     }
-
+    // 타일 위치 업데이트 
     public void UpdateGridPosition()
     {
         Vector2Int newGridPos = new Vector2Int(
@@ -184,7 +193,7 @@ public class Monster : PoolableObject, IEnemyHealth
         currentTile = newTile;
         CurrentGridPos = newGridPos;
     }
-
+    // 수동 업데이트: 외부에서 호출하여 이동 처리
     public void ManualUpdate(float deltaTime, Vector3 separationForce, float pathWidth, float containmentStrength, float speedMultiplier)
     {
         if (isDead || movePath == null || currentPathIndex >= movePath.Count || status.IsStunned) return;
@@ -230,7 +239,7 @@ public class Monster : PoolableObject, IEnemyHealth
         if (toTarget.magnitude < 0.5f) currentPathIndex++;
     }
     public bool IsReachedEnd() => movePath == null || currentPathIndex >= movePath.Count;
-
+    // 데미지 처리
     public void TakeDamage(int damage)
     {
         if (isDead) return;
@@ -240,7 +249,11 @@ public class Monster : PoolableObject, IEnemyHealth
             return;
         }
         currentHp -= damage;
-
+        if (gameObject.activeInHierarchy)
+        {
+            if (flashCoroutine != null) StopCoroutine(flashCoroutine);
+            flashCoroutine = StartCoroutine(HitFlashRoutine());
+        }
         float ratio = currentHp / maxHp;
         hpBar.UpdateHp(ratio);
         bool isDamaged = (currentHp < maxHp);
@@ -254,7 +267,31 @@ public class Monster : PoolableObject, IEnemyHealth
             Die();
         }
     }
+    // 데미지 입을 때 하얗게 반짝이는 이펙트 처리
+    private IEnumerator HitFlashRoutine()
+    {
+        // 1. 프로퍼티 블록에 강한 흰색 발광(HDR 느낌을 위해 4배 곱함) 세팅
+        propertyBlock.SetColor(EmissionColorId, Color.white * 0.5f);
 
+        // 2. 몬스터의 모든 렌더러에 적용 (메테리얼을 복사하지 않아 렉이 없음!)
+        foreach (var r in renderers)
+        {
+            if (r != null) r.SetPropertyBlock(propertyBlock);
+        }
+
+        // 3. 딱 0.08초 동안 유지 (하얗게 질려있는 시간)
+        yield return new WaitForSeconds(0.1f);
+
+        // 4. 다시 검은색(발광 없음)으로 세팅하여 원래 모습으로 복구
+        propertyBlock.SetColor(EmissionColorId, Color.black);
+        foreach (var r in renderers)
+        {
+            if (r != null) r.SetPropertyBlock(propertyBlock);
+        }
+
+        flashCoroutine = null;
+    }
+    // 힐 처리
     public void TakeHeal(int healAmount)
     {
         if (isDead) return;
@@ -283,6 +320,7 @@ public class Monster : PoolableObject, IEnemyHealth
             Debug.Log("몬스터 힐 이펙트 풀링 스폰 완료!");
         }
     }
+    // 몬스터 사망 처리
     public void Die()
     {
         if (isDead || !gameObject.activeInHierarchy) return;
@@ -299,7 +337,7 @@ public class Monster : PoolableObject, IEnemyHealth
        
         StartCoroutine(DieCoroutine());
     }
-
+    // 사망 애니메이션 재생 후 오브젝트 풀로 반환
     private IEnumerator DieCoroutine()
     {
         anim.SetTrigger("Die");
@@ -307,6 +345,7 @@ public class Monster : PoolableObject, IEnemyHealth
         yield return new WaitForSeconds(2f);
         ObjectPoolManager.Instance.Despawn(this);
     }
+    // 맵 내에서 다른 몬스터와의 분리 힘 계산
     public Vector3 GetSeparationForce(Monster other, float radius, float strength)
     {
         // 1. 거리 계산
@@ -334,6 +373,7 @@ public class Monster : PoolableObject, IEnemyHealth
 
         return dataName.Contains(abilityName);
     }
+    // 현재 타일 참조 해제
     public void ClearCurrentTile()
     {
         if (currentTile != null)
