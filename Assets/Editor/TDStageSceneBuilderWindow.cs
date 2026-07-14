@@ -13,7 +13,7 @@ using Object = UnityEngine.Object;
 
 public sealed class TDStageSceneBuilderWindow : EditorWindow
 {
-    const string DefaultOutputFolder = "Assets/Scenes/Stages";
+    const string DefaultOutputFolder = "Assets/Scenes";
     const string StageDataLabel = "StageData";
 
     static readonly string[] ExcludedRootNames =
