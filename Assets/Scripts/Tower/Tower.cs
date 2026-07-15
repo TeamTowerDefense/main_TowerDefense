@@ -192,7 +192,10 @@ public class Tower : BuildingBase
             return;
         }
         projectile.Initialize(target, towerData.damage, projectileData, this);
-
+        Debug.Log($"[Tower Sound] 발사음 요청 " + $"Tower={name}, " +
+            $"SoundID={projectileData.fireSoundID}, " +
+            $"Position={firePoint.position}");
+        SoundManager.Instance?.PlaySound(projectileData.fireSoundID, firePoint.position);
     }
     #endregion
 
@@ -321,7 +324,7 @@ public class Tower : BuildingBase
 
         Vector3 impactPosition = target.position;
 
-        RotateToTarget(transform);
+        RotateToTarget(target);
 
         SpawnLunchEffect(impactPosition, hitBoxData);
 
@@ -412,6 +415,8 @@ public class Tower : BuildingBase
     #region 착탄 HitBox 생성 메서드
     private void SpawnMortarHitBox(Vector3 impactPosition, HitBoxData hitBoxData)
     {
+        SoundManager.Instance?.PlaySound(hitBoxData.hitSoundID, impactPosition);
+
         GameObject prefab = ObjectPoolManager.Instance.GetHitBox(hitBoxData.hitBoxID);
     
         if (prefab == null) 

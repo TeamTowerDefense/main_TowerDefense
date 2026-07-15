@@ -1,4 +1,6 @@
+using System;
 using UnityEngine;
+using UnityEngine.Splines;
 
 public abstract class Projectile : PoolableObject
 {
@@ -61,7 +63,17 @@ public abstract class Projectile : PoolableObject
 
         OnHit();
 
+        PlayHitSound(hitPoint);
+
         DespawnSelf();
+    }
+
+    private void PlayHitSound(Vector3 hitPosition)
+    {
+        if (projectileData == null)
+            return;
+
+        SoundManager.Instance?.PlaySound( projectileData.hitSoundID, hitPosition);
     }
 
     protected abstract void OnHit();

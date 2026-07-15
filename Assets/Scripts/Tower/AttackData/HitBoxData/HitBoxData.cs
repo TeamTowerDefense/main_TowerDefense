@@ -40,7 +40,16 @@ public class HitBoxData : AttackBaseData
     public int warningEffectID;
     public int launchEffectID;
 
+    [Header("Sound")]
+    public int attackSoundID;
+    public int hitSoundID;
+
+    [Header("Loop Sound")]
+    public int loopSoundID;
+
+    [Header("Asset GameObject")]
     public AssetReferenceGameObject hitboxPF;
 
     [HideInInspector] public GameObject loadedPrefab;
+    public float hitEffectYOffset = 0.2f;
 }

@@ -22,11 +22,30 @@ MonoBehaviour:
     - Effect
     - Effect_Projectile
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0b93f9af63befa2478916a5396131fff
+    m_Address: Assets/Sounds/Free Pack/Bullet Impacts - Multiple 1.wav
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Sound
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0bd05763df902854a80475577a26666a
+    m_Address: Assets/Sounds/Free Pack/Flare gun 5-2.wav
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Sound
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 0ce8c047fa7f26248b9e14250a55ec7c
     m_Address: Assets/SO/TowerDataSO/TestFlameTower.asset
     m_ReadOnly: 0
     m_SerializedLabels:
     - Tower
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0f51c1535351f45bf978fa10a5e8c325
+    m_Address: Assets/asset-Store/Free_Fireworks__44.1k_16bit/HeavyHot Snare - Nova
+      Sound.wav
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Sound
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 1421d28de288a2f47bf38b21df6b4e54
     m_Address: Assets/SO/StageDataSO/Stage_003.asset
@@ -48,7 +67,7 @@ MonoBehaviour:
     - Effect_HitBox
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 18d2b03dab4102b4fa5cd7aba5a5e404
-    m_Address: Assets/Prefabs/Projectile/Projectile_Bullet.prefab
+    m_Address: Assets/Prefabs/Projectile/Projectile_Sniper.prefab
     m_ReadOnly: 0
     m_SerializedLabels:
     - Projectile
@@ -59,17 +78,42 @@ MonoBehaviour:
     m_SerializedLabels:
     - Projectile
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1fd31868d68903d4f9e2c4a3b7ef98f3
+    m_Address: Assets/Sounds/Free Pack/Explosion 1.wav
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Sound
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 22b03763742be7549aa6e8d4342a00f9
     m_Address: Assets/SO/MonsterDataSO/RegenMonsterData.asset
     m_ReadOnly: 0
     m_SerializedLabels:
     - MonsterData
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 281e15cc92254794eaf05caf4d044b76
+    m_Address: Assets/Sounds/Free Pack/Missile - Shot 4.wav
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Sound
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 2c7b0fb24cff0e2458092d232d40c493
     m_Address: Assets/Prefabs/Tower/TestFlameThrower.prefab
     m_ReadOnly: 0
     m_SerializedLabels:
     - Tower
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2c8b41517c99b414c973eb1f77ded18d
+    m_Address: Assets/asset-Store/Free_Fireworks__44.1k_16bit/HotBonus Snare - Nova
+      Sound.wav
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Sound
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2e071f5b8b8467d45a5e6e24c23c6ad4
+    m_Address: Assets/Sounds/Free Pack/Metal Impact 7.wav
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Sound
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 30efe4539f55b9d49bd9b3731b3337d3
     m_Address: Assets/Prefabs/HitBox/HowizerHitBox.prefab
@@ -83,11 +127,24 @@ MonoBehaviour:
     m_SerializedLabels:
     - StageData
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 34b439bf70b80a6409eadecc6be92d68
+    m_Address: Assets/Sounds/Free Pack/Hand Gun 2.wav
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Sound
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 3b1c54572b2e58243a5f71c24a4900fe
     m_Address: Assets/Prefabs/HitBox/SlowArea.prefab
     m_ReadOnly: 0
     m_SerializedLabels:
     - HitBox
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4546303cc47ba4c33976745dc249e36c
+    m_Address: Assets/asset-Store/Free_Fireworks__44.1k_16bit/SubFire Kick - Nova
+      Sound.wav
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Sound
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 484f1224dfd9712459a4464283612b0c
     m_Address: Assets/SO/StageDataSO/Stage_001.asset
@@ -98,7 +155,15 @@ MonoBehaviour:
   - m_GUID: 48c63f0bad0fd664c87ac2a224b8a4a1
     m_Address: Assets/Prefabs/Projectile/Projectile_Normal.prefab
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - Projectile
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 48cde60d3a3d9412caeaf949b6364160
+    m_Address: Assets/asset-Store/Free_Fireworks__44.1k_16bit/Burst Fireworks - Nova
+      Sound.wav
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Sound
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 4df76543a904f20458827d0e99690400
     m_Address: Assets/SO/AttackSo/TestProjectileLuncher.asset
@@ -118,11 +183,29 @@ MonoBehaviour:
     m_SerializedLabels:
     - Projectile
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5ae4d298ed547ba4c88587effb75d7e1
+    m_Address: Assets/Sounds/Free Pack/Earthquake 3 - Big.wav
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Sound
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5ff823f546b52574a931e1d9b44290a6
+    m_Address: Assets/Sounds/Free Pack/Cannon impact 9.wav
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Sound
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 666f1634bd2302241915e233cfdc57b6
     m_Address: Assets/Prefabs/Tower/TestHowizerTower.prefab
     m_ReadOnly: 0
     m_SerializedLabels:
     - Tower
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6739c01659ad96d47987f4ddee226b36
+    m_Address: Assets/Sounds/Free Pack/Hand Gun 1.wav
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Sound
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 6b42a58e1d069a94d917ddfa1ebf1e94
     m_Address: Assets/SO/EffectSo/HitLuncher.asset
@@ -136,6 +219,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - Tower
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6dd7024f00606b44eb5884197a66a893
+    m_Address: Assets/Sounds/Free Pack/Hand Gun_6.wav
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Sound
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 733578bafa28d9e4c95a09a3b505f397
     m_Address: Assets/Prefabs/Tower/TestSniperTower.prefab
     m_ReadOnly: 0
@@ -148,6 +237,38 @@ MonoBehaviour:
     m_SerializedLabels:
     - Effect
     - Effect_HitBox
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7575f4814720b4b509b55764405171f1
+    m_Address: Assets/asset-Store/Free_Fireworks__44.1k_16bit/Deep Fireworks - Nova
+      Sound.wav
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Sound
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 75adfe9a619833445a701305b983e548
+    m_Address: Assets/Sounds/Free Pack/Bullet Impact 14.wav
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Sound
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7b69beceabbd8f24e8bc62d77ac7ca1c
+    m_Address: Assets/Sounds/Free Pack/Heavy Object Impact 10.wav
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Sound
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7d156b8a5b340cd46bcf0a76557dd2dd
+    m_Address: Assets/Sounds/Free Pack/Dragon Spit Fire 1.wav
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Sound
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 80dc052911d5446298f486cca695b6ad
+    m_Address: Assets/asset-Store/Free_Fireworks__44.1k_16bit/Blue Fireworks - Nova
+      Sound.wav
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Sound
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 829fd095e4270ee48a4002de72905758
     m_Address: Assets/Prefabs/Tower/TestStunTower.prefab
@@ -173,6 +294,31 @@ MonoBehaviour:
     - Effect
     - Effect_Projectile
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 958408b32ccf3714ea02821877b0870c
+    m_Address: Assets/Sounds/Free Pack/Metal impact 5.wav
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Sound
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 986d6b30567e30e428f3f21373fe45ca
+    m_Address: Assets/Sounds/Free Pack/Explosion 2.wav
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Sound
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9930d5b4be15bb04c9d0a6fa0d7e6b2e
+    m_Address: Assets/Sounds/Free Pack/Heavy Object Impact 4.wav
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Sound
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 99b5eea824c2a4915b44598f1c564d53
+    m_Address: Assets/asset-Store/Free_Fireworks__44.1k_16bit/CampFire Clap - Nova
+      Sound.wav
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Sound
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: a3e2c3406e02f2c4ba86cfb1604277bd
     m_Address: Assets/Travis Game Assets/Hit Impact Effects/Prefabs/Guards/Guard_01.prefab
     m_ReadOnly: 0
@@ -180,11 +326,35 @@ MonoBehaviour:
     - Effect
     - Effect_Projectile
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a764377339b869e459f5e53fb9258f73
+    m_Address: Assets/Sounds/Free Pack/Hand Gun 3.wav
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Sound
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: ab9ec2005f982ee4bb4d9551842f18aa
     m_Address: Assets/SO/StageDataSO/Stage_002.asset
     m_ReadOnly: 0
     m_SerializedLabels:
     - StageData
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: adcac75087a17704ca6c0c3b15bc3aa5
+    m_Address: Assets/Sounds/Free Pack/Magic Spell - Sleeping spell 1.wav
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Sound
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bb6cdd13aeb95f743847b1cd460889bc
+    m_Address: Assets/Sounds/Free Pack/Laser Impact Light_6.wav
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Sound
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c9bb4171cafd3dd47829336ea4c8d988
+    m_Address: Assets/Sounds/Free Pack/Laser Multiple shots 1.wav
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Sound
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c9c33a53087dc9d4fb3146333e4b09c9
     m_Address: Assets/Prefabs/Tower/TestLuncher.prefab
@@ -198,6 +368,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - Effect
     - Effect_Projectile
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: cc6699269b4c1d44ea1e860518b9bb73
+    m_Address: Assets/Sounds/Free Pack/Magic Spell_Simple Swoosh_6.wav
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Sound
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: cca91d7e589f6464fbd64ef1b4c1ca70
     m_Address: Assets/SO/StageDataSO/Stage_006.asset
@@ -218,10 +394,35 @@ MonoBehaviour:
     - Effect
     - Effect_Projectile
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d40330822ccea6140b664c0560d5022f
+    m_Address: Assets/Sounds/Free Pack/Machine Gun 1.wav
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Sound
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d47e6ed162da1f740ad807d00f4679f3
+    m_Address: Assets/Sounds/Free Pack/Explosion 8.wav
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Sound
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: d71c56f2e6af1ba449a0a11217b143a4
     m_Address: Assets/Scripts/MonsterSystem/Skeleton_110.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d89e3e730bce443569b30b593a273361
+    m_Address: Assets/asset-Store/Free_Fireworks__44.1k_16bit/Rumble Fireworks -
+      Nova Sound.wav
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Sound
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e11a5a019377fbd4c81caa0adcb4c236
+    m_Address: Assets/Sounds/Free Pack/Bullet Impact 21.wav
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Sound
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: e2e5b904d2903e946998f4a2fe28bf7e
     m_Address: Assets/SO/EffectSo/HitSlow.asset
@@ -248,6 +449,12 @@ MonoBehaviour:
     - Effect
     - Effect_HitBox
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e88084c6f293c324db2b4dcf575d60dc
+    m_Address: Assets/Sounds/Free Pack/Laser Gun Salve.wav
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Sound
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: f094352850be13c49b024e4b9aa4583c
     m_Address: Assets/SO/TowerDataSO/TestLuncher.asset
     m_ReadOnly: 0
@@ -272,6 +479,12 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - StageData
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f9eb44b85c96be5429737d4dcadbfa3b
+    m_Address: Assets/Sounds/Free Pack/Railgun - Shot 6.wav
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Sound
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: fbb927ef055cf184bbf79724a14bc75f
     m_Address: Assets/SO/EffectSo/HitBullet.asset

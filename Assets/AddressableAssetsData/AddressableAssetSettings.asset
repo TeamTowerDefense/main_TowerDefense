@@ -15,7 +15,7 @@ MonoBehaviour:
   m_DefaultGroup: 
   m_currentHash:
     serializedVersion: 2
-    Hash: 738defe541f5368318879c16c61ffc85
+    Hash: 067ae062b8bd188c153b4742936cdabb
   m_OptimizeCatalogSize: 0
   m_BuildRemoteCatalog: 0
   m_CatalogRequestsTimeout: 0
@@ -109,6 +109,7 @@ MonoBehaviour:
     - Effect
     - MonsterData
     - StageData
+    - Sound
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: 7956ad28e156c3943b85d1c1f11ed898, type: 2}

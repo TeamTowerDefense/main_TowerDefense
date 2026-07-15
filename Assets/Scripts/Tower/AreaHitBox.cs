@@ -28,6 +28,7 @@ public class AreaHitBox : PoolableObject
     private Dictionary<Monster, Coroutine> effectDespawnRoutines = new();
 
     private Tower ownerTower;
+    private SoundPoolObject activeLoopSound;
 
     private void Awake()
     {
@@ -76,7 +77,8 @@ public class AreaHitBox : PoolableObject
             return;
 
         TryTickDamage(other);
-
+        StartTickSound(hitBoxData);
+        
     }
 
     private void OnTriggerExit(Collider other)
@@ -155,11 +157,12 @@ public class AreaHitBox : PoolableObject
         if (monster == null || monster.isDead)
             return;
 
-        SpawnTickHeatEffect(monster);
+       
 
         if (!damageTimers.ContainsKey(monster))
         {
             ApplyDamage(monster);
+            SpawnTickHeatEffect(monster);
             damageTimers[monster] = tickInterval;
             //Debug.Log($"[TickDamage] damageInterval={hitBoxData.damageInterval}, attackSpeed={attackSpeed}, tickInterval={tickInterval}");
             return;
@@ -171,6 +174,7 @@ public class AreaHitBox : PoolableObject
         if (damageTimers[monster] <= 0f)
         {
             ApplyDamage(monster);
+            SpawnTickHeatEffect(monster);
             damageTimers[monster] = GetTickInterval();
         }
     }
@@ -181,6 +185,7 @@ public class AreaHitBox : PoolableObject
             return;
 
         monster.TakeDamage(damage);
+        SoundManager.Instance?.PlaySound(hitBoxData.hitSoundID, monster.transform.position);
     }
 
     private void ApplySlows(Monster monster)
@@ -198,40 +203,48 @@ public class AreaHitBox : PoolableObject
 
     private void SpawnTickHeatEffect(Monster monster)
     {
-        if (activeHitEffects.TryGetValue(monster, out PoolableObject effect))
+        if (monster == null)
+            return;
+
+        if (hitBoxData == null || hitBoxData.hitEffectData == null)
+            return;
+
+        if (ObjectPoolManager.Instance == null)
+            return;
+
+        int effectID = hitBoxData.hitEffectData.effectID;
+
+        GameObject effectPF =
+            ObjectPoolManager.Instance.GetEffect(effectID);
+
+        if (effectPF == null)
         {
-            PlayParticles(effect);
-
-            if (effectDespawnRoutines.TryGetValue(monster, out Coroutine routine))
-            {
-                StopCoroutine(routine);
-                effectDespawnRoutines.Remove(monster);
-            }
-
+            Debug.LogWarning(
+                $"[AreaHitBox] HitEffect 프리팹 없음. ID={effectID}"
+            );
             return;
         }
+
+        Vector3 spawnPosition =
+            monster.transform.position + Vector3.up * hitBoxData.hitEffectYOffset;
+
+        PoolEffect effect =
+            ObjectPoolManager.Instance.Spawn<PoolEffect>(
+                effectPF,
+                spawnPosition,
+                Quaternion.identity,
+                ObjectPoolManager.Instance.GetEffectParent()
+            );
 
         if (effect == null)
             return;
 
-        effect = SpawnHitEffect(monster);
+        // 몬스터 이동을 따라가야 하는 짧은 피격 이펙트라면 부모 연결
+        effect.transform.SetParent(monster.transform);
+        effect.transform.localPosition = Vector3.up * hitBoxData.hitEffectYOffset;
+        effect.transform.localRotation = Quaternion.identity;
 
-        if (effect == null)
-            return;
-
-        activeHitEffects.Add(monster, effect);
-        PlayParticles(effect);
-    }
-
-    private void PlayParticles(PoolableObject effect)
-    {
-        ParticleSystem[] particles = effect.GetComponentsInChildren<ParticleSystem>();
-
-        foreach(ParticleSystem ps in particles)
-        {
-            if (!ps.isPlaying)
-                ps.Play(true);
-        }
+        effect.Play();
     }
 
     private void SpawnOnceEffect(Monster monster)
@@ -345,6 +358,26 @@ public class AreaHitBox : PoolableObject
         base.OnDespawned();
     }
 
+    private void StartTickSound(HitBoxData hitBoxData)
+    {
+        if (activeLoopSound != null)
+            return;
+
+        activeLoopSound = SoundManager.Instance?.PlayLoopSound(hitBoxData.loopSoundID, target.position);
+        if (hitBoxData == null)
+        {
+            StopTickSound();
+        }
+    }
+
+    private void StopTickSound()
+    {
+        if (activeLoopSound == null)
+            return;
+
+        activeLoopSound.StopSound();
+        activeLoopSound = null;
+    }
 
     #region 히트 시 키워드 적용
     protected void TriggerOnHitEffects(Monster targetMonster)

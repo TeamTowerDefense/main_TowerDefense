@@ -22,9 +22,14 @@ MonoBehaviour:
   stopEffectOutOfRange: 0
   colliderActiveTime: 0.2
   effectDespawnDelay: 1
-  applyDebuff: 0
-  debuffs: []
-  debuffApplyInterval: 0.5
+  isMortar: 0
+  impactDelay: 1.2
+  hitColliderActiveTime: 0.2
+  warningEffectID: 0
+  launchEffectID: 0
+  attackSoundID: 10200
+  hitSoundID: 10201
+  loopSoundID: 10202
   hitboxPF:
     m_AssetGUID: f43d546f448decb41af66526a7f44009
     m_SubObjectName: 
@@ -32,4 +37,5 @@ MonoBehaviour:
     m_SubObjectGUID: 
     m_EditorAssetChanged: 1
   loadedPrefab: {fileID: 0}
+  hitEffectYOffset: 0.2
   boxSize: {x: 1.5, y: 1.5, z: 6}
