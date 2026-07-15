@@ -15,7 +15,7 @@ MonoBehaviour:
   buildingID: 6
   buildingName: "\uBA67\uB3FC\uC9C0"
   buildingPrefab: {fileID: 100362392977836183, guid: 666f1634bd2302241915e233cfdc57b6, type: 3}
-  cost: 20
+  cost: 200
   isDestructible: 1
   baseFootprint:
   - {x: 0, y: 0}
@@ -23,10 +23,11 @@ MonoBehaviour:
   validStateMaterial: {fileID: 2100000, guid: 4eaf14d00b5b02d4786058d19d124e39, type: 2}
   inValidStateMaterial: {fileID: 2100000, guid: 4a85c9e89378a73489c64b9eede43a1b, type: 2}
   placeVFX: {fileID: -7969546562051743012, guid: 201eafd12c4c6b34396a2be032e4a7c9, type: 3}
-  damage: 10
+  keywords: []
+  damage: 20
   attackRange: 5
   attackInterval: 1
-  attackSpeed: 0.5
+  attackSpeed: 1
   monsterLayer:
     serializedVersion: 2
     m_Bits: 512
@@ -37,5 +38,6 @@ MonoBehaviour:
     m_SubObjectType: 
     m_SubObjectGUID: 
     m_EditorAssetChanged: 0
+  installSoundID: 10500
   defaultKeywords:
   - {fileID: 11400000, guid: 2d52918c5a1ef4146a601085dbc9802c, type: 2}

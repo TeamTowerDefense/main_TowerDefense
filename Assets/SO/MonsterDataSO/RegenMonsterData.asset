@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4db155bf894d96c41a060ad48c5cf716, type: 3}
   m_Name: RegenMonsterData
   m_EditorClassIdentifier: Assembly-CSharp::MonsterData
-  monsterName: New Monster
+  monsterName: Catus
   monsterId: 0
   Prefab: {fileID: 4253210182481893339, guid: 685e5cce46f303046b902b80a8aca5e8, type: 3}
   maxHP: 100

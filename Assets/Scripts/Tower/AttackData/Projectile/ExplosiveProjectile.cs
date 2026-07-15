@@ -1,4 +1,4 @@
-using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class ExplosiveProjectile : Projectile
@@ -31,7 +31,7 @@ public class ExplosiveProjectile : Projectile
             {
                 TriggerOnHitEffects(monster);
                 monster.TakeDamage(damage);
-                StartCoroutine(SpawnTargetHitEffect(monster));
+                SpawnTargetHitEffect(monster);
             }
         }
     }
@@ -64,15 +64,27 @@ public class ExplosiveProjectile : Projectile
     #endregion
 
     #region 몬스터 광역 피해 이펙트
-    private IEnumerator SpawnTargetHitEffect(Monster monster)
+    private void SpawnTargetHitEffect(Monster monster)
     {
-        Debug.Log($"[Launcher] SpawnTargetHitEffect : {monster.name}");
-        Debug.Log($"EffectData = {explosiveData.targetHitEffectData}");
         if (monster == null)
-            yield return null;
+            return;
+
+        if (explosiveData == null)
+        {
+            Debug.LogWarning("[ExplosiveProjectile] explosiveData가 없습니다.");
+            return;
+        }
+
+        if (explosiveData.targetHitEffectData == null)
+        {
+            Debug.LogWarning(
+                "[ExplosiveProjectile] targetHitEffectData가 없습니다."
+            );
+            return;
+        }
 
         if (ObjectPoolManager.Instance == null)
-            yield return null;
+            return;
 
         //int effectID = explosiveData.hitEffectID;
         int effectID = explosiveData.targetHitEffectData.effectID;
@@ -82,31 +94,22 @@ public class ExplosiveProjectile : Projectile
         if (effectPF == null)
         {
             Debug.LogWarning($"[Launcher] Target HitEffect 없음. ID={effectID}");
-            yield return null;
+            return;
         }
 
         Vector3 spawnPosition = monster.transform.position + Vector3.up * explosiveData.targetHitEffectYOffset;
 
-        PoolableObject effect = ObjectPoolManager.Instance.Spawn<PoolableObject>
+        PoolEffect effect = ObjectPoolManager.Instance.Spawn<PoolEffect>
             (effectPF, spawnPosition, Quaternion.identity, ObjectPoolManager.Instance.GetEffectParent());
 
         if (effect == null)
-            yield return null;
-
-        yield return new WaitForSeconds(0.3f);
+            return;
 
         effect.transform.SetParent(monster.transform);
         effect.transform.localPosition = Vector3.up * explosiveData.targetHitEffectYOffset;
         effect.transform.localRotation = Quaternion.identity;
 
-        EffectLifeTimeDespawner lifeTimeDespawner = effect.GetComponent<EffectLifeTimeDespawner>();
-
-        if (lifeTimeDespawner != null)
-        {
-            float lifeTime = Mathf.Max(0.1f, explosiveData.targetHitEffectLifetime);
-
-            lifeTimeDespawner.StartLifeTime(lifeTime);
-        }
+        effect.Play();
 
     }
     #endregion

@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 679234469263611764}
   - component: {fileID: -3748910466435132346}
   - component: {fileID: -1930414798521355677}
+  - component: {fileID: -7052754995114608199}
   m_Layer: 0
   m_Name: ExplosionHitEffect
   m_TagString: Untagged
@@ -5349,6 +5350,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c6e2605147fd7242bd143ea40e4b6a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EffectAutoDespawn
+--- !u!114 &-7052754995114608199
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 161343110397386216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4772c3d3f2819ba458201afcefdc662b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EffectLifeTimeDespawner
 --- !u!1 &1027561311708180069
 GameObject:
   m_ObjectHideFlags: 0
