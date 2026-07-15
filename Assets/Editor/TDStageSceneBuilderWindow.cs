@@ -99,6 +99,16 @@ public sealed class TDStageSceneBuilderWindow : EditorWindow
         DrawPreview();
         EditorGUILayout.Space(8f);
 
+        using (new EditorGUI.DisabledScope(!mapPrefab || !stageData))
+        {
+            if (GUILayout.Button("맵 프리뷰 생성 및 StageData 할당", GUILayout.Height(30f)))
+                TDMapPreviewGenerator.GenerateAndAssign(mapPrefab, stageData);
+        }
+
+        EditorGUILayout.Space(8f);
+
+        EditorGUILayout.Space(8f);
+
         using (new EditorGUI.DisabledScope(!CanBuild()))
         {
             if (GUILayout.Button("스테이지 씬 생성 또는 갱신", GUILayout.Height(36f)))
