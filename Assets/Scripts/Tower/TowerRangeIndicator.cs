@@ -15,23 +15,29 @@ public class TowerRangeIndicator : MonoBehaviour
         transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
         transform.localPosition = new Vector3(0f, yOffset, 0f);
 
-        gameObject.SetActive(false);
+        Hide();
     }
 
-    public void Show(float radius)
+    public void Show()
     {
         Debug.Log("Show Range");
 
+        gameObject.SetActive(true);
+    }
+
+    public void SetRange(float radius)
+    {
+        Debug.Log("Set Range: " + radius);
+
         float paddedRadius = radius + visualPadding;
         float diameter = paddedRadius * 2f;
-
         transform.localScale = new Vector3(diameter, diameter, 1f);
-        gameObject.SetActive(true);
     }
 
     // 타워 선택이 해제되었을 때 호출할 함수
     public void Hide()
     {
+        Debug.Log("Hide");
         gameObject.SetActive(false);
     }
 }

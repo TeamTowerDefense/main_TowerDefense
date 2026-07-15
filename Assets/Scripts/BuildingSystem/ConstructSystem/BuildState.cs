@@ -19,6 +19,15 @@ public class BuildState : IConstructMode
             if(controller.Model.BuildableToBuild is IHasPreview hasPreview)
             {
                 controller.View.CreatePreview(hasPreview.GetPreview());
+
+                if (controller.Model.DataToBuild is TowerData towerData)
+                {
+                    controller.View.SetPreviewRange(towerData.attackRange);
+                }
+                else
+                {
+                    controller.View.SetPreviewRange(0f);
+                }
             }
         }
     }
@@ -122,4 +131,5 @@ public class BuildState : IConstructMode
         }
         return true;
     }
+
 }

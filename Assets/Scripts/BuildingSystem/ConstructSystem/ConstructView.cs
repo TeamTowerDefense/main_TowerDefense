@@ -27,6 +27,12 @@ public class ConstructView : MonoBehaviour
         previewRenderer.SetValidityColor(isValid);
         previewRenderer.ShowPreview(true);
     }
+
+    public void SetPreviewRange(float range)
+    {
+        previewRenderer.SetPreviewRange(range);
+    }
+
     #endregion
 
 
