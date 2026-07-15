@@ -5,6 +5,7 @@ public class TowerRangeIndicator : MonoBehaviour
     [Header("시각적 설정")]
     [Tooltip("바닥과 겹쳐서 깜빡거리는 현상(Z-Fighting)을 막기 위한 미세한 높이")]
     [SerializeField] private float yOffset = 0.05f;
+    public float YOffset { get { return yOffset; } }
 
     [Tooltip("외곽선 두께의 절반 정도 값을 넣어주세요 (예: 0.2 ~ 0.5)")]
     [SerializeField] private float visualPadding = 0.2f;
