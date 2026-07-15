@@ -10,20 +10,26 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 71c03d9ba2eb41143a0e496070a1eff1, type: 3}
-  m_Name: TestWave
-  m_EditorClassIdentifier: Assembly-CSharp::WaveDataSO
-  WaveName: Test Wave
+  m_Name: Wave_101
+  m_EditorClassIdentifier: Assembly-CSharp::MonsterSpawnDataSO
+  WaveName: Wave_101
   SpawnGroups:
   - Elements:
     - MonsterData: {fileID: 11400000, guid: 14da851dccbe7334dbd5571a4a181a76, type: 2}
-      Count: 3
-    elementInterval: 0.1
+      Count: 1
+    - MonsterData: {fileID: 11400000, guid: 14da851dccbe7334dbd5571a4a181a76, type: 2}
+      Count: 1
+    - MonsterData: {fileID: 11400000, guid: 14da851dccbe7334dbd5571a4a181a76, type: 2}
+      Count: 1
+    elementInterval: 0.8
     Interval: 5
     StartDelay: 0.2
   - Elements:
     - MonsterData: {fileID: 11400000, guid: 14da851dccbe7334dbd5571a4a181a76, type: 2}
-      Count: 6
-    elementInterval: 0.1
+      Count: 3
+    - MonsterData: {fileID: 11400000, guid: 14da851dccbe7334dbd5571a4a181a76, type: 2}
+      Count: 2
+    elementInterval: 0.8
     Interval: 5
     StartDelay: 0.2
-  Reward: 10
+  Reward: 50

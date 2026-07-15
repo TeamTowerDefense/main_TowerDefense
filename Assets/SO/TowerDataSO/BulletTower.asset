@@ -15,7 +15,7 @@ MonoBehaviour:
   buildingID: 0
   buildingName: "\uBE44\uBC84"
   buildingPrefab: {fileID: 8340965744140817121, guid: 6bb5d459c8ae1a7438ec6c9e684d87b1, type: 3}
-  cost: 10
+  cost: 50
   isDestructible: 1
   baseFootprint:
   - {x: 0, y: 0}
@@ -27,7 +27,7 @@ MonoBehaviour:
   damage: 20
   attackRange: 5
   attackInterval: 1
-  attackSpeed: 1.5
+  attackSpeed: 1
   monsterLayer:
     serializedVersion: 2
     m_Bits: 512

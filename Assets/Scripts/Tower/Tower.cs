@@ -500,7 +500,8 @@ public class Tower : BuildingBase
         if (rangeIndicator != null)
         {
             float currentRange = GetStat(StatType.AttackRange);
-            rangeIndicator.Show(currentRange);
+            rangeIndicator.SetRange(currentRange);
+            rangeIndicator.Show();
         }
     }
 
