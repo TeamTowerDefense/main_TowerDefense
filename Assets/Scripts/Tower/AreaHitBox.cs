@@ -28,6 +28,7 @@ public class AreaHitBox : PoolableObject
     private Dictionary<Monster, Coroutine> effectDespawnRoutines = new();
 
     private Tower ownerTower;
+    private SoundPoolObject activeLoopSound;
 
     private void Awake()
     {
@@ -76,7 +77,8 @@ public class AreaHitBox : PoolableObject
             return;
 
         TryTickDamage(other);
-
+        StartTickSound(hitBoxData);
+        
     }
 
     private void OnTriggerExit(Collider other)
@@ -183,6 +185,7 @@ public class AreaHitBox : PoolableObject
             return;
 
         monster.TakeDamage(damage);
+        SoundManager.Instance?.PlaySound(hitBoxData.hitSoundID, monster.transform.position);
     }
 
     private void ApplySlows(Monster monster)
@@ -355,6 +358,26 @@ public class AreaHitBox : PoolableObject
         base.OnDespawned();
     }
 
+    private void StartTickSound(HitBoxData hitBoxData)
+    {
+        if (activeLoopSound != null)
+            return;
+
+        activeLoopSound = SoundManager.Instance?.PlayLoopSound(hitBoxData.loopSoundID, target.position);
+        if (hitBoxData == null)
+        {
+            StopTickSound();
+        }
+    }
+
+    private void StopTickSound()
+    {
+        if (activeLoopSound == null)
+            return;
+
+        activeLoopSound.StopSound();
+        activeLoopSound = null;
+    }
 
     #region 히트 시 키워드 적용
     protected void TriggerOnHitEffects(Monster targetMonster)

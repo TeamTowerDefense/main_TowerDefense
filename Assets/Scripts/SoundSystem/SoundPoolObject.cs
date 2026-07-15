@@ -17,8 +17,46 @@ public class SoundPoolObject : MonoBehaviour
 
     public void Play(AudioClip clip, SoundData soundData, float volumeScale = 1f)
     {
-        if (clip == null || soundData == null)
+        Debug.Log(
+       $"[Sound Play 진입] " +
+       $"Object={name}, " +
+       $"ParameterClip={(clip != null ? clip.name : "NULL")}, " +
+       $"SoundData={(soundData != null ? soundData.name : "NULL")}, " +
+       $"AudioSource={(audioSource != null ? audioSource.name : "NULL")}");
+
+        if (audioSource == null)
         {
+            audioSource = GetComponent<AudioSource>();
+
+            Debug.Log(
+                $"[Sound AudioSource 재탐색] " +
+                $"Result={(audioSource != null ? audioSource.name : "NULL")}");
+        }
+
+        if (audioSource == null)
+        {
+            Debug.LogError(
+                $"[Sound Play 실패] AudioSource가 없습니다. Object={name}");
+
+            SoundManager.Instance?.Despawn(this);
+            return;
+        }
+
+        if (clip == null)
+        {
+            Debug.LogError(
+                $"[Sound Play 실패] 전달받은 AudioClip이 null입니다. " +
+                $"SoundData={(soundData != null ? soundData.name : "NULL")}");
+
+            SoundManager.Instance?.Despawn(this);
+            return;
+        }
+
+        if (soundData == null)
+        {
+            Debug.LogError(
+                $"[Sound Play 실패] SoundData가 null입니다.");
+
             SoundManager.Instance?.Despawn(this);
             return;
         }
@@ -29,8 +67,9 @@ public class SoundPoolObject : MonoBehaviour
             despawnCoroutine = null;
         }
 
-        audioSource.Stop();
 
+        audioSource.Stop();
+        audioSource.clip = clip;
         audioSource.volume = Mathf.Clamp01(soundData.volume * volumeScale);
 
         audioSource.spatialBlend = soundData.spatialBlend;
@@ -61,8 +100,20 @@ public class SoundPoolObject : MonoBehaviour
 
     private IEnumerator DespawnAfterPlay()
     {
+        Debug.Log(
+      $"[Sound Despawn 대기 시작] " +
+      $"Object={name}, " +
+      $"Clip={audioSource.clip?.name}, " +
+      $"IsPlaying={audioSource.isPlaying}");
+
+
         while (audioSource.isPlaying)
             yield return null;
+
+        Debug.Log(
+       $"[Sound Despawn 실행] " +
+       $"Object={name}");
+
 
         despawnCoroutine = null;
         SoundManager.Instance?.Despawn(this);

@@ -27,6 +27,9 @@ MonoBehaviour:
   hitColliderActiveTime: 3
   warningEffectID: -1
   launchEffectID: -1
+  attackSoundID: 10500
+  hitSoundID: 10501
+  loopSoundID: 0
   hitboxPF:
     m_AssetGUID: 30efe4539f55b9d49bd9b3731b3337d3
     m_SubObjectName: 

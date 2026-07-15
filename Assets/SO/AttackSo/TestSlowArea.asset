@@ -12,30 +12,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 436dffeed80d04c4d857304485a50831, type: 3}
   m_Name: TestSlowArea
   m_EditorClassIdentifier: Assembly-CSharp::HitBoxAttackData
-  addressKey: 1004
-  label: HitBox
   hitBoxID: 1004
   hitEffectID: 1004
   activeTime: 5
   damageInterval: 2
   hitEffectData: {fileID: 11400000, guid: e2e5b904d2903e946998f4a2fe28bf7e, type: 2}
   center: {x: 0, y: 0, z: 0}
-  boxSize: {x: 1.5, y: 1.5, z: 6}
-  sphereRadius: 1
-  capsuleRadius: 1
-  capsuleHeight: 1
-  capsuleDirection: 0
   damageMode: 0
+  stopEffectOutOfRange: 1
   colliderActiveTime: 0.2
-  applyDebuff: 1
-  debuffs:
-  - debuffType: 0
-    duration: 3
-    value: 0.5
-    stackAmount: 0
-    maxStack: 0
-    refreshDuration: 1
-  debuffApplyInterval: 0.5
+  effectDespawnDelay: 1
+  isMortar: 0
+  impactDelay: 1.2
+  hitColliderActiveTime: 0.2
+  warningEffectID: 0
+  launchEffectID: 0
+  attackSoundID: 10300
+  hitSoundID: 10301
+  loopSoundID: 0
   hitboxPF:
     m_AssetGUID: 3b1c54572b2e58243a5f71c24a4900fe
     m_SubObjectName: 
@@ -43,3 +37,4 @@ MonoBehaviour:
     m_SubObjectGUID: 
     m_EditorAssetChanged: 0
   loadedPrefab: {fileID: 2033358281796941150, guid: 3b1c54572b2e58243a5f71c24a4900fe, type: 3}
+  hitEffectYOffset: 0.2

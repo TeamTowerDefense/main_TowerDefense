@@ -24,3 +24,5 @@ MonoBehaviour:
   targetLayer:
     serializedVersion: 2
     m_Bits: 512
+  fireSoundID: 10400
+  hitSoundID: 10401
