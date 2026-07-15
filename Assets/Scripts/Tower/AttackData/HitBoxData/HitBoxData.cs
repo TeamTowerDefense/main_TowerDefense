@@ -43,4 +43,5 @@ public class HitBoxData : AttackBaseData
     public AssetReferenceGameObject hitboxPF;
 
     [HideInInspector] public GameObject loadedPrefab;
+    public float hitEffectYOffset = 0.2f;
 }

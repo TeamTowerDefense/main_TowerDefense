@@ -322,6 +322,7 @@ public class ObjectPoolManager : MonoBehaviour
     {
         if (obj == null)
             return;
+        Debug.Log($"[Pool] Despawn ½ÇÇà: {obj.name}");
 
         GameObject key = obj.prefabKey;
 

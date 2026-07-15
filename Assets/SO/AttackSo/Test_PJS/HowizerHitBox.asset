@@ -22,11 +22,8 @@ MonoBehaviour:
   stopEffectOutOfRange: 0
   colliderActiveTime: 3
   effectDespawnDelay: 1
-  applyDebuff: 0
-  debuffs: []
-  debuffApplyInterval: 0.5
   isMortar: 1
-  impactDelay: 1.2
+  impactDelay: 0.1
   hitColliderActiveTime: 3
   warningEffectID: -1
   launchEffectID: -1
@@ -37,4 +34,5 @@ MonoBehaviour:
     m_SubObjectGUID: 
     m_EditorAssetChanged: 0
   loadedPrefab: {fileID: 4349695444788124133, guid: 30efe4539f55b9d49bd9b3731b3337d3, type: 3}
+  hitEffectYOffset: 0.2
   sphereRadius: 3.2

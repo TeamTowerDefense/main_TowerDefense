@@ -321,7 +321,7 @@ public class Tower : BuildingBase
 
         Vector3 impactPosition = target.position;
 
-        RotateToTarget(transform);
+        RotateToTarget(target);
 
         SpawnLunchEffect(impactPosition, hitBoxData);
 

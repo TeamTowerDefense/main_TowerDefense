@@ -15,11 +15,11 @@ MonoBehaviour:
   projectileID: 1005
   hitEffectID: 1005
   projectilePF:
-    m_AssetGUID: 48c63f0bad0fd664c87ac2a224b8a4a1
+    m_AssetGUID: 18d2b03dab4102b4fa5cd7aba5a5e404
     m_SubObjectName: 
     m_SubObjectType: 
     m_SubObjectGUID: 
-    m_EditorAssetChanged: 1
+    m_EditorAssetChanged: 0
   projectileSpeed: 50
   targetLayer:
     serializedVersion: 2

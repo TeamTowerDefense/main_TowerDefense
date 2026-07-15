@@ -48,7 +48,7 @@ MonoBehaviour:
     - Effect_HitBox
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 18d2b03dab4102b4fa5cd7aba5a5e404
-    m_Address: Assets/Prefabs/Projectile/Projectile_Bullet.prefab
+    m_Address: Assets/Prefabs/Projectile/Projectile_Sniper.prefab
     m_ReadOnly: 0
     m_SerializedLabels:
     - Projectile
@@ -98,7 +98,8 @@ MonoBehaviour:
   - m_GUID: 48c63f0bad0fd664c87ac2a224b8a4a1
     m_Address: Assets/Prefabs/Projectile/Projectile_Normal.prefab
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - Projectile
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 4df76543a904f20458827d0e99690400
     m_Address: Assets/SO/AttackSo/TestProjectileLuncher.asset
