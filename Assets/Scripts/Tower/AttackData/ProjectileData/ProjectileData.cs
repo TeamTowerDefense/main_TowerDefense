@@ -12,5 +12,9 @@ public abstract class ProjectileData : AttackBaseData
     [Header("기본 정보")]
     public float projectileSpeed = 10f;
     public LayerMask targetLayer;
+
+    [Header("Sound")]
+    public int fireSoundID;
+    public int hitSoundID;
 }
 

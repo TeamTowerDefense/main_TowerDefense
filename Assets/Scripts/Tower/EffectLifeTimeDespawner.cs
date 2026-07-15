@@ -13,6 +13,8 @@ public class EffectLifeTimeDespawner : MonoBehaviour
 
     public void StartLifeTime(float lifeTime)
     {
+        Debug.Log($"[EffectPool] Lifetime Ω√¿€: {name}, {lifeTime}");
+
         if (despawnRoutine != null)
         {
             StopCoroutine(despawnRoutine);

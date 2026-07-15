@@ -38,5 +38,6 @@ MonoBehaviour:
     m_SubObjectType: 
     m_SubObjectGUID: 
     m_EditorAssetChanged: 1
+  installSoundID: 10000
   defaultKeywords:
   - {fileID: 11400000, guid: 6c9a643a45f1ba942b8f41106db57847, type: 2}
