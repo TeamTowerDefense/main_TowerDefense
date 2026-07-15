@@ -7,6 +7,8 @@ public class BuildingPreviewRenderer : MonoBehaviour
     private Material validMateiral;
     [SerializeField]
     private Material invalidMateiral;
+    [SerializeField]
+    private TowerRangeIndicator previewRangeIndicator;
 
     private GameObject currentPreview;
 
@@ -41,6 +43,12 @@ public class BuildingPreviewRenderer : MonoBehaviour
         }
 
         currentPreview.SetActive(show);
+
+        if (previewRangeIndicator != null)
+        {
+            if (show) previewRangeIndicator.Show();
+            else previewRangeIndicator.Hide();
+        }
     }
 
     public void UpdateTransform(Vector3 position, Quaternion rotation)
@@ -49,6 +57,13 @@ public class BuildingPreviewRenderer : MonoBehaviour
         {
             currentPreview.transform.position = position;
             currentPreview.transform.rotation = rotation;
+        }
+
+        if (previewRangeIndicator != null)
+        {
+            Vector3 rangePos = position;
+            rangePos.y = previewRangeIndicator.transform.position.y;
+            previewRangeIndicator.transform.position = rangePos;
         }
     }
 
@@ -61,6 +76,21 @@ public class BuildingPreviewRenderer : MonoBehaviour
         foreach (Renderer r in previewRenderers)
         {
             r.material = targetMaterial;
+        }
+    }
+
+    public void SetPreviewRange(float range)
+    {
+        if (previewRangeIndicator != null)
+        {
+            if (range > 0f)
+            {
+                previewRangeIndicator.SetRange(range);
+            }
+            else
+            {
+                previewRangeIndicator.Hide();
+            }
         }
     }
 }

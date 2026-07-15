@@ -10,24 +10,24 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4db155bf894d96c41a060ad48c5cf716, type: 3}
-  m_Name: TestMonsterData
+  m_Name: BigMonsterData
   m_EditorClassIdentifier: Assembly-CSharp::MonsterData
-  monsterName: monster1
-  monsterId: 0
+  monsterName: BigSlime
+  monsterId: 2
   Prefab: {fileID: 4253210182481893339, guid: d71c56f2e6af1ba449a0a11217b143a4, type: 3}
-  maxHP: 100
-  speed: 2
+  maxHP: 300
+  speed: 1
   defense: 0
   Att: 0
-  LeakDamage: 1
-  scale: {x: 0.5, y: 0.5, z: 0.5}
+  LeakDamage: 3
+  scale: {x: 1, y: 1, z: 1}
   useUniformScale: 1
-  StunGauge: 1
+  StunGauge: 10
   moveWeight: 1
-  separationWeight: 0.3
+  separationWeight: 2
   boundaryWeight: 3
   containmentMultiplier: 5
   abilities: []
   heightOffset: 0
-  amount: 0
+  amount: 20
   defaultKeywords: []

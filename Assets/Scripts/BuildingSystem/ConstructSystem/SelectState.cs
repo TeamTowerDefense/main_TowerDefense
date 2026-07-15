@@ -45,14 +45,15 @@ public class SelectState : IConstructMode
         // 다른 타워를 클릭했다면 타겟을 교체하고 정보 재출력
         if (hitBuilding != null && hitBuilding != model.SelectedBuilding)
         {
+            OnExit();
             model.SelectedBuilding = hitBuilding;
             OnEnter();
         }
         // 빈 땅을 클릭했다면 선택 취소
-        //else if (hitBuilding == null)
-        //{
-        //    CancelMainAction();
-        //}
+        else if (hitBuilding == null)
+        {
+            CancelMainAction();
+        }
     }
 
     // 타워 해체
