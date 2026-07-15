@@ -6,6 +6,7 @@ public class MonsterData : ScriptableObject
 {
     public string monsterName = "New Monster";
     public int monsterId;
+    public Sprite Icon;
     public GameObject Prefab;
     public float maxHP = 100f;
     [Min(0f)]
