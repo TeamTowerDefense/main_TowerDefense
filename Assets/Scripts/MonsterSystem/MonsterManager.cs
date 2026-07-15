@@ -75,11 +75,14 @@ public class MonsterManager : MonoBehaviour
 
     private IEnumerator SpawnMonsterGroup(MonsterData data, PathData pathData, int count, float interval)
     {
+        Vector3 spawnPoint = pathData.waypoints[0].position;
+        CaveSpawner.Instance.PlayCaveEffectAtPosition(spawnPoint);
+
         for (int i = 0; i < count; i++)
         {
             Monster m = ObjectPoolManager.Instance.Spawn<Monster>(
                 data.Prefab,
-                pathData.waypoints[0].position,
+                spawnPoint,
                 Quaternion.identity
             );
 
@@ -203,7 +206,6 @@ public class MonsterManager : MonoBehaviour
         Tile nearest = null;
         float minDistance = float.MaxValue;
 
-        // paths가 아니라 실제 타일들이 저장된 pathTiles.Values를 순회해야 합니다!
         foreach (Tile tile in pathTiles.Values)
         {
             if (tile == null) continue; // 혹시라도 삭제된 타일 방지
