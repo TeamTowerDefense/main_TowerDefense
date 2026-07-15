@@ -83,7 +83,67 @@ MonoBehaviour:
     forbiddenTerrain: 10
     requiredPath: 10
     forbiddenPath: 5
-  decorations: []
+  decorations:
+  - displayName: DecoTile_Center
+    prefab: {fileID: 3622670526511579328, guid: 60d65e4eed2ca444d9a5224665294248, type: 3}
+    blocksTower: 0
+    customLayer:
+      serializedVersion: 2
+      m_Bits: 2048
+    applyLayerRecursively: 0
+    surfaceOffset: 0
+    alignToSurfaceNormal: 0
+    randomYRotation: 0
+    minScale: 0
+    maxScale: 0
+  - displayName: DecoTile_Corner
+    prefab: {fileID: 6852789893201058033, guid: 989cb3a038b5e8a418f4c15ab40e8e08, type: 3}
+    blocksTower: 0
+    customLayer:
+      serializedVersion: 2
+      m_Bits: 2048
+    applyLayerRecursively: 0
+    surfaceOffset: 0
+    alignToSurfaceNormal: 0
+    randomYRotation: 0
+    minScale: 0
+    maxScale: 0
+  - displayName: DecoTile_Edge
+    prefab: {fileID: 2900768042314010033, guid: 7459861c1d37ea34b87a556f5a00d8b2, type: 3}
+    blocksTower: 0
+    customLayer:
+      serializedVersion: 2
+      m_Bits: 2048
+    applyLayerRecursively: 0
+    surfaceOffset: 0
+    alignToSurfaceNormal: 0
+    randomYRotation: 0
+    minScale: 0
+    maxScale: 0
+  - displayName: DecoTile_Solo
+    prefab: {fileID: 1270399307217864340, guid: 29e2a1de97b4cbf48bb160e0a3d7707b, type: 3}
+    blocksTower: 0
+    customLayer:
+      serializedVersion: 2
+      m_Bits: 2048
+    applyLayerRecursively: 0
+    surfaceOffset: 0
+    alignToSurfaceNormal: 0
+    randomYRotation: 0
+    minScale: 0
+    maxScale: 0
+  - displayName: DecoTile_Water
+    prefab: {fileID: 3569279380451398375, guid: a1b4d59e2c59e8048925614a19a521a4, type: 3}
+    blocksTower: 0
+    customLayer:
+      serializedVersion: 2
+      m_Bits: 2048
+    applyLayerRecursively: 0
+    surfaceOffset: 0
+    alignToSurfaceNormal: 0
+    randomYRotation: 0
+    minScale: 0
+    maxScale: 0
   floorLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -94,6 +154,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 2048
   gridMaterial: {fileID: 0}
-  visualScale: 0.5
+  visualScale: 1
   waypointYOffset: 0
   cameraBoundsPadding: 2

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71c03d9ba2eb41143a0e496070a1eff1, type: 3}
   m_Name: Wave_102
   m_EditorClassIdentifier: Assembly-CSharp::MonsterSpawnDataSO
-  WaveName: Wave_101
+  WaveName: Wave_102
   SpawnGroups:
   - Elements:
     - MonsterData: {fileID: 11400000, guid: 14da851dccbe7334dbd5571a4a181a76, type: 2}

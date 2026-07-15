@@ -62,7 +62,7 @@ public class BuildingPreviewRenderer : MonoBehaviour
         if (previewRangeIndicator != null)
         {
             Vector3 rangePos = position;
-            rangePos.y = previewRangeIndicator.transform.position.y;
+            rangePos.y += previewRangeIndicator.YOffset;
             previewRangeIndicator.transform.position = rangePos;
         }
     }
