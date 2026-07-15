@@ -2,7 +2,7 @@
 using IGameInterface;
 using System;
 using UnityEngine;
-
+using System.Collections;
 public class StageController : MonoBehaviour, IStageService, IAutoSceneService
 {
     [Header("스테이지 데이터")]
