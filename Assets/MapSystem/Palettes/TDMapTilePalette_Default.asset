@@ -144,6 +144,30 @@ MonoBehaviour:
     randomYRotation: 0
     minScale: 0
     maxScale: 0
+  - displayName: DecoTile_Tree
+    prefab: {fileID: 868859769844269485, guid: 9d9016a93e2afb14993f9ab42254fc2b, type: 3}
+    blocksTower: 0
+    customLayer:
+      serializedVersion: 2
+      m_Bits: 2048
+    applyLayerRecursively: 0
+    surfaceOffset: 0
+    alignToSurfaceNormal: 0
+    randomYRotation: 0
+    minScale: 0
+    maxScale: 0
+  - displayName: DecoTile_Shrub
+    prefab: {fileID: 746657117632786859, guid: 6fbeead406b0d6c4ba7793d754752d28, type: 3}
+    blocksTower: 0
+    customLayer:
+      serializedVersion: 2
+      m_Bits: 2048
+    applyLayerRecursively: 0
+    surfaceOffset: 0
+    alignToSurfaceNormal: 0
+    randomYRotation: 0
+    minScale: 0
+    maxScale: 0
   floorLayer:
     serializedVersion: 2
     m_Bits: 64
