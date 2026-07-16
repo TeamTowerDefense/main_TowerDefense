@@ -383,6 +383,7 @@ namespace IGameInterface
         void StartStage();
         void StartWave();
         void TakeBaseDamage(int damage);
+        bool TryGetNextWavePreviewInfo(out StageWavePreviewInfo nextInfo);
     }
     public interface IStageMonsterTracker : ISceneService
     {

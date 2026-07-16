@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MonsterData
   monsterName: TurtleShell
   monsterId: 0
-  Icon: {fileID: 0}
+  Icon: {fileID: 527109551, guid: 41b68c5bcea271e4fa90d041054eb029, type: 3}
   Prefab: {fileID: 4253210182481893339, guid: a4a371efb423612459856bdf929e6ded, type: 3}
   maxHP: 150
   speed: 1.5

@@ -157,8 +157,17 @@ public class StageController : MonoBehaviour, IStageService, IAutoSceneService
         if (CurrentBaseHp <= 0)
             FailStage();
     }
+    public bool TryGetNextWavePreviewInfo(out StageWavePreviewInfo nextInfo)
+    {
+        nextInfo = null;
+        if (currentWaveIndex == stageData.Waves.Count - 1) return false;
+        int nextWaveIndex = currentWaveIndex + 1;
+        nextInfo = stageData.GetWavePreviewInfo(nextWaveIndex);
+        return nextInfo != null;
+    }
 
     #endregion
+
 
     #region 내부 유틸
     void ApplyRunContextStageData()

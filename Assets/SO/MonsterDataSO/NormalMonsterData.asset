@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MonsterData
   monsterName: Slime
   monsterId: 0
+  Icon: {fileID: 2077213831, guid: c38b4c9b52607e84ea1a1b1a2df618cf, type: 3}
   Prefab: {fileID: 4253210182481893339, guid: d71c56f2e6af1ba449a0a11217b143a4, type: 3}
   maxHP: 100
   speed: 2
