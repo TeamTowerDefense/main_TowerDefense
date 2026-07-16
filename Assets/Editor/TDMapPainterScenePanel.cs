@@ -66,6 +66,7 @@ public static class TDGridMapPainter
     static Vector2Int? lastPaintedCell;
     static Vector3? lastDecorationPosition;
 
+    static float conversionCellSize;
     static float rotationY;
     static float surfaceOffset;
     static float decorationSpacing = 0.5f;
@@ -73,7 +74,7 @@ public static class TDGridMapPainter
     static bool paintEnabled;
     static bool drawGrid = true;
 
-    static int defaultCellSize = 2;
+    const float DefaultCellSize = 2f;
 
     public static TDMapRoot MapRoot
     {
@@ -86,6 +87,7 @@ public static class TDGridMapPainter
             if (mapRoot)
             {
                 palette = mapRoot.Palette ? mapRoot.Palette : palette;
+                conversionCellSize = mapRoot.CellSize;
                 EnsureHierarchy();
             }
 
@@ -484,14 +486,25 @@ public static class TDGridMapPainter
         }
 
         SurfaceOffset = EditorGUILayout.FloatField("표면 Offset", SurfaceOffset);
-        DecorationSpacing = Mathf.Max(0.05f, EditorGUILayout.FloatField("장식 드래그 간격", DecorationSpacing));
+        DecorationSpacing = Mathf.Max(
+            0.05f,
+            EditorGUILayout.FloatField("장식 드래그 간격", DecorationSpacing));
+
         DrawGrid = EditorGUILayout.Toggle("그리드 표시", DrawGrid);
 
-        Color previous = GUI.backgroundColor;
-        GUI.backgroundColor = PaintEnabled ? new Color(0.6f, 1f, 0.65f) : Color.white;
+        DrawCellSizeConverter();
 
-        if (GUILayout.Button(PaintEnabled ? "페인팅 종료" : "페인팅 시작", GUILayout.Height(30f)))
+        Color previous = GUI.backgroundColor;
+        GUI.backgroundColor = PaintEnabled
+            ? new Color(0.6f, 1f, 0.65f)
+            : Color.white;
+
+        if (GUILayout.Button(
+                PaintEnabled ? "페인팅 종료" : "페인팅 시작",
+                GUILayout.Height(30f)))
+        {
             PaintEnabled = !PaintEnabled;
+        }
 
         GUI.backgroundColor = previous;
 
@@ -511,6 +524,35 @@ public static class TDGridMapPainter
             "F1~F5 탭 전환 · 1~9/0 타일 선택 · Q/E 회전\n" +
             "좌클릭/드래그 배치 · Shift+클릭 삭제",
             MessageType.None);
+    }
+
+    static void DrawCellSizeConverter()
+    {
+        EditorGUILayout.Space(6f);
+        EditorGUILayout.LabelField("셀 크기 변환", EditorStyles.boldLabel);
+
+        if (!mapRoot)
+        {
+            EditorGUILayout.HelpBox("Map Root를 먼저 지정해 주세요.", MessageType.Info);
+            return;
+        }
+
+        conversionCellSize = Mathf.Max(
+            0.1f,
+            EditorGUILayout.FloatField("변환 Cell Size", conversionCellSize));
+
+        using (new EditorGUI.DisabledScope(Mathf.Approximately(mapRoot.CellSize, conversionCellSize)))
+        {
+            if (GUILayout.Button(
+                    $"Cell Size {mapRoot.CellSize:0.###} → {conversionCellSize:0.###} 변환",
+                    GUILayout.Height(26f)))
+            {
+                ConvertMapCellSize(conversionCellSize);
+            }
+        }
+
+        if (GUILayout.Button("Ground/Path 비주얼 크기 복구", GUILayout.Height(24f)))
+            RestoreTerrainVisualScale();
     }
 
     #endregion
@@ -605,11 +647,12 @@ public static class TDGridMapPainter
 
         GameObject rootObject = new("TD_MapRoot");
         Undo.RegisterCreatedObjectUndo(rootObject, "TD MapRoot 생성");
-        mapRoot = Undo.AddComponent<TDMapRoot>(rootObject);
-        mapRoot.ConfigureGrid(defaultCellSize, 0f);
-        if (palette) mapRoot.SetPalette(palette);
 
-        EnsureHierarchy();
+        TDMapRoot createdRoot = Undo.AddComponent<TDMapRoot>(rootObject);
+        createdRoot.ConfigureGrid(DefaultCellSize, 0f);
+        if (palette) createdRoot.SetPalette(palette);
+
+        MapRoot = createdRoot;
         Selection.activeGameObject = rootObject;
         Undo.CollapseUndoOperations(group);
         SceneView.FrameLastActiveSceneView();
@@ -874,7 +917,7 @@ public static class TDGridMapPainter
             tile.gridPos = GetWorldGrid(cell);
         }
 
-        Transform visual = CreateVisual(marker, asset.Prefab, rotationY, palette ? palette.VisualScale : 1f);
+        Transform visual = CreateVisual(marker, asset.Prefab, rotationY, GetTerrainVisualScale());
         marker.Setup(asset.Type, cell, asset.Prefab, visual);
         ApplyLayer(root, asset.Type == TDMapCellType.Ground ? GetGroundLayer() : GetPathLayer(), true);
 
@@ -899,7 +942,7 @@ public static class TDGridMapPainter
         root.transform.localScale = Vector3.one;
 
         TDMapCellMarker marker = Undo.AddComponent<TDMapCellMarker>(root);
-        Transform visual = CreateVisual(marker, asset.Prefab, 0f, 1f);
+        Transform visual = CreateVisual(marker, asset.Prefab, 0f, Vector3.one);
         marker.Setup(asset.Type, cell, asset.Prefab, visual);
         ApplyLayer(root, GetPathLayer(), true);
 
@@ -927,7 +970,7 @@ public static class TDGridMapPainter
         root.transform.localScale = Vector3.one;
 
         TDMapCellMarker marker = Undo.AddComponent<TDMapCellMarker>(root);
-        Transform visual = CreateVisual(marker, asset.Prefab, 0f, scale);
+        Transform visual = CreateVisual(marker, asset.Prefab, 0f, Vector3.one * scale);
         bool blocks = entry?.BlocksTower == true;
 
         marker.Setup(TDMapCellType.Decoration, cell, asset.Prefab, visual, blocks);
@@ -949,14 +992,14 @@ public static class TDGridMapPainter
         return root;
     }
 
-    static Transform CreateVisual(TDMapCellMarker marker, GameObject prefab, float rotation, float scale)
+    static Transform CreateVisual(TDMapCellMarker marker, GameObject prefab, float rotation, Vector3 scale)
     {
         GameObject visualRoot = new("Visual");
         Undo.RegisterCreatedObjectUndo(visualRoot, "Visual 생성");
         Undo.SetTransformParent(visualRoot.transform, marker.transform, "Visual 부모 설정");
         visualRoot.transform.localPosition = Vector3.zero;
         visualRoot.transform.localRotation = Quaternion.Euler(0f, rotation, 0f);
-        visualRoot.transform.localScale = Vector3.one * scale;
+        visualRoot.transform.localScale = scale;
 
         GameObject instance = CreatePrefabInstance(prefab, visualRoot.transform);
         Undo.RegisterCreatedObjectUndo(instance, "Visual Prefab 생성");
@@ -1071,10 +1114,13 @@ public static class TDGridMapPainter
         previewRoot.hideFlags = HideFlags.HideAndDontSave | HideFlags.NotEditable;
         previewPrefab = asset.Prefab;
 
-        float scale = asset.Type is TDMapCellType.Ground or TDMapCellType.Path
-            ? palette ? palette.VisualScale : 1f
-            : 1f;
-        previewRoot.transform.localScale = asset.Prefab.transform.localScale * scale;
+        Vector3 visualScale = asset.Type is TDMapCellType.Ground or TDMapCellType.Path
+            ? GetTerrainVisualScale()
+            : Vector3.one;
+
+        previewRoot.transform.localScale = Vector3.Scale(
+            asset.Prefab.transform.localScale,
+            visualScale);
 
         Transform[] transforms = previewRoot.GetComponentsInChildren<Transform>(true);
         for (int i = 0; i < transforms.Length; i++) transforms[i].gameObject.hideFlags = previewRoot.hideFlags;
@@ -1091,6 +1137,155 @@ public static class TDGridMapPainter
         if (previewRoot) Object.DestroyImmediate(previewRoot);
         previewRoot = null;
         previewPrefab = null;
+    }
+
+    #endregion
+
+    #region Cell 크기 변환
+    static void ConvertMapCellSize(float newCellSize)
+    {
+        if (!mapRoot) return;
+
+        newCellSize = Mathf.Max(0.1f, newCellSize);
+
+        float oldCellSize = mapRoot.CellSize;
+        if (Mathf.Approximately(oldCellSize, newCellSize)) return;
+
+        bool confirmed = EditorUtility.DisplayDialog(
+            "맵 Cell Size 변환",
+            $"현재 Cell Size {oldCellSize:0.##}를 {newCellSize:0.##}로 변환합니다.\n\n" +
+            "Ground, Path, Spawn, Base는 기존 GridPosition을 기준으로 재배치합니다.\n" +
+            "Decoration은 기존 상대 위치 비율을 유지합니다.\n" +
+            "Ctrl+Z로 되돌릴 수 있습니다.",
+            "변환",
+            "취소");
+
+        if (!confirmed) return;
+
+        Undo.IncrementCurrentGroup();
+        int group = Undo.GetCurrentGroup();
+        Undo.SetCurrentGroupName($"TD Map Cell Size {oldCellSize:0.##} → {newCellSize:0.##}");
+
+        TDMapCellMarker[] markers =
+            mapRoot.GetComponentsInChildren<TDMapCellMarker>(true);
+
+        List<Vector2Int> waypointCells = new();
+
+        for (int i = 0; i < mapRoot.Waypoints.Count; i++)
+        {
+            Transform waypoint = mapRoot.Waypoints[i];
+            if (!waypoint) continue;
+
+            waypointCells.Add(mapRoot.WorldToGrid(waypoint.position));
+        }
+
+        Undo.RecordObject(mapRoot, "Map Cell Size 변경");
+        mapRoot.ConfigureGrid(newCellSize, mapRoot.TileY);
+
+        float ratio = newCellSize / oldCellSize;
+
+        for (int i = 0; i < markers.Length; i++)
+        {
+            TDMapCellMarker marker = markers[i];
+            if (!marker) continue;
+
+            Transform target = marker.transform;
+            Undo.RecordObject(target, "Map Cell 위치 변환");
+
+            if (marker.IsDecoration)
+            {
+                Vector3 localPosition = target.localPosition;
+                localPosition.x *= ratio;
+                localPosition.z *= ratio;
+                target.localPosition = localPosition;
+                continue;
+            }
+
+            Vector3 convertedPosition = mapRoot.GridToLocal(marker.GridPosition);
+            convertedPosition.y = target.localPosition.y;
+            target.localPosition = convertedPosition;
+
+            if (marker.IsPath)
+            {
+                Tile tile = marker.GetComponent<Tile>();
+
+                if (tile)
+                {
+                    Undo.RecordObject(tile, "Path Grid 좌표 갱신");
+                    tile.gridPos = GetWorldGrid(marker.GridPosition);
+                    EditorUtility.SetDirty(tile);
+                }
+            }
+
+            EditorUtility.SetDirty(target);
+        }
+
+        int waypointIndex = 0;
+
+        for (int i = 0; i < mapRoot.Waypoints.Count; i++)
+        {
+            Transform waypoint = mapRoot.Waypoints[i];
+            if (!waypoint) continue;
+            if (waypointIndex >= waypointCells.Count) break;
+
+            Undo.RecordObject(waypoint, "Waypoint 위치 변환");
+
+            Vector3 position = mapRoot.GetCellSurfaceWorld(waypointCells[waypointIndex]);
+            position += mapRoot.transform.up * (palette ? palette.WaypointYOffset : 0f);
+
+            waypoint.position = position;
+            waypointIndex++;
+        }
+
+        mapRoot.MarkCellCacheDirty();
+        mapRoot.RebuildCellCache();
+
+        conversionCellSize = mapRoot.CellSize;
+
+        EditorUtility.SetDirty(mapRoot);
+        EditorSceneManager.MarkSceneDirty(mapRoot.gameObject.scene);
+
+        ResetDrag();
+        DestroyPreview();
+
+        Undo.CollapseUndoOperations(group);
+        SceneView.RepaintAll();
+    }
+    static void RestoreTerrainVisualScale()
+    {
+        if (!mapRoot) return;
+
+        TDMapCellMarker[] markers = mapRoot.GetComponentsInChildren<TDMapCellMarker>(true);
+        Vector3 targetScale = GetTerrainVisualScale();
+
+        Undo.IncrementCurrentGroup();
+        int group = Undo.GetCurrentGroup();
+        Undo.SetCurrentGroupName("Ground Path 비주얼 크기 복구");
+
+        for (int i = 0; i < markers.Length; i++)
+        {
+            TDMapCellMarker marker = markers[i];
+            if (!marker || !marker.IsGround && !marker.IsPath) continue;
+
+            Transform visual = marker.transform.Find("Visual");
+            if (!visual) continue;
+
+            Undo.RecordObject(visual, "Terrain Visual 크기 복구");
+            visual.localScale = targetScale;
+            EditorUtility.SetDirty(visual);
+        }
+
+        EditorSceneManager.MarkSceneDirty(mapRoot.gameObject.scene);
+        Undo.CollapseUndoOperations(group);
+
+        DestroyPreview();
+        SceneView.RepaintAll();
+    }
+
+    static Vector3 GetTerrainVisualScale()
+    {
+        float baseScale = palette ? palette.VisualScale : 1f;
+        return Vector3.one * baseScale;
     }
 
     #endregion
