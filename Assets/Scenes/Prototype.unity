@@ -19393,7 +19393,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MonsterManager
   useAutoSpawn: 1
-  spawnY: -0.1
+  spawnY: 0.3
   separationRadius: 1
   separationStrength: 1
   tileSize: 1
