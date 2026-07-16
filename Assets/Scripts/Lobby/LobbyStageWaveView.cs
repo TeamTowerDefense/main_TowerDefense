@@ -28,7 +28,7 @@ public class LobbyStageWaveView : MonoBehaviour
 
         bool hasMonsters = info.Monsters != null && info.Monsters.Count > 0;
 
-        if (emptyRoot != null) emptyRoot.SetActive(true);
+        if (emptyRoot != null) emptyRoot.SetActive(!hasMonsters);
 
         if (!hasMonsters || monsterPrefab == null || monsterContent == null) return;
 

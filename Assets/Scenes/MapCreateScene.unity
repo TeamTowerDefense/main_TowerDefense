@@ -25030,7 +25030,7 @@ MonoBehaviour:
   palette: {fileID: 11400000, guid: d1a93a49513c71f4ca8410699be3663f, type: 2}
   cellSize: 2
   tileY: 0
-  surfaceYOffset: 0.5
+  surfaceYOffset: 1.1
   groundRoot: {fileID: 4400024035584376929}
   pathRoot: {fileID: 4879681470253591097}
   spawnBaseRoot: {fileID: 1660692552660180076}
