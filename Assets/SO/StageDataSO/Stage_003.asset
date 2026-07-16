@@ -17,7 +17,7 @@ MonoBehaviour:
   Description: "\uC2A4\uD14C\uC774\uC9C0 3 (\uC12C)"
   Icon: {fileID: 21300000, guid: de5afc594137f4aceb71a73abfe8a719, type: 3}
   LobbyOrder: 0
-  MapPreview: {fileID: 0}
+  MapPreview: {fileID: 21300000, guid: 622e7b0206928a44ba7929a9c5347387, type: 3}
   StartResource: 100
   TowerLimit: 10
   BaseHp: 10
