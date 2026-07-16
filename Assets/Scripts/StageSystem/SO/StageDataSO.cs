@@ -32,24 +32,31 @@ public class StageDataSO : ScriptableObject
     {
         List<StageWavePreviewInfo> results = new();
 
-        if (Waves == null) return results;
+        if (Waves == null)
+            return results;
 
         for (int i = 0; i < Waves.Count; i++)
-        {
-            StageWaveEntry wave = Waves[i];
-            MonsterSpawnDataSO spawnData = wave?.SpawnData;
-
-            results.Add(new StageWavePreviewInfo
-            {
-                WaveNumber = i + 1,
-                DisplayName = GetWaveDisplayName(spawnData, i),
-                Monsters = spawnData != null
-                    ? spawnData.GetMonsterPreviewInfos()
-                    : new List<MonsterSpawnPreviewInfo>()
-            });
-        }
+            results.Add(GetWavePreviewInfo(i));
 
         return results;
+    }
+
+    public StageWavePreviewInfo GetWavePreviewInfo(int index)
+    {
+        if (Waves == null || index < 0 || index >= Waves.Count)
+            return null;
+
+        StageWaveEntry wave = Waves[index];
+        MonsterSpawnDataSO spawnData = wave?.SpawnData;
+
+        return new StageWavePreviewInfo
+        {
+            WaveNumber = index + 1,
+            DisplayName = GetWaveDisplayName(spawnData, index),
+            Monsters = spawnData != null
+                ? spawnData.GetMonsterPreviewInfos()
+                : new List<MonsterSpawnPreviewInfo>()
+        };
     }
 
     static string GetWaveDisplayName(MonsterSpawnDataSO spawnData, int waveIndex)

@@ -343,7 +343,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -421}
+  m_AnchoredPosition: {x: 0, y: -399}
   m_SizeDelta: {x: 390, y: 92}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &26442368897717223
@@ -834,8 +834,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -133.54, y: 78}
-  m_SizeDelta: {x: 592.93, y: 310}
+  m_AnchoredPosition: {x: -128.09016, y: 125}
+  m_SizeDelta: {x: 582.0302, y: 310}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2215239989069665047
 CanvasRenderer:
@@ -910,7 +910,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -112}
+  m_AnchoredPosition: {x: 0, y: -54}
   m_SizeDelta: {x: 220, y: 42}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6578085512649709180
@@ -1778,7 +1778,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 274}
+  m_AnchoredPosition: {x: 0, y: 320}
   m_SizeDelta: {x: 860, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4091941835079046497
@@ -2343,7 +2343,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 284.53, y: 76.75}
+  m_AnchoredPosition: {x: 284.53, y: 123.75}
   m_SizeDelta: {x: 243.2, y: 307.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3727029369853205844
@@ -3907,8 +3907,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -220}
-  m_SizeDelta: {x: 860, y: 175}
+  m_AnchoredPosition: {x: 0, y: -198.84}
+  m_SizeDelta: {x: 860, y: 247.68}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1504152638316463901
 CanvasRenderer:

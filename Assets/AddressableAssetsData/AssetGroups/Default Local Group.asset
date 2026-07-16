@@ -121,12 +121,6 @@ MonoBehaviour:
     m_SerializedLabels:
     - HitBox
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 324d0803b52fb8a479b4018ed350935d
-    m_Address: Assets/SO/StageDataSO/Stage_004.asset
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - StageData
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 34b439bf70b80a6409eadecc6be92d68
     m_Address: Assets/Sounds/Free Pack/Hand Gun 2.wav
     m_ReadOnly: 0
@@ -375,12 +369,6 @@ MonoBehaviour:
     m_SerializedLabels:
     - Sound
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: cca91d7e589f6464fbd64ef1b4c1ca70
-    m_Address: Assets/SO/StageDataSO/Stage_006.asset
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - StageData
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: ccb11473b2cf5b2439f0edd3b4d28434
     m_Address: Assets/SO/AttackSo/TestBulletData.asset
     m_ReadOnly: 0
@@ -473,12 +461,6 @@ MonoBehaviour:
     m_SerializedLabels:
     - Effect
     - Effect_Projectile
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: f74847c790c8aec46b983d0142865744
-    m_Address: Assets/SO/StageDataSO/Stage_005.asset
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - StageData
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: f9eb44b85c96be5429737d4dcadbfa3b
     m_Address: Assets/Sounds/Free Pack/Railgun - Shot 6.wav
