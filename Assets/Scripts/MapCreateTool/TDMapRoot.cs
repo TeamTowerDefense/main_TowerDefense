@@ -12,7 +12,7 @@ public sealed class TDMapRoot : MonoBehaviour
     [SerializeField, Min(0.1f)] float cellSize = 2f;
     [SerializeField] float tileY;
 
-    [SerializeField] float surfaceYOffset = 0.5f;
+    [SerializeField] float surfaceYOffset = 1.1f;
 
     [Header("맵 계층")]
     [SerializeField] Transform groundRoot;

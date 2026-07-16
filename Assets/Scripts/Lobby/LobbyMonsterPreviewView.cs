@@ -7,7 +7,6 @@ public class LobbyMonsterPreviewView : MonoBehaviour
     [Header("UI")]
     [SerializeField] Image iconImage;
     [SerializeField] TMP_Text countText;
-    [SerializeField] TMP_Text nameText;
 
     public void Bind(MonsterSpawnPreviewInfo info)
     {
@@ -25,7 +24,6 @@ public class LobbyMonsterPreviewView : MonoBehaviour
         }
 
         if (countText != null) countText.text = $"× {info.Count}";
-        if (nameText != null) nameText.text = info.DisplayName;
     }
 
     public void Clear()
@@ -37,6 +35,5 @@ public class LobbyMonsterPreviewView : MonoBehaviour
         }
 
         if (countText != null) countText.text = string.Empty;
-        if (nameText != null) nameText.text = string.Empty;
     }
 }
