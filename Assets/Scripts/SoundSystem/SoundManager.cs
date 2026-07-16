@@ -20,6 +20,8 @@ public class SoundManager : MonoBehaviour
     [SerializeField] private int lobbyBgmID = 30001;
     [SerializeField] private int stageBgmID = 30002;
 
+    [Header("SFX")]
+    [SerializeField] private AudioMixerGroup sfxMixerGroup;
 
     [Header("Database")]
     [SerializeField]
@@ -155,7 +157,15 @@ public class SoundManager : MonoBehaviour
     {
         SoundPoolObject soundObject = Instantiate(soundPrefab, soundParent);
 
+        AudioSource source = soundObject.AudioSource;
+
+        if (source != null && sfxMixerGroup != null)
+        {
+            source.outputAudioMixerGroup = sfxMixerGroup;
+        }
+
         soundObject.gameObject.SetActive(false);
+
         return soundObject;
     }
 
@@ -466,11 +476,12 @@ public class SoundManager : MonoBehaviour
 
     private void ApplyAndPlayBGM(SoundData soundData, AudioClip clip)
     {
-        if (soundData == null || clip == null)
+        if (soundData == null || soundData == null || clip == null)
             return;
 
-        bgmSource.Stop();  
-        
+        bgmSource.Stop();
+
+        bgmSource.outputAudioMixerGroup = bgmMixerGroup;
         bgmSource.clip = clip;
         bgmSource.volume = soundData.volume;
         bgmSource.pitch = 1f;
