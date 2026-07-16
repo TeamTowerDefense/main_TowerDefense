@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 71c03d9ba2eb41143a0e496070a1eff1, type: 3}
-  m_Name: Wave_203
+  m_Name: Wave_303
   m_EditorClassIdentifier: Assembly-CSharp::WaveDataSO
   WaveName: Wave_203
   SpawnGroups:
@@ -29,8 +29,6 @@ MonoBehaviour:
       Count: 2
     - MonsterData: {fileID: 11400000, guid: febdbf95396b5bb4eaba5cfad2225585, type: 2}
       Count: 1
-    - MonsterData: {fileID: 11400000, guid: febdbf95396b5bb4eaba5cfad2225585, type: 2}
-      Count: 1
     - MonsterData: {fileID: 11400000, guid: 14da851dccbe7334dbd5571a4a181a76, type: 2}
       Count: 4
     elementInterval: 0.8
@@ -47,11 +45,43 @@ MonoBehaviour:
       Count: 2
     - MonsterData: {fileID: 11400000, guid: 14da851dccbe7334dbd5571a4a181a76, type: 2}
       Count: 5
+    - MonsterData: {fileID: 11400000, guid: 22b03763742be7549aa6e8d4342a00f9, type: 2}
+      Count: 2
     - MonsterData: {fileID: 11400000, guid: 180c8cb2b55cb624aa52ef4a16625fa4, type: 2}
       Count: 2
     - MonsterData: {fileID: 11400000, guid: 180c8cb2b55cb624aa52ef4a16625fa4, type: 2}
       Count: 2
     - MonsterData: {fileID: 11400000, guid: febdbf95396b5bb4eaba5cfad2225585, type: 2}
+      Count: 2
+    elementInterval: 0.8
+    Interval: 5
+    StartDelay: 0.2
+  - Elements:
+    - MonsterData: {fileID: 11400000, guid: e4b4ae75212d9744898d1379a00eb534, type: 2}
+      Count: 2
+    - MonsterData: {fileID: 11400000, guid: 180c8cb2b55cb624aa52ef4a16625fa4, type: 2}
+      Count: 1
+    - MonsterData: {fileID: 11400000, guid: febdbf95396b5bb4eaba5cfad2225585, type: 2}
+      Count: 2
+    - MonsterData: {fileID: 11400000, guid: 180c8cb2b55cb624aa52ef4a16625fa4, type: 2}
+      Count: 2
+    - MonsterData: {fileID: 11400000, guid: 14da851dccbe7334dbd5571a4a181a76, type: 2}
+      Count: 5
+    - MonsterData: {fileID: 11400000, guid: febdbf95396b5bb4eaba5cfad2225585, type: 2}
+      Count: 1
+    - MonsterData: {fileID: 11400000, guid: 180c8cb2b55cb624aa52ef4a16625fa4, type: 2}
+      Count: 2
+    - MonsterData: {fileID: 11400000, guid: 180c8cb2b55cb624aa52ef4a16625fa4, type: 2}
+      Count: 2
+    - MonsterData: {fileID: 11400000, guid: febdbf95396b5bb4eaba5cfad2225585, type: 2}
+      Count: 2
+    - MonsterData: {fileID: 11400000, guid: 22b03763742be7549aa6e8d4342a00f9, type: 2}
+      Count: 2
+    elementInterval: 0.8
+    Interval: 6
+    StartDelay: 0.2
+  - Elements:
+    - MonsterData: {fileID: 11400000, guid: 22b03763742be7549aa6e8d4342a00f9, type: 2}
       Count: 2
     elementInterval: 0.8
     Interval: 5

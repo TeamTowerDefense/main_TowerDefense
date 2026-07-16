@@ -18,16 +18,23 @@ MonoBehaviour:
   Icon: {fileID: 21300000, guid: de5afc594137f4aceb71a73abfe8a719, type: 3}
   LobbyOrder: 0
   MapPreview: {fileID: 21300000, guid: 622e7b0206928a44ba7929a9c5347387, type: 3}
-  StartResource: 100
+  StartResource: 300
   TowerLimit: 10
   BaseHp: 10
   Waves:
-  - SpawnData: {fileID: 11400000, guid: 49be76b0f7d6ffc4d951eb4bbb0ef058, type: 2}
+  - SpawnData: {fileID: 11400000, guid: 8981e3291f5e272459d695e4d7310aaf, type: 2}
     PrepareTime: 10
     CanSkipPrepare: 0
     AllowBuildDuringWave: 1
-  NextStageIds:
-  - Stage_004
+  - SpawnData: {fileID: 11400000, guid: 014e35ab7733cf844991b9424ed489d1, type: 2}
+    PrepareTime: 10
+    CanSkipPrepare: 0
+    AllowBuildDuringWave: 1
+  - SpawnData: {fileID: 11400000, guid: 90bc7ca05b8ac37488879d27af924287, type: 2}
+    PrepareTime: 10
+    CanSkipPrepare: 0
+    AllowBuildDuringWave: 1
+  NextStageIds: []
   StarConditions:
   - {fileID: 11400000, guid: 048e6764a0c32cf45827982ee668e164, type: 2}
   - {fileID: 11400000, guid: 6938b1100201b0c469d671ed3543779b, type: 2}

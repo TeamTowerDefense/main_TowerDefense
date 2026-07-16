@@ -44,7 +44,7 @@ public class Slot_TowerQuickSlot : MonoBehaviour
 
         if (slotIcon != null)
         {
-            //slotIcon.sprite = data.towerIcon;
+            slotIcon.sprite = data.buildingIcon;
             slotIcon.enabled = true;
         }
 

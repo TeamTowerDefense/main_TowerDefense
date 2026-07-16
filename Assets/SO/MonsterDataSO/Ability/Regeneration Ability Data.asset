@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c4425cb6a087cc34d940f2899f93569c, type: 3}
-  m_Name: Regen Ability Data
+  m_Name: Regeneration Ability Data
   m_EditorClassIdentifier: Assembly-CSharp::RegenAbilityData
-  regenAmount: 20
+  regenAmount: 8
   regenInterval: 1

@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Monster/Abilities/Regen")]
-public class RegenAbilityData : AbilityData
+public class RegenerationAbilityData : AbilityData
 {
     public override AbilityType Type => AbilityType.Regen;
 
