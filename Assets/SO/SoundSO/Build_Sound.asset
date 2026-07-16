@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 023d9b812dd1f304e94403e9cffc625b, type: 3}
-  m_Name: SoundData
+  m_Name: Build_Sound
   m_EditorClassIdentifier: Assembly-CSharp::SoundData
-  soundID: 0
+  soundID: 20001
   audioClipReference:
-    m_AssetGUID: 
+    m_AssetGUID: 7c9263fbea4d604418631d1126d2042c
     m_SubObjectName: 
     m_SubObjectType: 
     m_SubObjectGUID: 

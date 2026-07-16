@@ -215,18 +215,11 @@ public class AreaHitBox : PoolableObject
             (effectPF, spawnPosition, Quaternion.identity, ObjectPoolManager.Instance.GetEffectParent());
 
         if (effect == null)
-        {
-            Debug.LogError(
-                $"[AreaHitBox] PoolEffect Spawn 실패. " +
-                $"Prefab={effectPF.name}, ID={effectID}. " +
-                $"프리팹 루트에 PoolEffect가 있는지 확인하세요."
-            );
-
             return;
-        }
+        
 
         // 몬스터 이동을 따라가야 하는 짧은 피격 이펙트라면 부모 연결
-        effect.transform.SetParent(monster.transform, true);
+        effect.transform.SetParent(monster.transform, false);
         effect.transform.localPosition = Vector3.up * hitBoxData.hitEffectYOffset;
         effect.transform.localRotation = Quaternion.identity;
 

@@ -257,6 +257,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - Sound
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7c9263fbea4d604418631d1126d2042c
+    m_Address: Assets/CelerisLab/CompleteUISFX/crafting_and_upgrading/crafting_start_05.wav
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Sound
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 7d156b8a5b340cd46bcf0a76557dd2dd
     m_Address: Assets/Sounds/Free Pack/Dragon Spit Fire 1.wav
     m_ReadOnly: 0
