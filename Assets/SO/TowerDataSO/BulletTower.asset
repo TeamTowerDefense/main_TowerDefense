@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TowerData
   buildingID: 0
   buildingName: "\uBE44\uBC84"
+  buildingIcon: {fileID: 21300000, guid: cbd106d5e5f335542987128c052202b3, type: 3}
   buildingPrefab: {fileID: 8340965744140817121, guid: 6bb5d459c8ae1a7438ec6c9e684d87b1, type: 3}
   cost: 50
   isDestructible: 1
@@ -24,7 +25,7 @@ MonoBehaviour:
   inValidStateMaterial: {fileID: 2100000, guid: 4a85c9e89378a73489c64b9eede43a1b, type: 2}
   placeVFX: {fileID: -7969546562051743012, guid: 201eafd12c4c6b34396a2be032e4a7c9, type: 3}
   keywords: []
-  damage: 20
+  damage: 25
   attackRange: 5
   attackInterval: 1
   attackSpeed: 1
