@@ -18,7 +18,7 @@ public sealed class TDStageSceneBuilderWindow : EditorWindow
 
     static readonly string[] ExcludedRootNames =
     {
-        "ObjectPoolManager",
+        //"ObjectPoolManager",
         "LevelDesignTool",
         "TestTile",
         "d",
