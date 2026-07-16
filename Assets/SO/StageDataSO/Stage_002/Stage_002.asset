@@ -22,11 +22,15 @@ MonoBehaviour:
   TowerLimit: 10
   BaseHp: 10
   Waves:
-  - SpawnData: {fileID: 11400000, guid: 49be76b0f7d6ffc4d951eb4bbb0ef058, type: 2}
+  - SpawnData: {fileID: 11400000, guid: 286aaa22c74286740bf4187797531664, type: 2}
     PrepareTime: 10
     CanSkipPrepare: 0
     AllowBuildDuringWave: 1
-  - SpawnData: {fileID: 11400000, guid: bd0f43978dc765d48ae57b2d7e98b477, type: 2}
+  - SpawnData: {fileID: 11400000, guid: 9980f8fd684643145b0165f3c5a51a90, type: 2}
+    PrepareTime: 10
+    CanSkipPrepare: 0
+    AllowBuildDuringWave: 1
+  - SpawnData: {fileID: 11400000, guid: b89abee9d31d75d40ac5a552b6207c50, type: 2}
     PrepareTime: 10
     CanSkipPrepare: 0
     AllowBuildDuringWave: 1

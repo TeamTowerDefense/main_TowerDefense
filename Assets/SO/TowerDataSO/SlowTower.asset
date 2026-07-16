@@ -16,7 +16,7 @@ MonoBehaviour:
   buildingName: "\uB3FC\uC9C0"
   buildingIcon: {fileID: 21300000, guid: 95391129e20126a42b57bf27476eaa0a, type: 3}
   buildingPrefab: {fileID: 7107717812107533692, guid: 829fd095e4270ee48a4002de72905758, type: 3}
-  cost: 150
+  cost: 125
   isDestructible: 1
   baseFootprint:
   - {x: 0, y: 0}
@@ -26,7 +26,7 @@ MonoBehaviour:
   placeVFX: {fileID: -7969546562051743012, guid: 201eafd12c4c6b34396a2be032e4a7c9, type: 3}
   keywords: []
   damage: 0
-  attackRange: 2
+  attackRange: 4
   attackInterval: 1
   attackSpeed: 0.5
   monsterLayer:
