@@ -1,5 +1,4 @@
-﻿using JetBrains.Annotations;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,16 +6,51 @@ using UnityEngine;
 public class MonsterSpawnDataSO : ScriptableObject
 {
     public string WaveName;
-    public List<MonsterSpawnGroup> SpawnGroups;
+    public List<MonsterSpawnGroup> SpawnGroups = new();
     public int Reward;
+
+    public bool IsEmpty => SpawnGroups == null || SpawnGroups.Count == 0;
 
     public Queue<MonsterSpawnGroup> CreateQueue()
     {
-        if (SpawnGroups == null || SpawnGroups.Count == 0) return new Queue<MonsterSpawnGroup>();
+        if (IsEmpty) return new Queue<MonsterSpawnGroup>();
         return new Queue<MonsterSpawnGroup>(SpawnGroups);
     }
 
-    public bool IsEmpty => SpawnGroups == null || SpawnGroups.Count <= 0;
+    public List<MonsterSpawnPreviewInfo> GetMonsterPreviewInfos()
+    {
+        List<MonsterSpawnPreviewInfo> results = new();
+        Dictionary<MonsterData, MonsterSpawnPreviewInfo> lookup = new();
+
+        if (SpawnGroups == null) return results;
+
+        foreach (MonsterSpawnGroup group in SpawnGroups)
+        {
+            if (group?.Elements == null) continue;
+
+            foreach (MonsterSpawnElement element in group.Elements)
+            {
+                if (element?.MonsterData == null || element.Count <= 0) continue;
+
+                if (lookup.TryGetValue(element.MonsterData, out MonsterSpawnPreviewInfo info))
+                {
+                    info.Count += element.Count;
+                    continue;
+                }
+
+                info = new MonsterSpawnPreviewInfo
+                {
+                    MonsterData = element.MonsterData,
+                    Count = element.Count
+                };
+
+                lookup.Add(element.MonsterData, info);
+                results.Add(info);
+            }
+        }
+
+        return results;
+    }
 }
 
 [Serializable]
@@ -29,8 +63,17 @@ public class MonsterSpawnElement
 [Serializable]
 public class MonsterSpawnGroup
 {
-    public List<MonsterSpawnElement> Elements;
-    public float elementInterval = 0;
+    public List<MonsterSpawnElement> Elements = new();
+    public float elementInterval;
     public float Interval = 1f;
-    public float StartDelay = 0f;
+    public float StartDelay;
+}
+
+public class MonsterSpawnPreviewInfo
+{
+    public MonsterData MonsterData;
+    public int Count;
+
+    public string DisplayName => MonsterData != null ? MonsterData.monsterName : string.Empty;
+    public Sprite Icon => MonsterData != null ? MonsterData.Icon : null;
 }

@@ -9,7 +9,7 @@ public sealed class TDMapRoot : MonoBehaviour
     [SerializeField] TDMapTilePaletteSO palette;
 
     [Header("그리드")]
-    [SerializeField, Min(0.1f)] float cellSize = 1f;
+    [SerializeField, Min(0.1f)] float cellSize = 2f;
     [SerializeField] float tileY;
 
     [SerializeField] float surfaceYOffset = 0.5f;
