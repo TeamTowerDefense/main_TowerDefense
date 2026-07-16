@@ -72,6 +72,11 @@ MonoBehaviour:
     m_SerializedLabels:
     - Projectile
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1aaad5bf94ba0ed47aaa0ffbafcb08e2
+    m_Address: Assets/Sounds/SubFire Kick - Nova Sound.wav
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 1b55dec9921f0e4439f638a5cb2a954f
     m_Address: Assets/Prefabs/Projectile/Projectiles_Luncher.prefab
     m_ReadOnly: 0
@@ -155,6 +160,12 @@ MonoBehaviour:
   - m_GUID: 48cde60d3a3d9412caeaf949b6364160
     m_Address: Assets/asset-Store/Free_Fireworks__44.1k_16bit/Burst Fireworks - Nova
       Sound.wav
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Sound
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4be257afb5987574b8d5cb2bd042c798
+    m_Address: Assets/CelerisLab/CompleteUISFX/crafting_and_upgrading/crafting_start_02.wav
     m_ReadOnly: 0
     m_SerializedLabels:
     - Sound
@@ -251,6 +262,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - Sound
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7c9263fbea4d604418631d1126d2042c
+    m_Address: Assets/CelerisLab/CompleteUISFX/crafting_and_upgrading/crafting_start_05.wav
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Sound
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 7d156b8a5b340cd46bcf0a76557dd2dd
     m_Address: Assets/Sounds/Free Pack/Dragon Spit Fire 1.wav
     m_ReadOnly: 0
@@ -331,6 +348,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - StageData
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ac7c9d18a915f094c92039c0b624d4cb
+    m_Address: Assets/CelerisLab/CompleteUISFX/inventory_and_item_management/crafting_item_04.wav
+    m_ReadOnly: 0
+    m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: adcac75087a17704ca6c0c3b15bc3aa5
     m_Address: Assets/Sounds/Free Pack/Magic Spell - Sleeping spell 1.wav

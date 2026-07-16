@@ -3,11 +3,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.Audio;
 using UnityEngine.ResourceManagement.AsyncOperations;
+using UnityEngine.SceneManagement;
 
 public class SoundManager : MonoBehaviour
 {
     public static SoundManager Instance { get; private set; }
+
+    [Header("BGM")]
+    [SerializeField] private AudioSource bgmSource;
+    [SerializeField] private AudioMixerGroup bgmMixerGroup;
+
+    private int currentBgmID = -1;
+    [Header("Scene BGM")]
+    [SerializeField] private int lobbyBgmID = 30001;
+    [SerializeField] private int stageBgmID = 30002;
+
+    [Header("SFX")]
+    [SerializeField] private AudioMixerGroup sfxMixerGroup;
 
     [Header("Database")]
     [SerializeField]
@@ -19,6 +33,8 @@ public class SoundManager : MonoBehaviour
 
     [SerializeField]
     private Transform soundParent;
+
+   
 
     [SerializeField]
     private int initialPoolSize = 20;
@@ -35,27 +51,16 @@ public class SoundManager : MonoBehaviour
     private readonly HashSet<int> loadingSoundIDs = new HashSet<int>();
 
     private void Awake()
-    {
-        Debug.Log(
-       $"[SoundManager] Awake 시작 " +
-       $"Object={name}, Instance={Instance}");
-
+    {;
         if (Instance != null && Instance != this)
         {
-            Debug.LogWarning(
-                $"[SoundManager] 중복 인스턴스 제거: {name}");
-
             Destroy(gameObject);
             return;
         }
 
         Instance = this;
 
-        Debug.Log(
-            $"[SoundManager] Instance 등록 완료: {Instance.name}");
-
-        //DontDestroyOnLoad(gameObject);
-
+        Debug.Log($"[SoundManager] Instance 등록 완료: {Instance.name}");
         BuildSoundTable();
         CreateInitialPool();
     }
@@ -63,6 +68,46 @@ public class SoundManager : MonoBehaviour
     private void Start()
     {
         PreloadAllSounds();
+        Scene currentScene = SceneManager.GetActiveScene();
+
+        OnSceneLoaded(currentScene, LoadSceneMode.Single);
+    }
+
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        Debug.Log(
+        $"[BGM Scene] 씬 로드됨. Scene={scene.name}");
+
+        switch (scene.name)
+        {
+            case "BootStrap":
+            case "Loading...":
+            case "Lobby":
+                PlayBGM(lobbyBgmID);
+                break;
+
+            case "Stage_001":
+            case "Stage_002":
+            case "Stage_003":
+                PlayBGM(stageBgmID);
+                break;
+
+            default:
+                Debug.Log(
+                    $"[BGM Scene] 지정된 BGM이 없는 씬입니다. " +
+                    $"Scene={scene.name}");
+                break;
+        }
     }
 
     private void BuildSoundTable()
@@ -112,7 +157,15 @@ public class SoundManager : MonoBehaviour
     {
         SoundPoolObject soundObject = Instantiate(soundPrefab, soundParent);
 
+        AudioSource source = soundObject.AudioSource;
+
+        if (source != null && sfxMixerGroup != null)
+        {
+            source.outputAudioMixerGroup = sfxMixerGroup;
+        }
+
         soundObject.gameObject.SetActive(false);
+
         return soundObject;
     }
 
@@ -332,6 +385,151 @@ public class SoundManager : MonoBehaviour
         clipTable[soundID] = handle.Result;
         clipHandles[soundID] = handle;
     }
+
+    public void PlayBGM(int soundID)
+    {
+        if(soundID <= 0)
+        {
+            Debug.LogWarning($"[BGM] 유효하지 않은 ID입니다. ID={soundID}");
+            return;
+        }
+        if (bgmSource == null)
+        {
+            Debug.LogError(
+                "[BGM] BGM AudioSource가 연결되지 않았습니다.");
+            return;
+        }
+
+        if (currentBgmID == soundID && bgmSource.isPlaying)
+        {
+            Debug.Log($"[BGM] 이미 재생 중입니다. ID={soundID}");
+            return;
+        }
+
+        if (!soundTable.TryGetValue(soundID, out SoundData soundData))
+        {
+            Debug.LogError($"[BGM] SoundTable에 ID가 없습니다. ID={soundID}");
+            return;
+        }
+
+        if (clipTable.TryGetValue(soundID, out AudioClip loadedClip))
+        {
+            ApplyAndPlayBGM(soundData, loadedClip);
+
+            return;
+        }
+
+        StartCoroutine(LoadAndPlayBGMCoroutine(soundData));
+
+    }
+
+    private IEnumerator LoadAndPlayBGMCoroutine(SoundData soundData)
+    {
+        if (soundData == null)
+            yield break;
+
+        int soundID = soundData.soundID;
+
+        if (soundData.audioClipReference == null || !soundData.audioClipReference.RuntimeKeyIsValid())
+        {
+            Debug.LogError($"[BGM] Addressable Reference가 유효하지 않습니다. ID={soundID}");
+            yield break;
+        }
+
+        if (loadingSoundIDs.Contains(soundID))
+        {
+            while(loadingSoundIDs.Contains(soundID))
+                yield return null;
+
+            if (clipTable.TryGetValue(soundID, out AudioClip cachedClip))
+            {
+                ApplyAndPlayBGM(soundData, cachedClip);
+            }
+
+            yield break;
+        }
+
+        loadingSoundIDs.Add(soundID);
+
+        AsyncOperationHandle<AudioClip> handle = soundData.audioClipReference.LoadAssetAsync<AudioClip>();
+
+        yield return handle;
+
+        if (handle.Status != AsyncOperationStatus.Succeeded)
+        {
+            Debug.LogError($"[BGM] AudioClip 로드 실패. ID={soundID}, Exception={handle.OperationException}");
+            yield break;
+        }
+
+        AudioClip clip = handle.Result;
+
+        if (clip == null)
+        {
+            Debug.LogError($"[BGM] 로드 결과가 null입니다. ID={soundID}");
+            yield break;
+        }
+        clipTable[soundID] = clip;
+        clipHandles[soundID] = handle;
+
+        ApplyAndPlayBGM(soundData, clip);
+    }
+
+    private void ApplyAndPlayBGM(SoundData soundData, AudioClip clip)
+    {
+        if (soundData == null || soundData == null || clip == null)
+            return;
+
+        bgmSource.Stop();
+
+        bgmSource.outputAudioMixerGroup = bgmMixerGroup;
+        bgmSource.clip = clip;
+        bgmSource.volume = soundData.volume;
+        bgmSource.pitch = 1f;
+        bgmSource.loop = true;
+        bgmSource.spatialBlend = 0f;
+
+        if (bgmMixerGroup != null)
+        {
+            bgmSource.outputAudioMixerGroup =
+                bgmMixerGroup;
+        }
+
+        currentBgmID = soundData.soundID;
+
+        bgmSource.Play();
+
+        Debug.Log($"[BGM] 재생 시작 ID={currentBgmID}, Clip={clip.name}, " +
+            $"Volume={bgmSource.volume}, IsPlaying={bgmSource.isPlaying}");
+    }
+
+    public void StopBGM()
+    {
+        if (bgmSource == null)
+            return;
+
+        bgmSource.Stop();
+        bgmSource.clip = null;
+        currentBgmID = -1;
+
+        Debug.Log("[BGM] 재생 정지");
+    }
+
+    public void PauseBGM()
+    {
+        if (bgmSource != null && bgmSource.isPlaying)
+        {
+            bgmSource.Pause();
+        }
+    }
+
+    public void ResumeBGM()
+    {
+        if (bgmSource != null && bgmSource.clip != null)
+        {
+            bgmSource.UnPause();
+        }
+    }
+
     private void OnDestroy()
     {
         if (Instance == this)
