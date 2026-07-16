@@ -73,6 +73,8 @@ public static class TDGridMapPainter
     static bool paintEnabled;
     static bool drawGrid = true;
 
+    static int defaultCellSize = 2;
+
     public static TDMapRoot MapRoot
     {
         get => mapRoot;
@@ -604,7 +606,7 @@ public static class TDGridMapPainter
         GameObject rootObject = new("TD_MapRoot");
         Undo.RegisterCreatedObjectUndo(rootObject, "TD MapRoot 생성");
         mapRoot = Undo.AddComponent<TDMapRoot>(rootObject);
-        mapRoot.ConfigureGrid(1f, 0f);
+        mapRoot.ConfigureGrid(defaultCellSize, 0f);
         if (palette) mapRoot.SetPalette(palette);
 
         EnsureHierarchy();
