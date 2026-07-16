@@ -468,6 +468,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7290de690bd60e7409a7393b1768352a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SoundManager
+  bgmSource: {fileID: 0}
+  bgmMixerGroup: {fileID: 0}
+  lobbyBgmID: 30001
+  stageBgmID: 30002
   soundDB: {fileID: 11400000, guid: bab62b649eceffb47963b75f89d079cd, type: 2}
   soundPrefab: {fileID: 1381401195}
   soundParent: {fileID: 905434196}

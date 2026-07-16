@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SoundData
   soundID: 20002
   audioClipReference:
-    m_AssetGUID: 
+    m_AssetGUID: 1aaad5bf94ba0ed47aaa0ffbafcb08e2
     m_SubObjectName: 
     m_SubObjectType: 
     m_SubObjectGUID: 
-    m_EditorAssetChanged: 0
+    m_EditorAssetChanged: 1
   volume: 1
   pitchRange: {x: 1, y: 1}
   spatialBlend: 1
