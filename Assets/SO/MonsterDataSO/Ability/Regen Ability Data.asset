@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Regen Ability Data
   m_EditorClassIdentifier: Assembly-CSharp::RegenAbilityData
   regenAmount: 20
-  regenInterval: 1
+  regenInterval: 0.5

@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Heal Ability Data
   m_EditorClassIdentifier: Assembly-CSharp::HealAbilityData
   healAmount: 80
-  healRange: 3
+  healRange: 4
   healCooldown: 2

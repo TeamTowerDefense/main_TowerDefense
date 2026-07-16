@@ -14,9 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MonsterData
   monsterName: BigSlime
   monsterId: 2
+  Icon: {fileID: 0}
   Prefab: {fileID: 4253210182481893339, guid: d71c56f2e6af1ba449a0a11217b143a4, type: 3}
   maxHP: 300
-  speed: 1
+  speed: 1.75
   defense: 0
   Att: 0
   LeakDamage: 3

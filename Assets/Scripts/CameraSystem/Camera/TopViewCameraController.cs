@@ -190,11 +190,14 @@ public class TopViewCameraController : MonoBehaviour, ICameraModule
         bool outsideX = position.x < bounds.min.x || position.x > bounds.max.x;
         bool outsideZ = position.z < bounds.min.z || position.z > bounds.max.z;
 
+        position.x = bounds.center.x;
+        position.z = bounds.center.z;
+
+        topViewTarget.position = position;
+
         if (outsideX || outsideZ)
         {
-            position.x = bounds.center.x;
-            position.z = bounds.center.z;
-            topViewTarget.position = position;
+
         }
 
         startPositionResolved = true;

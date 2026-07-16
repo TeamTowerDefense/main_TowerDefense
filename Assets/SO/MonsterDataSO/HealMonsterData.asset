@@ -14,8 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MonsterData
   monsterName: Mushroom
   monsterId: 1
+  Icon: {fileID: 0}
   Prefab: {fileID: 6012647353202847045, guid: 903d63fff4348ab4790c4193d8e90046, type: 3}
-  maxHP: 80
+  maxHP: 85
   speed: 2
   defense: 0
   Att: 0
@@ -30,5 +31,5 @@ MonoBehaviour:
   abilities:
   - {fileID: 11400000, guid: 72baa0d7923bcd248baa4fb18da071f2, type: 2}
   heightOffset: 0
-  amount: 0
+  amount: 12
   defaultKeywords: []

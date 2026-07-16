@@ -7,6 +7,7 @@ public class BuildingData : ScriptableObject
     [Header("기본 정보")]
     public int buildingID = 0;
     public string buildingName = "";
+    public Sprite buildingIcon;
     public GameObject buildingPrefab; 
 
     [Header("경제 데이터")]
