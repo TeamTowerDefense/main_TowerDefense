@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MonsterData
   monsterName: Mushroom
   monsterId: 1
-  Icon: {fileID: 0}
+  Icon: {fileID: 49821281, guid: 2542415bc1d153e40ba1498ecfae3b57, type: 3}
   Prefab: {fileID: 6012647353202847045, guid: 903d63fff4348ab4790c4193d8e90046, type: 3}
   maxHP: 85
   speed: 2

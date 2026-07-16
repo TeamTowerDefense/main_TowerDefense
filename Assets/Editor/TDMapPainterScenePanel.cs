@@ -64,12 +64,11 @@ public static class TDGridMapPainter
     static GameObject previewRoot;
     static GameObject previewPrefab;
     static Vector2Int? lastPaintedCell;
-    static Vector3? lastDecorationPosition;
+    static Vector2Int? lastDecorationCell;
 
     static float conversionCellSize;
     static float rotationY;
     static float surfaceOffset;
-    static float decorationSpacing = 0.5f;
     static int gridExtent = 20;
     static bool paintEnabled;
     static bool drawGrid = true;
@@ -128,7 +127,6 @@ public static class TDGridMapPainter
     public static TDMapCellType SelectedType => selectedAsset.Type;
     public static float RotationY => rotationY;
     public static float SurfaceOffset { get => surfaceOffset; set => surfaceOffset = value; }
-    public static float DecorationSpacing { get => decorationSpacing; set => decorationSpacing = value; }
     public static bool DrawGrid { get => drawGrid; set => drawGrid = value; }
 
     public static bool PaintEnabled
@@ -486,10 +484,6 @@ public static class TDGridMapPainter
         }
 
         SurfaceOffset = EditorGUILayout.FloatField("표면 Offset", SurfaceOffset);
-        DecorationSpacing = Mathf.Max(
-            0.05f,
-            EditorGUILayout.FloatField("장식 드래그 간격", DecorationSpacing));
-
         DrawGrid = EditorGUILayout.Toggle("그리드 표시", DrawGrid);
 
         DrawCellSizeConverter();
@@ -739,11 +733,10 @@ public static class TDGridMapPainter
             if (erase) Erase(currentEvent.mousePosition, cell);
             else if (selectedAsset.Type == TDMapCellType.Decoration)
             {
-                if (!lastDecorationPosition.HasValue ||
-                    Vector3.Distance(lastDecorationPosition.Value, position) >= decorationSpacing)
+                if (lastDecorationCell != cell)
                 {
                     PlaceDecoration(selectedAsset, position, normal, cell);
-                    lastDecorationPosition = position;
+                    lastDecorationCell = cell;
                 }
             }
             else if (selectedAsset.Type is TDMapCellType.Spawn or TDMapCellType.Base)
@@ -829,26 +822,27 @@ public static class TDGridMapPainter
     {
         Ray ray = HandleUtility.GUIPointToWorldRay(mousePosition);
 
-        if (type is TDMapCellType.Spawn or TDMapCellType.Base or TDMapCellType.Decoration)
+        if (type == TDMapCellType.Decoration)
+            return TryGetDecorationPlacement(ray, out position, out normal, out cell);
+
+        if (type is TDMapCellType.Spawn or TDMapCellType.Base)
         {
-            RaycastHit[] hits = Physics.RaycastAll(ray, 10000f, ~0, QueryTriggerInteraction.Ignore);
-            Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
-
-            for (int i = 0; i < hits.Length; i++)
+            if (TryGetMapSurfaceHit(ray, out RaycastHit hit, out _))
             {
-                TDMapCellMarker marker = hits[i].collider.GetComponentInParent<TDMapCellMarker>();
-                if (!marker || marker.IsDecoration || !marker.transform.IsChildOf(mapRoot.transform)) continue;
+                cell = mapRoot.WorldToGrid(hit.point);
+                normal = hit.normal.sqrMagnitude > 0.0001f ? hit.normal.normalized : mapRoot.transform.up;
 
-                cell = mapRoot.WorldToGrid(hits[i].point);
-                normal = hits[i].normal;
+                Vector3 center = mapRoot.GridToWorld(cell);
+                position = center + mapRoot.transform.up * GetSurfaceHeightAlongMapUp(hit.point, center);
+                position += normal * surfaceOffset;
+                return true;
+            }
 
-                if (type == TDMapCellType.Decoration) position = hits[i].point + normal * surfaceOffset;
-                else
-                {
-                    Vector3 center = mapRoot.GridToWorld(cell);
-                    position = new Vector3(center.x, hits[i].point.y + surfaceOffset, center.z);
-                }
-
+            if (TryGetMapSurfaceBounds(ray, out Vector3 boundsPosition, out normal, out cell))
+            {
+                Vector3 center = mapRoot.GridToWorld(cell);
+                position = center + mapRoot.transform.up * GetSurfaceHeightAlongMapUp(boundsPosition, center);
+                position += normal * surfaceOffset;
                 return true;
             }
         }
@@ -858,7 +852,7 @@ public static class TDGridMapPainter
         if (!plane.Raycast(ray, out float distance))
         {
             position = default;
-            normal = Vector3.up;
+            normal = mapRoot.transform.up;
             cell = default;
             return false;
         }
@@ -872,10 +866,233 @@ public static class TDGridMapPainter
                 : mapRoot.GridToWorld(cell);
 
         position = snappedPosition + mapRoot.transform.up * surfaceOffset;
-
         normal = mapRoot.transform.up;
         return true;
     }
+    static bool TryGetDecorationPlacement(
+       Ray ray,
+       out Vector3 position,
+       out Vector3 normal,
+       out Vector2Int cell)
+    {
+        position = default;
+        normal = mapRoot ? mapRoot.transform.up : Vector3.up;
+        cell = default;
+
+        if (!mapRoot)
+            return false;
+
+        Plane plane = new(
+            mapRoot.transform.up,
+            mapRoot.GridToWorld(Vector2Int.zero));
+
+        if (!plane.Raycast(ray, out float distance)) return false;
+
+        Vector3 point = ray.GetPoint(distance);
+        cell = mapRoot.WorldToGrid(point);
+
+        if (FindEndpointAtCell(cell)) return false;
+        if (FindDecorationAtCell(cell)) return false;
+
+        position = mapRoot.GridToWorld(cell);
+        normal = mapRoot.transform.up.normalized;
+        return true;
+    }
+
+    static TDMapCellMarker FindDecorationAtCell(Vector2Int cell)
+    {
+        if (!mapRoot || !mapRoot.DecorationRoot)
+            return null;
+
+        TDMapCellMarker[] markers =
+            mapRoot.DecorationRoot.GetComponentsInChildren<TDMapCellMarker>(true);
+
+        for (int i = 0; i < markers.Length; i++)
+        {
+            TDMapCellMarker marker = markers[i];
+
+            if (!marker || !marker.IsDecoration)
+                continue;
+
+            if (marker.GridPosition == cell)
+                return marker;
+        }
+
+        return null;
+    }
+
+    static TDMapCellMarker FindEndpointAtCell(Vector2Int cell)
+    {
+        if (!mapRoot || !mapRoot.SpawnBaseRoot)
+            return null;
+
+        TDMapCellMarker[] markers =
+            mapRoot.SpawnBaseRoot.GetComponentsInChildren<TDMapCellMarker>(true);
+
+        for (int i = 0; i < markers.Length; i++)
+        {
+            TDMapCellMarker marker = markers[i];
+
+            if (!marker) continue;
+            if (!marker.IsSpawn && !marker.IsBase) continue;
+
+            if (marker.GridPosition == cell) return marker;
+        }
+
+        return null;
+    }
+
+    static TDMapCellMarker FindDecorationSurfaceCell(Vector2Int cell)
+    {
+        TDMapCellMarker terrain = mapRoot.FindTerrainCell(cell);
+
+        if (terrain && !terrain.IsDecoration)
+            return terrain;
+
+        TDMapCellMarker[] markers =
+            mapRoot.GetComponentsInChildren<TDMapCellMarker>(true);
+
+        for (int i = 0; i < markers.Length; i++)
+        {
+            TDMapCellMarker marker = markers[i];
+
+            if (!marker || marker.IsDecoration) continue;
+            if (marker.GridPosition != cell) continue;
+
+            if (marker.IsGround ||
+                marker.IsPath ||
+                marker.IsSpawn ||
+                marker.IsBase)
+            {
+                return marker;
+            }
+        }
+
+        return null;
+    }
+    static bool TryGetMapSurfaceHit(Ray ray, out RaycastHit bestHit, out TDMapCellMarker bestMarker)
+    {
+        bestHit = default;
+        bestMarker = null;
+
+        if (!mapRoot) return false;
+
+        Physics.SyncTransforms();
+
+        Collider[] colliders = mapRoot.GetComponentsInChildren<Collider>(true);
+        float nearestDistance = float.PositiveInfinity;
+
+        for (int i = 0; i < colliders.Length; i++)
+        {
+            Collider collider = colliders[i];
+
+            if (!collider || !collider.enabled || !collider.gameObject.activeInHierarchy)
+                continue;
+
+            TDMapCellMarker marker = FindMapCellMarker(collider.transform);
+
+            if (!IsValidDecorationSurface(marker))
+                continue;
+
+            if (!collider.Raycast(ray, out RaycastHit hit, 10000f))
+                continue;
+
+            if (hit.distance < 0f || hit.distance >= nearestDistance)
+                continue;
+
+            nearestDistance = hit.distance;
+            bestHit = hit;
+            bestMarker = marker;
+        }
+
+        return bestMarker != null;
+    }
+
+    static TDMapCellMarker FindMapCellMarker(Transform source)
+    {
+        if (!mapRoot || !source) return null;
+
+        Transform current = source;
+
+        while (current && current != mapRoot.transform)
+        {
+            if (current.TryGetComponent(out TDMapCellMarker marker))
+                return marker;
+
+            current = current.parent;
+        }
+
+        return null;
+    }
+
+    static bool IsValidDecorationSurface(TDMapCellMarker marker)
+    {
+        if (!marker || !mapRoot) return false;
+        if (marker.IsDecoration) return false;
+
+        return marker.transform.IsChildOf(mapRoot.transform);
+    }
+
+    static bool TryGetMapSurfaceBounds(
+        Ray ray,
+        out Vector3 position,
+        out Vector3 normal,
+        out Vector2Int cell)
+    {
+        position = default;
+        normal = mapRoot ? mapRoot.transform.up : Vector3.up;
+        cell = default;
+
+        if (!mapRoot) return false;
+
+        TDMapCellMarker[] markers = mapRoot.GetComponentsInChildren<TDMapCellMarker>(true);
+        Vector3 mapUp = mapRoot.transform.up.normalized;
+        float nearestDistance = float.PositiveInfinity;
+        bool found = false;
+
+        for (int i = 0; i < markers.Length; i++)
+        {
+            TDMapCellMarker marker = markers[i];
+
+            if (!IsValidDecorationSurface(marker))
+                continue;
+
+            if (!marker.TryGetWorldBounds(out Bounds bounds))
+                continue;
+
+            float topExtent =
+                Mathf.Abs(mapUp.x) * bounds.extents.x +
+                Mathf.Abs(mapUp.y) * bounds.extents.y +
+                Mathf.Abs(mapUp.z) * bounds.extents.z;
+
+            Vector3 topPoint = bounds.center + mapUp * topExtent;
+            Plane topPlane = new(mapUp, topPoint);
+
+            if (!topPlane.Raycast(ray, out float distance))
+                continue;
+
+            if (distance < 0f || distance >= nearestDistance)
+                continue;
+
+            Vector3 hitPoint = ray.GetPoint(distance);
+            Bounds expandedBounds = bounds;
+            expandedBounds.Expand(0.02f);
+
+            if (!expandedBounds.Contains(hitPoint))
+                continue;
+
+            nearestDistance = distance;
+            position = hitPoint;
+            normal = mapUp;
+            cell = mapRoot.WorldToGrid(hitPoint);
+            found = true;
+        }
+
+        return found;
+    }
+
+    static float GetSurfaceHeightAlongMapUp(Vector3 surfacePoint, Vector3 cellCenter)
+        => Vector3.Dot(surfacePoint - cellCenter, mapRoot.transform.up);
 
     static void DrawSceneGrid()
     {
@@ -954,33 +1171,264 @@ public static class TDGridMapPainter
     static void PlaceDecoration(TDMapPainterAsset asset, Vector3 position, Vector3 normal, Vector2Int cell)
     {
         EnsureHierarchy();
+
+        if (!mapRoot || !mapRoot.DecorationRoot || !asset.Prefab) return;
+        if (FindEndpointAtCell(cell)) return;
+        if (FindDecorationAtCell(cell)) return;
+
         TDDecorationPaletteEntry entry = asset.Decoration;
 
         GameObject root = new($"{asset.Name}_{mapRoot.DecorationRoot.childCount:000}");
+
         Undo.RegisterCreatedObjectUndo(root, "Decoration 배치");
         Undo.SetTransformParent(root.transform, mapRoot.DecorationRoot, "Decoration 부모 설정");
 
         float randomRotation = entry != null ? entry.GetRandomYRotation() : 0f;
-        float scale = entry != null ? entry.GetRandomScale() : 1f;
+
         bool align = entry?.AlignToSurfaceNormal == true;
 
-        root.transform.position = position;
-        root.transform.rotation = (align ? Quaternion.FromToRotation(Vector3.up, normal) : Quaternion.identity) *
-                                  Quaternion.Euler(0f, rotationY + randomRotation, 0f);
+        Vector3 mapUp = mapRoot.transform.up.normalized;
+
+        // Ground/Path Collider의 최상단 또는 빈 셀의 기본 높이
+        Vector3 supportPosition =
+            GetDecorationSupportPosition(cell, mapUp);
+
+        root.transform.position = supportPosition;
+
+        root.transform.rotation =
+            (align
+                ? Quaternion.FromToRotation(Vector3.up, normal)
+                : Quaternion.identity) *
+            Quaternion.Euler(
+                0f,
+                rotationY + randomRotation,
+                0f);
+
         root.transform.localScale = Vector3.one;
 
-        TDMapCellMarker marker = Undo.AddComponent<TDMapCellMarker>(root);
-        Transform visual = CreateVisual(marker, asset.Prefab, 0f, Vector3.one * scale);
-        bool blocks = entry?.BlocksTower == true;
+        TDMapCellMarker marker =
+            Undo.AddComponent<TDMapCellMarker>(root);
 
-        marker.Setup(TDMapCellType.Decoration, cell, asset.Prefab, visual, blocks);
-        ApplyLayer(root, entry != null && palette ? palette.GetDecorationLayer(entry) : 0,
+        Transform visual = CreateVisual(
+            marker,
+            asset.Prefab,
+            0f,
+            Vector3.one);
+
+        // 설치한 데코의 Collider 최하단을 지지면 최상단에 맞춘다.
+        AlignDecorationBottomToSupport(
+            root.transform,
+            visual,
+            supportPosition,
+            mapUp);
+
+        bool blocks =
+            entry?.BlocksTower == true;
+
+        marker.Setup(
+            TDMapCellType.Decoration,
+            cell,
+            asset.Prefab,
+            visual,
+            blocks);
+
+        int layer =
+            entry != null && palette
+                ? palette.GetDecorationLayer(entry)
+                : 0;
+
+        ApplyLayer(
+            root,
+            layer,
             entry?.ApplyLayerRecursively != false);
 
         mapRoot.MarkCellCacheDirty();
+        mapRoot.RebuildCellCache();
+
         EditorUtility.SetDirty(marker);
+        EditorUtility.SetDirty(root);
+        EditorSceneManager.MarkSceneDirty(root.scene);
     }
 
+    static Vector3 GetDecorationSupportPosition(
+    Vector2Int cell,
+    Vector3 up)
+    {
+        Vector3 cellPosition = mapRoot.GridToWorld(cell);
+        float supportAlongUp = Vector3.Dot(cellPosition, up);
+
+        TDMapCellMarker terrain =
+            mapRoot.FindTerrainCell(cell);
+
+        if (terrain)
+        {
+            bool foundCollider = false;
+
+            Collider[] colliders =
+                terrain.GetComponentsInChildren<Collider>(true);
+
+            for (int i = 0; i < colliders.Length; i++)
+            {
+                Collider collider = colliders[i];
+
+                if (!collider ||
+                    !collider.enabled ||
+                    !collider.gameObject.activeInHierarchy)
+                {
+                    continue;
+                }
+
+                float top =
+                    GetBoundsMaximumAlongAxis(
+                        collider.bounds,
+                        up);
+
+                supportAlongUp =
+                    foundCollider
+                        ? Mathf.Max(supportAlongUp, top)
+                        : top;
+
+                foundCollider = true;
+            }
+
+            // Collider가 없으면 Renderer 최상단을 사용
+            if (!foundCollider)
+            {
+                Renderer[] renderers =
+                    terrain.GetComponentsInChildren<Renderer>(true);
+
+                for (int i = 0; i < renderers.Length; i++)
+                {
+                    Renderer renderer = renderers[i];
+
+                    if (!renderer ||
+                        !renderer.enabled ||
+                        !renderer.gameObject.activeInHierarchy)
+                    {
+                        continue;
+                    }
+
+                    float top =
+                        GetBoundsMaximumAlongAxis(
+                            renderer.bounds,
+                            up);
+
+                    supportAlongUp =
+                        Mathf.Max(supportAlongUp, top);
+                }
+            }
+        }
+
+        float cellAlongUp =
+            Vector3.Dot(cellPosition, up);
+
+        return cellPosition +
+               up * (supportAlongUp - cellAlongUp + surfaceOffset);
+    }
+    static void AlignDecorationBottomToSupport(
+    Transform root,
+    Transform visual,
+    Vector3 supportPosition,
+    Vector3 up)
+    {
+        if (!root || !visual)
+            return;
+
+        bool foundCollider = false;
+        float bottomAlongUp = float.PositiveInfinity;
+
+        Collider[] colliders =
+            visual.GetComponentsInChildren<Collider>(true);
+
+        for (int i = 0; i < colliders.Length; i++)
+        {
+            Collider collider = colliders[i];
+
+            if (!collider ||
+                !collider.enabled ||
+                !collider.gameObject.activeInHierarchy)
+            {
+                continue;
+            }
+
+            float bottom =
+                GetBoundsMinimumAlongAxis(
+                    collider.bounds,
+                    up);
+
+            bottomAlongUp =
+                Mathf.Min(bottomAlongUp, bottom);
+
+            foundCollider = true;
+        }
+
+        // 설치 프리팹에 Collider가 없다면 Renderer 바닥 사용
+        if (!foundCollider)
+        {
+            Renderer[] renderers =
+                visual.GetComponentsInChildren<Renderer>(true);
+
+            for (int i = 0; i < renderers.Length; i++)
+            {
+                Renderer renderer = renderers[i];
+
+                if (!renderer ||
+                    !renderer.enabled ||
+                    !renderer.gameObject.activeInHierarchy)
+                {
+                    continue;
+                }
+
+                float bottom =
+                    GetBoundsMinimumAlongAxis(
+                        renderer.bounds,
+                        up);
+
+                bottomAlongUp =
+                    Mathf.Min(bottomAlongUp, bottom);
+            }
+        }
+
+        if (float.IsPositiveInfinity(bottomAlongUp))
+            return;
+
+        float targetAlongUp =
+            Vector3.Dot(supportPosition, up);
+
+        float moveDistance =
+            targetAlongUp - bottomAlongUp;
+
+        root.position += up * moveDistance;
+    }
+    static float GetBoundsMaximumAlongAxis(
+    Bounds bounds,
+    Vector3 axis)
+    {
+        axis.Normalize();
+
+        float projectedExtent =
+            Mathf.Abs(axis.x) * bounds.extents.x +
+            Mathf.Abs(axis.y) * bounds.extents.y +
+            Mathf.Abs(axis.z) * bounds.extents.z;
+
+        return Vector3.Dot(bounds.center, axis) +
+               projectedExtent;
+    }
+
+    static float GetBoundsMinimumAlongAxis(
+        Bounds bounds,
+        Vector3 axis)
+    {
+        axis.Normalize();
+
+        float projectedExtent =
+            Mathf.Abs(axis.x) * bounds.extents.x +
+            Mathf.Abs(axis.y) * bounds.extents.y +
+            Mathf.Abs(axis.z) * bounds.extents.z;
+
+        return Vector3.Dot(bounds.center, axis) -
+               projectedExtent;
+    }
     static GameObject CreateCellRoot(TDMapCellType type, Vector2Int cell, Transform parent)
     {
         GameObject root = new($"{type}_{cell.x}_{cell.y}");
@@ -994,18 +1442,75 @@ public static class TDGridMapPainter
 
     static Transform CreateVisual(TDMapCellMarker marker, GameObject prefab, float rotation, Vector3 scale)
     {
-        GameObject visualRoot = new("Visual");
-        Undo.RegisterCreatedObjectUndo(visualRoot, "Visual 생성");
-        Undo.SetTransformParent(visualRoot.transform, marker.transform, "Visual 부모 설정");
-        visualRoot.transform.localPosition = Vector3.zero;
-        visualRoot.transform.localRotation = Quaternion.Euler(0f, rotation, 0f);
-        visualRoot.transform.localScale = scale;
+        if (!marker || !prefab)
+            return null;
 
-        GameObject instance = CreatePrefabInstance(prefab, visualRoot.transform);
-        Undo.RegisterCreatedObjectUndo(instance, "Visual Prefab 생성");
+        GameObject visualRoot = new("Visual");
+
+        Undo.RegisterCreatedObjectUndo(
+            visualRoot,
+            "Visual 생성");
+
+        Undo.SetTransformParent(
+            visualRoot.transform,
+            marker.transform,
+            "Visual 부모 설정");
+
+        visualRoot.transform.localPosition = Vector3.zero;
+        visualRoot.transform.localRotation =
+            Quaternion.Euler(0f, rotation, 0f);
+        visualRoot.transform.localScale = scale;
+        visualRoot.SetActive(true);
+
+        GameObject instance =
+            CreatePrefabInstance(
+                prefab,
+                visualRoot.transform);
+
+        if (!instance)
+        {
+            Undo.DestroyObjectImmediate(visualRoot);
+            return null;
+        }
+
+        Undo.RegisterCreatedObjectUndo(
+            instance,
+            "Visual Prefab 생성");
+
         instance.transform.localPosition = Vector3.zero;
-        instance.transform.localRotation = prefab.transform.localRotation;
-        instance.transform.localScale = prefab.transform.localScale;
+        instance.transform.localRotation =
+            prefab.transform.localRotation;
+        instance.transform.localScale =
+            prefab.transform.localScale;
+
+        instance.SetActive(true);
+
+        Renderer[] renderers =
+            instance.GetComponentsInChildren<Renderer>(true);
+
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            Renderer renderer = renderers[i];
+
+            renderer.gameObject.SetActive(true);
+            renderer.enabled = true;
+            renderer.forceRenderingOff = false;
+        }
+
+        LODGroup[] lodGroups =
+            instance.GetComponentsInChildren<LODGroup>(true);
+
+        for (int i = 0; i < lodGroups.Length; i++)
+            lodGroups[i].enabled = false;
+
+        Debug.Log(
+            $"[TDMapPainter] Visual 생성 완료 / " +
+            $"Prefab={prefab.name}, " +
+            $"Active={instance.activeInHierarchy}, " +
+            $"Renderer={renderers.Length}, " +
+            $"LossyScale={instance.transform.lossyScale}",
+            instance);
+
         return visualRoot.transform;
     }
 
@@ -1353,7 +1858,7 @@ public static class TDGridMapPainter
     static void ResetDrag()
     {
         lastPaintedCell = null;
-        lastDecorationPosition = null;
+        lastDecorationCell = null;
     }
 
     #endregion

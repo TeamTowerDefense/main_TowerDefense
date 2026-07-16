@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MonsterData
   monsterName: Catus
   monsterId: 0
+  Icon: {fileID: -1106184837, guid: 08f9a67ddc42e2549b1e59495f1f32d1, type: 3}
   Prefab: {fileID: 4253210182481893339, guid: 685e5cce46f303046b902b80a8aca5e8, type: 3}
   maxHP: 100
   speed: 2

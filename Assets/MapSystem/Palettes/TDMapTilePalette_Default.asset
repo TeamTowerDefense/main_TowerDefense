@@ -154,6 +154,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 2048
   gridMaterial: {fileID: 0}
-  visualScale: 0.5
+  visualScale: 1
   waypointYOffset: 0
   cameraBoundsPadding: 2
