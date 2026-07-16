@@ -22,7 +22,7 @@ public class Regeneration : MonoBehaviour, IAbility
     public void EnableAbility(AbilityData data)
     {
         // 재생 데이터 타입으로 안전하게 캐스팅합니다.
-        if (data is RegenAbilityData regenData)
+        if (data is RegenerationAbilityData regenData)
         {
             regenAmount = regenData.regenAmount;
             regenInterval = regenData.regenInterval;
