@@ -76,7 +76,7 @@ public class AreaHitBox : PoolableObject
         if (hitBoxData.damageMode != HitBoxDamageMode.TickDamage)
             return;
 
-        TryTickDamage(other);
+        TryHitDamage(other);
         StartTickSound(hitBoxData);
         
     }
@@ -89,21 +89,6 @@ public class AreaHitBox : PoolableObject
             return;
 
         damageTimers.Remove(monster);
-
-        if (hitBoxData.damageMode != HitBoxDamageMode.TickDamage)
-            return;
-
-        if (!activeHitEffects.TryGetValue(monster, out PoolableObject effect))
-            return;
-
-        if (effectDespawnRoutines.TryGetValue(monster, out Coroutine routine))
-        {
-            StopCoroutine(routine);
-            effectDespawnRoutines.Remove(monster);
-        }
-
-        effectDespawnRoutines[monster] = StartCoroutine
-            (DespawnLoopEffectAfterDelay(monster, effect, hitBoxData.effectDespawnDelay));
 
     }
 
@@ -137,14 +122,14 @@ public class AreaHitBox : PoolableObject
         }
         else if (hitBoxData.damageMode == HitBoxDamageMode.TickDamage)
         {
-            SpawnTickHeatEffect(monster);
+            SpawnHitDamageEffect(monster);
 
             ApplyDamage(monster);
             damageTimers[monster] = GetTickInterval();
         }
     }
 
-    private void TryTickDamage(Collider other)
+    private void TryHitDamage(Collider other)
     {
 
         if (((1 << other.gameObject.layer) & monsterLayer) == 0)
@@ -157,12 +142,12 @@ public class AreaHitBox : PoolableObject
         if (monster == null || monster.isDead)
             return;
 
-       
-
         if (!damageTimers.ContainsKey(monster))
         {
             ApplyDamage(monster);
-            SpawnTickHeatEffect(monster);
+            SpawnHitDamageEffect(monster);
+            TriggerOnHitEffects(monster);
+
             damageTimers[monster] = tickInterval;
             //Debug.Log($"[TickDamage] damageInterval={hitBoxData.damageInterval}, attackSpeed={attackSpeed}, tickInterval={tickInterval}");
             return;
@@ -174,7 +159,7 @@ public class AreaHitBox : PoolableObject
         if (damageTimers[monster] <= 0f)
         {
             ApplyDamage(monster);
-            SpawnTickHeatEffect(monster);
+            SpawnHitDamageEffect(monster);
             damageTimers[monster] = GetTickInterval();
         }
     }
@@ -201,9 +186,9 @@ public class AreaHitBox : PoolableObject
     }
 
 
-    private void SpawnTickHeatEffect(Monster monster)
+    private void SpawnHitDamageEffect(Monster monster)
     {
-        if (monster == null)
+        if (monster == null || monster.isDead)
             return;
 
         if (hitBoxData == null || hitBoxData.hitEffectData == null)
@@ -214,8 +199,7 @@ public class AreaHitBox : PoolableObject
 
         int effectID = hitBoxData.hitEffectData.effectID;
 
-        GameObject effectPF =
-            ObjectPoolManager.Instance.GetEffect(effectID);
+        GameObject effectPF = ObjectPoolManager.Instance.GetEffect(effectID);
 
         if (effectPF == null)
         {
@@ -225,22 +209,24 @@ public class AreaHitBox : PoolableObject
             return;
         }
 
-        Vector3 spawnPosition =
-            monster.transform.position + Vector3.up * hitBoxData.hitEffectYOffset;
+        Vector3 spawnPosition = monster.transform.position + Vector3.up * hitBoxData.hitEffectYOffset;
 
-        PoolEffect effect =
-            ObjectPoolManager.Instance.Spawn<PoolEffect>(
-                effectPF,
-                spawnPosition,
-                Quaternion.identity,
-                ObjectPoolManager.Instance.GetEffectParent()
-            );
+        PoolEffect effect = ObjectPoolManager.Instance.Spawn<PoolEffect>
+            (effectPF, spawnPosition, Quaternion.identity, ObjectPoolManager.Instance.GetEffectParent());
 
         if (effect == null)
+        {
+            Debug.LogError(
+                $"[AreaHitBox] PoolEffect Spawn 실패. " +
+                $"Prefab={effectPF.name}, ID={effectID}. " +
+                $"프리팹 루트에 PoolEffect가 있는지 확인하세요."
+            );
+
             return;
+        }
 
         // 몬스터 이동을 따라가야 하는 짧은 피격 이펙트라면 부모 연결
-        effect.transform.SetParent(monster.transform);
+        effect.transform.SetParent(monster.transform, true);
         effect.transform.localPosition = Vector3.up * hitBoxData.hitEffectYOffset;
         effect.transform.localRotation = Quaternion.identity;
 
@@ -330,6 +316,8 @@ public class AreaHitBox : PoolableObject
 
     public override void OnDespawned()
     {
+        StopTickSound();
+
         target = null;
 
         foreach (var routine in effectDespawnRoutines.Values)
@@ -361,6 +349,9 @@ public class AreaHitBox : PoolableObject
     private void StartTickSound(HitBoxData hitBoxData)
     {
         if (activeLoopSound != null)
+            return;
+
+        if (hitBoxData == null || target == null)
             return;
 
         activeLoopSound = SoundManager.Instance?.PlayLoopSound(hitBoxData.loopSoundID, target.position);

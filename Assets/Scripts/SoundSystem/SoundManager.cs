@@ -54,7 +54,7 @@ public class SoundManager : MonoBehaviour
         Debug.Log(
             $"[SoundManager] Instance 등록 완료: {Instance.name}");
 
-        DontDestroyOnLoad(gameObject);
+        //DontDestroyOnLoad(gameObject);
 
         BuildSoundTable();
         CreateInitialPool();
