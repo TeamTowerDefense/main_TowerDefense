@@ -17553,6 +17553,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7290de690bd60e7409a7393b1768352a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SoundManager
+  bgmSource: {fileID: 0}
+  bgmMixerGroup: {fileID: 0}
+  lobbyBgmID: 30001
+  stageBgmID: 30002
+  sfxMixerGroup: {fileID: 0}
   soundDB: {fileID: 11400000, guid: bab62b649eceffb47963b75f89d079cd, type: 2}
   soundPrefab: {fileID: 263930350}
   soundParent: {fileID: 1691502164}
@@ -17954,7 +17959,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1277840289}
         m_TargetAssemblyTypeName: StageTimeController, Assembly-CSharp
-        m_MethodName: Pause
+        m_MethodName: TogglePlay
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -21203,6 +21208,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04899277e23eff74a9c1bff73c41d8bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BuildSystem
+  buildSoundID: 20001
+  dismantleSoundID: 20002
 --- !u!114 &2001423672
 MonoBehaviour:
   m_ObjectHideFlags: 0
