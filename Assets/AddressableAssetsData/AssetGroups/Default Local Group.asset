@@ -355,6 +355,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - Sound
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a8bb046862e63c04881745483efd15c2
+    m_Address: Assets/Sounds/KBF_Field_Land_06.ogg
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Sound
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: ab9ec2005f982ee4bb4d9551842f18aa
     m_Address: Assets/SO/StageDataSO/Stage_002.asset
     m_ReadOnly: 0
