@@ -22,7 +22,7 @@ public class CaveSpawner : MonoBehaviour
     [SerializeField] private GameObject rockfallPrefab;
 
     [Header("페이드 인/아웃 연출 시간 설정")]
-    [SerializeField] private float spawnFadeInDuration = 1.0f;
+    [SerializeField] public float spawnFadeInDuration = 1.0f;
     [Tooltip("최대 방출(100%)을 유지할 시간")]
     [SerializeField] private float activeDuration = 1.5f;
     [Tooltip("스폰 양이 서서히 0%로 줄어드는 시간")]

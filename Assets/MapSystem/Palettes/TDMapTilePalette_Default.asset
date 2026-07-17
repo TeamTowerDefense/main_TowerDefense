@@ -30,7 +30,7 @@ MonoBehaviour:
     cornerBaseYRotation: 0
     endBaseYRotation: 0
     soloBaseYRotation: 0
-  spawnPrefab: {fileID: 5205084122294766156, guid: de6e5a8dda092e64aa197e2a79b69e5b, type: 3}
+  spawnPrefab: {fileID: 0}
   basePrefab: {fileID: 3351010397087084706, guid: 48c4335c9b485ce49a9ab4f4f6f52150, type: 3}
   specialRules:
   - ruleName: Road End Edge
@@ -178,6 +178,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 2048
   gridMaterial: {fileID: 0}
-  visualScale: 1
+  visualScale: 0.5
   waypointYOffset: 0
   cameraBoundsPadding: 2

@@ -51,16 +51,20 @@ public class Monster : PoolableObject, IEnemyHealth
     private MaterialPropertyBlock propertyBlock; // 성능 최적화용 프로퍼티 블록
     private Coroutine flashCoroutine; // 코루틴 중복 실행 방지용 변수
 
+    private Renderer monsterRenderer;
     // URP 및 일반 메테리얼의 에미션 컬러 속성 키 ID
     private static readonly int EmissionColorId = Shader.PropertyToID("_EmissionColor");
+
+    private int lastUpdateFrame = -1;
     private void Awake()
     {
-        anim = GetComponent<Animator>();
+        anim = GetComponentInChildren<Animator>();
         col = GetComponent<Collider>();
         status = GetComponent<MonsterStatus>();
         keywordController = GetComponent<KeywordController>();
         renderers = GetComponentsInChildren<Renderer>();
         propertyBlock = new MaterialPropertyBlock();
+        monsterRenderer = GetComponentInChildren<Renderer>();
 
         if (keywordController != null)
         {
@@ -81,6 +85,7 @@ public class Monster : PoolableObject, IEnemyHealth
     // 초기화 로직 통합
     public void Setup(List<Transform> path, float spawnY, MonsterData data,float separationRadius, float separationStrength)
     {
+        movePath = path;
         Debug.Log($"{allAbilities}");
         // 런타임 스텟 적용 및 초기 특성 키워드 적용
         stats.Clear();
@@ -157,8 +162,9 @@ public class Monster : PoolableObject, IEnemyHealth
 
         if (col != null) col.enabled = true;
         if (anim != null) anim.ResetTrigger("Die");
+        propertyBlock.SetColor(EmissionColorId, Color.black);
 
-        movePath = path;
+
         currentPathIndex = 1;
         pathOffset = new Vector3(UnityEngine.Random.Range(-0.4f, 0.4f), 0, UnityEngine.Random.Range(-0.4f, 0.4f));
 
@@ -167,7 +173,7 @@ public class Monster : PoolableObject, IEnemyHealth
             transform.position = movePath[0].position + new Vector3(pathOffset.x, spawnY, pathOffset.z);
         }
 
-   
+      
         gameObject.SetActive(true);
         
     }
@@ -196,6 +202,9 @@ public class Monster : PoolableObject, IEnemyHealth
     // 수동 업데이트: 외부에서 호출하여 이동 처리
     public void ManualUpdate(float deltaTime, Vector3 separationForce, float pathWidth, float containmentStrength, float speedMultiplier)
     {
+        if (Time.frameCount == lastUpdateFrame) return;
+        lastUpdateFrame = Time.frameCount;
+
         if (isDead || movePath == null || currentPathIndex >= movePath.Count || status.IsStunned) return;
 
         Transform targetTile = movePath[currentPathIndex];
@@ -340,6 +349,11 @@ public class Monster : PoolableObject, IEnemyHealth
     // 사망 애니메이션 재생 후 오브젝트 풀로 반환
     private IEnumerator DieCoroutine()
     {
+        if (anim == null)
+        {
+            yield break;
+        }
+
         anim.SetTrigger("Die");
         // 애니메이션 재생되는 시간 동안
         yield return new WaitForSeconds(2f);
