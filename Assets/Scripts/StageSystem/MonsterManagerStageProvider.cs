@@ -72,6 +72,13 @@ public class MonsterManagerStageProvider : MonoBehaviour, IMonsterSpawnManager, 
 
     IEnumerator WaveRoutine(MonsterSpawnDataSO spawnData)
     {
+        PathData path = GetPath();
+        Vector3 spawnpoint = path != null && path.waypoints != null && path.waypoints.Count > 0 ? path.waypoints[0].position : Vector3.zero;
+
+        CaveSpawner.Instance.PlayCaveEffectAtPosition(spawnpoint);
+        CameraShaker.Instance?.Shake(1f, 0.5f); // 원하는 지속 시간(s)과 강도
+
+        yield return new WaitForSeconds(CaveSpawner.Instance.spawnFadeInDuration);
         Queue<MonsterSpawnGroup> queue = spawnData.CreateQueue();
 
         while (queue.Count > 0)

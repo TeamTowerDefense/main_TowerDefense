@@ -76,9 +76,6 @@ public class MonsterManager : MonoBehaviour
     private IEnumerator SpawnMonsterGroup(MonsterData data, PathData pathData, int count, float interval)
     {
         Vector3 spawnPoint = pathData.waypoints[0].position;
-        
-        if (CaveSpawner.Instance != null)
-            CaveSpawner.Instance.PlayCaveEffectAtPosition(spawnPoint);
 
         for (int i = 0; i < count; i++)
         {
