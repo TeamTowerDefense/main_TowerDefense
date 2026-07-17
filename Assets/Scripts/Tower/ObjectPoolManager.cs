@@ -1,4 +1,4 @@
-
+ï»¿
 using System.Collections;
 
 using System.Collections.Generic;
@@ -24,7 +24,7 @@ public class ObjectPoolManager : MonoBehaviour
     [SerializeField] private EffectDB effectDatabase;
     public static ObjectPoolManager Instance { get; private set; }
 
-    // ¿ÀºêÁ§Æ® Ç®
+    // ì˜¤ë¸Œì íŠ¸ í’€
     private Dictionary<GameObject, Queue<PoolableObject>> pools = new();
 
     private Dictionary<int, ProjectileData> projectileTable = new();
@@ -55,7 +55,7 @@ public class ObjectPoolManager : MonoBehaviour
         yield return LoadMonsterAssets();
 
 
-        Debug.Log("¸ğµç Addressable ·Îµå ¿Ï·á");
+        Debug.Log("ëª¨ë“  Addressable ë¡œë“œ ì™„ë£Œ");
     }
 
     private IEnumerator LoadProjectileAssets()
@@ -67,7 +67,7 @@ public class ObjectPoolManager : MonoBehaviour
             yield return handle;
             if (handle.Status != AsyncOperationStatus.Succeeded)
             {
-                Debug.LogError($"[projectile Load ½ÇÆĞ] Data: {data.name}");
+                Debug.LogError($"[projectile Load ì‹¤íŒ¨] Data: {data.name}");
                 continue;
             }
 
@@ -76,7 +76,7 @@ public class ObjectPoolManager : MonoBehaviour
             data.loadedPrefab = prefab;
             projectileTable[data.projectileID] = data;
 
-            Debug.Log($"[projectileTable µî·Ï] ID: {data.projectileID}, Data: {data.name}, Prefab: {prefab.name}");
+            Debug.Log($"[projectileTable ë“±ë¡] ID: {data.projectileID}, Data: {data.name}, Prefab: {prefab.name}");
         }
     }
     private IEnumerator LoadHitBoxAssets()
@@ -89,7 +89,7 @@ public class ObjectPoolManager : MonoBehaviour
 
             if (handle.Status != AsyncOperationStatus.Succeeded)
             {
-                Debug.LogError($"[HitBox Load ½ÇÆĞ] Data: {data.name}");
+                Debug.LogError($"[HitBox Load ì‹¤íŒ¨] Data: {data.name}");
                 continue;
             }
 
@@ -98,7 +98,7 @@ public class ObjectPoolManager : MonoBehaviour
             data.loadedPrefab = prefab;
             hitBoxTable[data.hitBoxID] = data;
 
-            Debug.Log($"[HitBoxTable µî·Ï] ID: {data.hitBoxID}, Data: {data.name}, Prefab: {prefab.name}");
+            Debug.Log($"[HitBoxTable ë“±ë¡] ID: {data.hitBoxID}, Data: {data.name}, Prefab: {prefab.name}");
         }
     }
 
@@ -111,7 +111,7 @@ public class ObjectPoolManager : MonoBehaviour
 
             if (data.effectPF == null || !data.effectPF.RuntimeKeyIsValid())
             {
-                Debug.LogError($"[Effect] AssetReference À¯È¿ÇÏÁö ¾ÊÀ½: {data.name}");
+                Debug.LogError($"[Effect] AssetReference ìœ íš¨í•˜ì§€ ì•ŠìŒ: {data.name}");
                 continue;
             }
 
@@ -120,20 +120,20 @@ public class ObjectPoolManager : MonoBehaviour
 
             if (handle.Status != AsyncOperationStatus.Succeeded)
             {
-                Debug.LogError($"[Effect Load ½ÇÆĞ] Data: {data.name}");
+                Debug.LogError($"[Effect Load ì‹¤íŒ¨] Data: {data.name}");
                 continue;
             }
 
             data.loadedPrefab = handle.Result;
             effectTable[data.effectID] = data;
 
-            Debug.Log($"[EffectTable µî·Ï] ID: {data.effectID}, Data: {data.name}, Prefab: {data.loadedPrefab.name}");
+            Debug.Log($"[EffectTable ë“±ë¡] ID: {data.effectID}, Data: {data.name}, Prefab: {data.loadedPrefab.name}");
         }
     }
 
     private IEnumerator LoadMonsterEffectAssets()
     {
-        // effectDatabase ¾È¿¡ Monstereffects ¸®½ºÆ®°¡ ÀÖ´Ù°í °¡Á¤ÇÕ´Ï´Ù.
+        // effectDatabase ì•ˆì— Monstereffects ë¦¬ìŠ¤íŠ¸ê°€ ìˆë‹¤ê³  ê°€ì •í•©ë‹ˆë‹¤.
         foreach (var data in effectDatabase.monsterEffects)
         {
             if (data == null)
@@ -141,7 +141,7 @@ public class ObjectPoolManager : MonoBehaviour
 
             if (data.effectPF == null || !data.effectPF.RuntimeKeyIsValid())
             {
-                Debug.LogError($"[MonsterEffect] AssetReference À¯È¿ÇÏÁö ¾ÊÀ½: {data.name}");
+                Debug.LogError($"[MonsterEffect] AssetReference ìœ íš¨í•˜ì§€ ì•ŠìŒ: {data.name}");
                 continue;
             }
 
@@ -150,16 +150,16 @@ public class ObjectPoolManager : MonoBehaviour
 
             if (handle.Status != AsyncOperationStatus.Succeeded)
             {
-                Debug.LogError($"[MonsterEffect Load ½ÇÆĞ] Data: {data.name}");
+                Debug.LogError($"[MonsterEffect Load ì‹¤íŒ¨] Data: {data.name}");
                 continue;
             }
 
             data.loadedPrefab = handle.Result;
 
-            // °°Àº Å×ÀÌºí¿¡ µî·ÏÇÏ¹Ç·Î GetEffect(id)¸¦ ±×´ë·Î »ç¿ëÇÒ ¼ö ÀÖ½À´Ï´Ù.
+            // ê°™ì€ í…Œì´ë¸”ì— ë“±ë¡í•˜ë¯€ë¡œ GetEffect(id)ë¥¼ ê·¸ëŒ€ë¡œ ì‚¬ìš©í•  ìˆ˜ ìˆìŠµë‹ˆë‹¤.
             monsterEffectTable[data.effectID] = data;
 
-            Debug.Log($"[MonsterEffectTable µî·Ï] ID: {data.effectID}, Data: {data.name}, Prefab: {data.loadedPrefab.name}");
+            Debug.Log($"[MonsterEffectTable ë“±ë¡] ID: {data.effectID}, Data: {data.name}, Prefab: {data.loadedPrefab.name}");
         }
     }
 
@@ -184,7 +184,7 @@ public class ObjectPoolManager : MonoBehaviour
 
         return null;
     }
-    public GameObject   GetProjectile(int id)
+    public GameObject GetProjectile(int id)
     {
         ProjectileData data = GetProjectileData(id);
         return data != null ? data.loadedPrefab : null;
@@ -204,13 +204,13 @@ public class ObjectPoolManager : MonoBehaviour
 
         if (data == null)
         {
-            Debug.LogError($"[HitBox] Data ¾øÀ½ ID: {id}");
+            Debug.LogError($"[HitBox] Data ì—†ìŒ ID: {id}");
             return null;
         }
 
         if (data.loadedPrefab == null)
         {
-            Debug.LogError($"[HitBox] loadedPrefab ¾øÀ½ ID: {id}, Data: {data.name}");
+            Debug.LogError($"[HitBox] loadedPrefab ì—†ìŒ ID: {id}, Data: {data.name}");
             return null;
         }
 
@@ -247,7 +247,7 @@ public class ObjectPoolManager : MonoBehaviour
     {
         if (reference == null || !reference.RuntimeKeyIsValid())
         {
-            //Debug.Log("Addresable Reference ¾øÀ½");
+            //Debug.Log("Addresable Reference ì—†ìŒ");
             return null;
         }
 
@@ -264,7 +264,7 @@ public class ObjectPoolManager : MonoBehaviour
 
         if (handle.Status != AsyncOperationStatus.Succeeded)
         {
-            //Debug.Log($"Addressable Load ½ÇÆĞ : {key}");
+            //Debug.Log($"Addressable Load ì‹¤íŒ¨ : {key}");
             return null;
         }
 
@@ -273,10 +273,10 @@ public class ObjectPoolManager : MonoBehaviour
     }
 
 
-    #region ½ºÆù ¸Ş¼­µå
+    #region ìŠ¤í° ë©”ì„œë“œ
     public T Spawn<T>(GameObject prefab, Vector3 position, Quaternion rotation, Transform parent = null) where T : PoolableObject
     {
-        //Debug.Log($"[Pool] Spawn ¿äÃ» prefab : {(prefab != null ? prefab.name : "NULL")}, ¿äÃ» Å¸ÀÔ : {typeof(T).Name}");
+        //Debug.Log($"[Pool] Spawn ìš”ì²­ prefab : {(prefab != null ? prefab.name : "NULL")}, ìš”ì²­ íƒ€ì… : {typeof(T).Name}");
 
         if (prefab == null)
             return null;
@@ -299,7 +299,7 @@ public class ObjectPoolManager : MonoBehaviour
 
             if (obj == null)
             {
-                //Debug.LogError($"{prefab.name}¿¡ PoolableObject°¡ ¾øÀ½");
+                //Debug.LogError($"{prefab.name}ì— PoolableObjectê°€ ì—†ìŒ");
                 Destroy(newObj);
                 return null;
             }
@@ -311,24 +311,24 @@ public class ObjectPoolManager : MonoBehaviour
         obj.transform.SetPositionAndRotation(position, rotation);
         obj.OnSpawned();
 
-        //Debug.Log($"[Pool] ½ÇÁ¦ Å¸ÀÔ : {obj.GetType().Name}, ¿äÃ» Å¸ÀÔ : {typeof(T).Name}");
+        //Debug.Log($"[Pool] ì‹¤ì œ íƒ€ì… : {obj.GetType().Name}, ìš”ì²­ íƒ€ì… : {typeof(T).Name}");
 
         return obj as T;
     }
     #endregion
 
-    #region µğ½ºÆù ¸Ş¼­µå
+    #region ë””ìŠ¤í° ë©”ì„œë“œ
     public void Despawn(PoolableObject obj)
     {
         if (obj == null)
             return;
-        Debug.Log($"[Pool] Despawn ½ÇÇà: {obj.name}");
+        Debug.Log($"[Pool] Despawn ì‹¤í–‰: {obj.name}");
 
         GameObject key = obj.prefabKey;
 
         if (key == null)
         {
-            Debug.LogError($"{obj.name} prefabKey ¾øÀ½");
+            Debug.LogError($"{obj.name} prefabKey ì—†ìŒ");
             Destroy(obj.gameObject);
             return;
         }
@@ -341,14 +341,15 @@ public class ObjectPoolManager : MonoBehaviour
         pools[key].Enqueue(obj);
     }
     #endregion
-    #region projectile ºÎ¸ğ ÁÂÇ¥ °¡Á®¿À±â
+
+    #region projectile ë¶€ëª¨ ì¢Œí‘œ ê°€ì ¸ì˜¤ê¸°
     public Transform GetProjectileParent()
     {
         return projectileParent != null ? projectileParent : transform;
     }
     #endregion
 
-    #region Effect ºÎ¸ğ ÁÂÇ¥ °¡Á®¿À±â
+    #region Effect ë¶€ëª¨ ì¢Œí‘œ ê°€ì ¸ì˜¤ê¸°
     public Transform GetEffectParent()
     {
         return effectParent != null ? effectParent : transform;
@@ -362,13 +363,13 @@ public class ObjectPoolManager : MonoBehaviour
 
     
 
-    #region ÄÚ·çÆ¾¿ë ·Îµå ¸Ş¼­µå
+    #region ì½”ë£¨í‹´ìš© ë¡œë“œ ë©”ì„œë“œ
     public IEnumerator LoadPrefabCoroutine(
         AssetReferenceGameObject reference, System.Action<GameObject> onLoaded)
     {
         if (reference == null || !reference.RuntimeKeyIsValid())
         {
-            Debug.LogError("Addressable Reference ¾øÀ½");
+            Debug.LogError("Addressable Reference ì—†ìŒ");
             onLoaded?.Invoke(null);
             yield break;
         }
@@ -386,7 +387,7 @@ public class ObjectPoolManager : MonoBehaviour
 
         if (handle.Status != AsyncOperationStatus.Succeeded)
         {
-            Debug.LogError($"Addressable Load ½ÇÆĞ : {key}");
+            Debug.LogError($"Addressable Load ì‹¤íŒ¨ : {key}");
             onLoaded?.Invoke(null);
             yield break;
         }

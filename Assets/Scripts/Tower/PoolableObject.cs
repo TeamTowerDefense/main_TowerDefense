@@ -1,10 +1,8 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PoolableObject : MonoBehaviour
 {
     public GameObject prefabKey { get; private set; }
-
-    private Transform poolParent;
 
     public void SetPrefabKey(GameObject key)
     {
@@ -18,10 +16,6 @@ public class PoolableObject : MonoBehaviour
 
     public virtual void OnDespawned()
     {
-        if (poolParent != null)
-        {
-            transform.SetParent(poolParent, false);
-        }
         gameObject.SetActive(false);
     }
 }
