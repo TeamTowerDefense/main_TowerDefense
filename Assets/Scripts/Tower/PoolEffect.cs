@@ -6,9 +6,15 @@ public class PoolEffect : PoolableObject
     private ParticleSystem[] particles;
     private Coroutine despawnRoutine;
 
+    private Vector3 originalLocalScale;
+    private Quaternion originalLocalRotation;    
+
     private void Awake()
     {
         CacheParticles();
+
+        originalLocalScale = transform.localScale;
+        originalLocalRotation = transform.localRotation;
     }
 
     private void CacheParticles()
@@ -26,11 +32,13 @@ public class PoolEffect : PoolableObject
             StopCoroutine(despawnRoutine);
             despawnRoutine = null;
         }
+        
+        transform.localScale = originalLocalScale;
 
         foreach (ParticleSystem ps in particles)
         {
 
-            ps.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+            ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
             ps.Clear(true);
             ps.Play(true);
         }
@@ -52,6 +60,8 @@ public class PoolEffect : PoolableObject
         yield return new WaitForSeconds(maxDuration);
 
         ObjectPoolManager.Instance.Despawn(this);
+
+        ReturnToPool();
     }
     private void ReturnToPool()
     {
@@ -105,8 +115,8 @@ public class PoolEffect : PoolableObject
         }
 
         transform.localPosition = Vector3.zero;
-        transform.localRotation = Quaternion.identity;
-        //transform.localScale = Vector3.one;
+        transform.localRotation = originalLocalRotation;
+        transform.localScale = originalLocalScale;
 
         base.OnDespawned();
     }
