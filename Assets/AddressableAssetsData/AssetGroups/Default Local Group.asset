@@ -132,6 +132,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - Sound
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3a8e6fa632856624d9a84fae53a125f7
+    m_Address: Assets/SO/EffectSo/HitStone.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Effect_HitBox
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 3b1c54572b2e58243a5f71c24a4900fe
     m_Address: Assets/Prefabs/HitBox/SlowArea.prefab
     m_ReadOnly: 0
@@ -427,6 +433,12 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - Sound
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d8e26976f7b629941af5bcf8e05b6ec8
+    m_Address: Assets/SO/EffectSo/HitExplosion.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Effect_Projectile
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: e11a5a019377fbd4c81caa0adcb4c236
     m_Address: Assets/Sounds/Free Pack/Bullet Impact 21.wav
