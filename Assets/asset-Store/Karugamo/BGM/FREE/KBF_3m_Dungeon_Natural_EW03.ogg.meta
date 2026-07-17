@@ -1,0 +1,31 @@
+fileFormatVersion: 2
+guid: 69100963061a84e6fb25647e6e720c34
+timeCreated: 1574085285
+licenseType: Store
+AudioImporter:
+  externalObjects: {}
+  serializedVersion: 6
+  defaultSettings:
+    loadType: 0
+    sampleRateSetting: 0
+    sampleRateOverride: 44100
+    compressionFormat: 1
+    quality: 1
+    conversionMode: 0
+  platformSettingOverrides: {}
+  forceToMono: 0
+  normalize: 1
+  preloadAudioData: 1
+  loadInBackground: 0
+  ambisonic: 0
+  3D: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 117893
+  packageName: Karugamo BGM FREE Pack
+  packageVersion: 1.0
+  assetPath: Assets/Karugamo/BGM/FREE/KBF_3m_Dungeon_Natural_EW03.ogg
+  uploadId: 346841
