@@ -19,7 +19,7 @@ MonoBehaviour:
     m_SubObjectType: 
     m_SubObjectGUID: 
     m_EditorAssetChanged: 0
-  volume: 1
+  volume: 0.2
   pitchRange: {x: 1, y: 1}
   spatialBlend: 1
   minDistance: 1
