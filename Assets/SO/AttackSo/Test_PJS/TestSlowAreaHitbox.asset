@@ -16,7 +16,7 @@ MonoBehaviour:
   hitEffectID: 1004
   activeTime: 0.3
   damageInterval: 0.2
-  hitEffectData: {fileID: 11400000, guid: e2e5b904d2903e946998f4a2fe28bf7e, type: 2}
+  hitEffectData: {fileID: 0}
   center: {x: 0, y: 0, z: 0}
   damageMode: 0
   stopEffectOutOfRange: 1

@@ -132,6 +132,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - Sound
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3a106ca14e8c4f14bb22b5c000f48ca8
+    m_Address: Assets/Sounds/KBF_3m_Battle_Nomal_EW02.ogg
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Sound
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 3a8e6fa632856624d9a84fae53a125f7
     m_Address: Assets/SO/EffectSo/HitStone.asset
     m_ReadOnly: 0

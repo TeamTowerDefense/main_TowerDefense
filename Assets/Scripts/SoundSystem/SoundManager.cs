@@ -92,6 +92,7 @@ public class SoundManager : MonoBehaviour
         {
             case "BootStrap":
             case "Loading...":
+            case "Title":
             case "Lobby":
                 PlayBGM(lobbyBgmID);
                 break;
