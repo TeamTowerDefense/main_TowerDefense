@@ -1,4 +1,4 @@
-using System;
+Ôªøusing System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -23,19 +23,12 @@ public class SoundManager : MonoBehaviour
     [SerializeField] private AudioMixerGroup sfxMixerGroup;
 
     [Header("Database")]
-    [SerializeField]
-    private SoundDB soundDB;
+    [SerializeField] private SoundDB soundDB;
 
     [Header("Pool")]
-    [SerializeField]
-    private SoundPoolObject soundPrefab;
-
-    [SerializeField]
-    private Transform soundParent; 
-
-    [SerializeField]
-    private int initialPoolSize = 20;
-
+    [SerializeField] private SoundPoolObject soundPrefab;
+    [SerializeField] private Transform soundParent;
+    [SerializeField] private int initialPoolSize = 20;
 
     private int currentBgmID = -1;
     private int requestedBgmID = -1;
@@ -44,20 +37,29 @@ public class SoundManager : MonoBehaviour
     private readonly Dictionary<int, AudioClip> clipTable = new Dictionary<int, AudioClip>();
 
     private readonly Dictionary<string, AudioClip> assetClipTable = new Dictionary<string, AudioClip>();
-    private readonly Dictionary<string, AsyncOperationHandle<AudioClip>> assetHandleTable = 
+    private readonly Dictionary<string, AsyncOperationHandle<AudioClip>> assetHandleTable =
         new Dictionary<string, AsyncOperationHandle<AudioClip>>();
     private readonly HashSet<string> loadingAssetKeys = new HashSet<string>();
-
-    private readonly Dictionary<int, AsyncOperationHandle<AudioClip>> clipHandles = 
-        new Dictionary<int, AsyncOperationHandle<AudioClip>>();
 
     private readonly Queue<SoundPoolObject> soundPool = new Queue<SoundPoolObject>();
     private readonly HashSet<SoundPoolObject> pooledObjects = new HashSet<SoundPoolObject>();
 
-    private readonly HashSet<int> loadingSoundIDs = new HashSet<int>();
+    private const string MasterVolumeParam = "MasterVolume";
+    private const string BgmVolumeParam = "BGMVolume";
+    private const string SfxVolumeParam = "SFXVolume";
+
+    private AudioMixer Mixer
+    {
+        get
+        {
+            if (bgmMixerGroup != null) return bgmMixerGroup.audioMixer;
+            if (sfxMixerGroup != null) return sfxMixerGroup.audioMixer;
+            return null;
+        }
+    }
 
     private void Awake()
-    {;
+    {
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -66,16 +68,16 @@ public class SoundManager : MonoBehaviour
 
         Instance = this;
 
-        Debug.Log($"[SoundManager] Instance µÓ∑œ øœ∑·: {Instance.name}");
         BuildSoundTable();
         CreateInitialPool();
+        GameSettingsStore.ApplyAudio(this);
     }
 
     private IEnumerator Start()
     {
         yield return PreloadAllSoundsCoroutine();
-        Scene currentScene = SceneManager.GetActiveScene();
 
+        Scene currentScene = SceneManager.GetActiveScene();
         OnSceneLoaded(currentScene, LoadSceneMode.Single);
     }
 
@@ -99,24 +101,52 @@ public class SoundManager : MonoBehaviour
         foreach (AsyncOperationHandle<AudioClip> handle in assetHandleTable.Values)
         {
             if (handle.IsValid())
-            {
                 Addressables.Release(handle);
-            }
         }
+
         assetHandleTable.Clear();
         assetClipTable.Clear();
         clipTable.Clear();
         soundTable.Clear();
         loadingAssetKeys.Clear();
-
         soundPool.Clear();
         pooledObjects.Clear();
     }
+
+    public void SetMasterVolume(float volume)
+    {
+        SetMixerVolume(MasterVolumeParam, volume);
+    }
+
+    public void SetBgmVolume(float volume)
+    {
+        SetMixerVolume(BgmVolumeParam, volume);
+    }
+
+    public void SetSfxVolume(float volume)
+    {
+        SetMixerVolume(SfxVolumeParam, volume);
+    }
+
+    private void SetMixerVolume(string parameterName, float volume)
+    {
+        AudioMixer mixer = Mixer;
+        if (mixer == null) return;
+
+        float clampedVolume = Mathf.Clamp01(volume);
+        float decibel = clampedVolume <= 0.0001f
+            ? -80f
+            : Mathf.Log10(clampedVolume) * 20f;
+
+        if (!mixer.SetFloat(parameterName, decibel))
+        {
+            Debug.LogWarning(
+                $"[SoundManager] Audio Mixer ÌååÎùºÎØ∏ÌÑ∞Î•º Ï∞æÏßÄ Î™ªÌñàÏäµÎãàÎã§. Parameter={parameterName}");
+        }
+    }
+
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        Debug.Log(
-        $"[BGM Scene] æ¿ ∑ŒµÂµ . Scene={scene.name}");
-
         switch (scene.name)
         {
             case "Title":
@@ -129,12 +159,6 @@ public class SoundManager : MonoBehaviour
             case "Stage_003":
                 PlayBGM(stageBgmID);
                 break;
-
-            default:
-                Debug.Log(
-                    $"[BGM Scene] ¡ˆ¡§µ» BGM¿Ã æ¯¥¬ æ¿¿‘¥œ¥Ÿ. " +
-                    $"Scene={scene.name}");
-                break;
         }
     }
 
@@ -144,12 +168,13 @@ public class SoundManager : MonoBehaviour
 
         if (soundDB == null)
         {
-            Debug.LogError("[SoundManger] SoundDB∞° æ¯Ω¿¥œ¥Ÿ.");
+            Debug.LogError("[SoundManager] SoundDBÍ∞Ä ÏóÜÏäµÎãàÎã§.");
             return;
         }
+
         if (soundDB.sounds == null)
         {
-            Debug.LogError("[SoundManager] SoundDB.sounds∞° null¿‘¥œ¥Ÿ.");
+            Debug.LogError("[SoundManager] SoundDB.soundsÍ∞Ä nullÏûÖÎãàÎã§.");
             return;
         }
 
@@ -157,47 +182,44 @@ public class SoundManager : MonoBehaviour
         {
             if (soundData == null)
             {
-                Debug.LogWarning("[SoundManager] SoundDBø° null µ•¿Ã≈Õ∞° ¿÷Ω¿¥œ¥Ÿ.");
+                Debug.LogWarning("[SoundManager] SoundDBÏóê null Îç∞Ïù¥ÌÑ∞Í∞Ä ÏûàÏäµÎãàÎã§.");
                 continue;
             }
 
             if (soundData.soundID <= 0)
             {
-                Debug.LogWarning($"[SoundManager] ¿Ø»ø«œ¡ˆ æ ¿∫ SoundID¿‘¥œ¥Ÿ. Data={soundData.name}, ID={soundData.soundID}");
+                Debug.LogWarning(
+                    $"[SoundManager] Ïú†Ìö®ÌïòÏßÄ ÏïäÏùÄ Sound IDÏûÖÎãàÎã§. Data={soundData.name}, ID={soundData.soundID}");
                 continue;
             }
 
             if (soundTable.ContainsKey(soundData.soundID))
             {
                 Debug.LogError(
-                    $"[SoundManager] ¡ﬂ∫π SoundID∞° ¿÷Ω¿¥œ¥Ÿ. ID={soundData.soundID}, Data={soundData.name}");
+                    $"[SoundManager] Ï§ëÎ≥µ Sound IDÍ∞Ä ÏûàÏäµÎãàÎã§. ID={soundData.soundID}, Data={soundData.name}");
                 continue;
             }
 
             soundTable.Add(soundData.soundID, soundData);
         }
-
     }
-    private bool TryGetSoundData(int soundID,  out SoundData soundData)
+
+    private bool TryGetSoundData(int soundID, out SoundData soundData)
     {
         soundData = null;
 
         if (soundID <= 0)
         {
-            Debug.LogWarning(
-                $"[SoundManager] ¿Ø»ø«œ¡ˆ æ ¿∫ ID¿‘¥œ¥Ÿ. ID={soundID}");
+            Debug.LogWarning($"[SoundManager] Ïú†Ìö®ÌïòÏßÄ ÏïäÏùÄ Sound IDÏûÖÎãàÎã§. ID={soundID}");
             return false;
         }
 
         if (!soundTable.TryGetValue(soundID, out soundData))
-        {
-            //Debug.LogWarning($"[SoundManager] µÓ∑œµ«¡ˆ æ ¿∫ Sound ID¿‘¥œ¥Ÿ. ID={soundID}");
             return false;
-        }
 
         if (soundData == null)
         {
-            Debug.LogError($"[SoundManager] SoundData∞° null¿‘¥œ¥Ÿ. ID={soundID}");
+            Debug.LogError($"[SoundManager] SoundDataÍ∞Ä nullÏûÖÎãàÎã§. ID={soundID}");
             return false;
         }
 
@@ -213,91 +235,69 @@ public class SoundManager : MonoBehaviour
 
         if (soundData.audioClipReference == null)
         {
-            Debug.LogError($"[SoundManager] AudioClip Reference∞° null¿‘¥œ¥Ÿ. ID={soundData.soundID}, Data={soundData.name}");
+            Debug.LogError(
+                $"[SoundManager] AudioClip ReferenceÍ∞Ä nullÏûÖÎãàÎã§. ID={soundData.soundID}, Data={soundData.name}");
             return false;
         }
 
         if (!soundData.audioClipReference.RuntimeKeyIsValid())
         {
-            Debug.LogError( $"[SoundManager] RuntimeKey∞° ¿Ø»ø«œ¡ˆ æ Ω¿¥œ¥Ÿ. ID={soundData.soundID}, Data={soundData.name}");
+            Debug.LogError(
+                $"[SoundManager] RuntimeKeyÍ∞Ä Ïú†Ìö®ÌïòÏßÄ ÏïäÏäµÎãàÎã§. ID={soundData.soundID}, Data={soundData.name}");
             return false;
         }
 
-        object keyObject =
-            soundData.audioClipReference.RuntimeKey;
-
+        object keyObject = soundData.audioClipReference.RuntimeKey;
         if (keyObject == null)
         {
-            Debug.LogError($"[SoundManager] RuntimeKey∞° null¿‘¥œ¥Ÿ. ID={soundData.soundID}");
+            Debug.LogError($"[SoundManager] RuntimeKeyÍ∞Ä nullÏûÖÎãàÎã§. ID={soundData.soundID}");
             return false;
         }
 
         runtimeKey = keyObject.ToString();
-
         if (string.IsNullOrWhiteSpace(runtimeKey))
         {
-            Debug.LogError($"[SoundManager] RuntimeKey πÆ¿⁄ø≠¿Ã ∫ÒæÓ ¿÷Ω¿¥œ¥Ÿ. ID={soundData.soundID}");
+            Debug.LogError($"[SoundManager] RuntimeKey Î¨∏ÏûêÏó¥Ïù¥ ÎπÑÏñ¥ ÏûàÏäµÎãàÎã§. ID={soundData.soundID}");
             return false;
         }
 
         return true;
     }
 
-    private IEnumerator EnsureClipLoaded(
-       SoundData soundData)
+    private IEnumerator EnsureClipLoaded(SoundData soundData)
     {
         if (soundData == null)
             yield break;
 
         int soundID = soundData.soundID;
-  
-        if (clipTable.TryGetValue(
-                soundID,
-                out AudioClip idCachedClip) &&
-            idCachedClip != null)
-        {
-            yield break;
-        }
 
-        if (!TryGetRuntimeKey(
-                soundData,
-                out string runtimeKey))
-        {
+        if (clipTable.TryGetValue(soundID, out AudioClip idCachedClip) && idCachedClip != null)
             yield break;
-        }
 
-        if (assetClipTable.TryGetValue(
-                runtimeKey,
-                out AudioClip assetCachedClip) &&
+        if (!TryGetRuntimeKey(soundData, out string runtimeKey))
+            yield break;
+
+        if (assetClipTable.TryGetValue(runtimeKey, out AudioClip assetCachedClip) &&
             assetCachedClip != null)
         {
             clipTable[soundID] = assetCachedClip;
             yield break;
         }
 
-        /*
-         * ¥Ÿ∏• SoundData ∂«¥¬ ¥Ÿ∏• »£√‚ ∞Ê∑Œø°º≠ ∞∞¿∫ ø°º¬¿ª
-         * ∑ŒµÂ ¡ﬂ¿Ã∂Û∏È øœ∑·µ… ∂ß±Ó¡ˆ ±‚¥Ÿ∏≥¥œ¥Ÿ.
-         */
         if (loadingAssetKeys.Contains(runtimeKey))
         {
             while (loadingAssetKeys.Contains(runtimeKey))
                 yield return null;
 
             if (assetClipTable.TryGetValue(runtimeKey, out assetCachedClip) && assetCachedClip != null)
-            {
                 clipTable[soundID] = assetCachedClip;
-            }
             else
-            {
-                Debug.LogError($"[SoundManager] ∑ŒµÂ ¥Î±‚ »ƒ Clip¿Ã æ¯Ω¿¥œ¥Ÿ. ID={soundID}, Key={runtimeKey}");
-            }
+                Debug.LogError($"[SoundManager] Î°úÎìú ÏôÑÎ£å ÌõÑ ClipÏù¥ ÏóÜÏäµÎãàÎã§. ID={soundID}, Key={runtimeKey}");
 
             yield break;
         }
 
         loadingAssetKeys.Add(runtimeKey);
-
         AsyncOperationHandle<AudioClip> handle;
 
         try
@@ -307,43 +307,35 @@ public class SoundManager : MonoBehaviour
         catch (Exception exception)
         {
             loadingAssetKeys.Remove(runtimeKey);
-
-            Debug.LogError($"[SoundManager] Addressable ∑ŒµÂ ø‰√ª øπø‹\n" +
-                $"ID={soundID}, Key={runtimeKey}, Data={soundData.name}\n" +
-                $"{exception}");
-
+            Debug.LogError(
+                $"[SoundManager] Addressable Î°úÎìú ÏöîÏ≤≠ Ïã§Ìå®\n" +
+                $"ID={soundID}, Key={runtimeKey}, Data={soundData.name}\n{exception}");
             yield break;
         }
 
         yield return handle;
-
         loadingAssetKeys.Remove(runtimeKey);
 
         if (!handle.IsValid())
         {
-            Debug.LogError($"[SoundManager] ¿Ø»ø«œ¡ˆ æ ¿∫ Handle¿‘¥œ¥Ÿ. ID={soundID}, Key={runtimeKey}");
-
+            Debug.LogError($"[SoundManager] Ïú†Ìö®ÌïòÏßÄ ÏïäÏùÄ HandleÏûÖÎãàÎã§. ID={soundID}, Key={runtimeKey}");
             yield break;
         }
 
-        if (handle.Status !=
-            AsyncOperationStatus.Succeeded)
+        if (handle.Status != AsyncOperationStatus.Succeeded)
         {
-            Debug.LogError($"[SoundManager] AudioClip ∑ŒµÂ Ω«∆–\n" +
+            Debug.LogError(
+                $"[SoundManager] AudioClip Î°úÎìú Ïã§Ìå®\n" +
                 $"ID={soundID}, Key={runtimeKey}, Data={soundData.name}\n" +
                 $"Exception={handle.OperationException}");
-
-            if (handle.IsValid())
-                Addressables.Release(handle);
-
+            Addressables.Release(handle);
             yield break;
         }
 
         AudioClip loadedClip = handle.Result;
-
         if (loadedClip == null)
         {
-            Debug.LogError($"[SoundManager] ∑ŒµÂ¥¬ º∫∞¯«ﬂ¡ˆ∏∏ Clip¿Ã null¿‘¥œ¥Ÿ. ID={soundID}, Key={runtimeKey}");
+            Debug.LogError($"[SoundManager] Î°úÎìúÎêú ClipÏù¥ nullÏûÖÎãàÎã§. ID={soundID}, Key={runtimeKey}");
             Addressables.Release(handle);
             yield break;
         }
@@ -351,48 +343,41 @@ public class SoundManager : MonoBehaviour
         assetHandleTable[runtimeKey] = handle;
         assetClipTable[runtimeKey] = loadedClip;
         clipTable[soundID] = loadedClip;
-
-        Debug.Log($"[SoundManager] AudioClip ∑ŒµÂ øœ∑·. ID={soundID}, Clip={loadedClip.name}");
     }
 
     public void PreloadAllSounds()
     {
         StartCoroutine(PreloadAllSoundsCoroutine());
     }
+
     public IEnumerator PreloadAllSoundsCoroutine()
     {
         foreach (SoundData soundData in soundTable.Values)
         {
-            if (soundData == null)
-                continue;
-
-            yield return EnsureClipLoaded(soundData);
+            if (soundData != null)
+                yield return EnsureClipLoaded(soundData);
         }
-
-        Debug.Log($"[SoundManager] ¿¸√º ªÁøÓµÂ Preload øœ∑·. SoundIDClipCount={clipTable.Count}, AssetClipCount={assetClipTable.Count}");
     }
 
     private void CreateInitialPool()
     {
         if (soundPrefab == null)
         {
-            Debug.LogError("[SoundManager] SoundPrefab¿Ã æ¯Ω¿¥œ¥Ÿ.");
+            Debug.LogError("[SoundManager] SoundPrefabÏù¥ ÏóÜÏäµÎãàÎã§.");
             return;
         }
 
         if (soundParent == null)
         {
-            Debug.LogWarning("[SoundManager] SoundParent∞° null¿‘¥œ¥Ÿ. SoundManager Transform¿ª ªÁøÎ«’¥œ¥Ÿ.");
+            Debug.LogWarning("[SoundManager] SoundParentÍ∞Ä ÏóÜÏñ¥ SoundManager TransformÏùÑ ÏÇ¨Ïö©Ìï©ÎãàÎã§.");
             soundParent = transform;
         }
-        int createCount = Mathf.Max(0, initialPoolSize);
 
-        for (int i = 0; i < initialPoolSize; i++)
+        int createCount = Mathf.Max(0, initialPoolSize);
+        for (int i = 0; i < createCount; i++)
         {
             SoundPoolObject soundObject = CreateSoundObject();
-
-            if (soundObject == null)
-                continue;
+            if (soundObject == null) continue;
 
             soundPool.Enqueue(soundObject);
             pooledObjects.Add(soundObject);
@@ -405,18 +390,17 @@ public class SoundManager : MonoBehaviour
             return null;
 
         SoundPoolObject soundObject = Instantiate(soundPrefab, soundParent);
-
         if (soundObject == null)
         {
-            Debug.LogError("[SoundManager] SoundPoolObject ª˝º∫ø° Ω«∆–«ﬂΩ¿¥œ¥Ÿ.");
+            Debug.LogError("[SoundManager] SoundPoolObject ÏÉùÏÑ±Ïóê Ïã§Ìå®ÌñàÏäµÎãàÎã§.");
             return null;
         }
 
         AudioSource source = soundObject.AudioSource;
-
         if (source == null)
         {
-            Debug.LogError($"[SoundManager] SoundPoolObjectø° AudioSource∞° æ¯Ω¿¥œ¥Ÿ. Object={soundObject.name}");
+            Debug.LogError(
+                $"[SoundManager] SoundPoolObjectÏóê AudioSourceÍ∞Ä ÏóÜÏäµÎãàÎã§. Object={soundObject.name}");
         }
         else if (sfxMixerGroup != null)
         {
@@ -424,7 +408,6 @@ public class SoundManager : MonoBehaviour
         }
 
         soundObject.gameObject.SetActive(false);
-
         return soundObject;
     }
 
@@ -432,32 +415,26 @@ public class SoundManager : MonoBehaviour
     {
         SoundPoolObject soundObject = null;
 
-        while (soundPool.Count > 0 &&
-               soundObject == null)
+        while (soundPool.Count > 0 && soundObject == null)
         {
             soundObject = soundPool.Dequeue();
-
             if (soundObject != null)
                 pooledObjects.Remove(soundObject);
         }
 
         if (soundObject == null)
-        {
             soundObject = CreateSoundObject();
-        }
 
         if (soundObject == null)
         {
-            Debug.LogError("[SoundManager] SoundPoolObject Spawn Ω«∆–");
+            Debug.LogError("[SoundManager] SoundPoolObject SpawnÏóê Ïã§Ìå®ÌñàÏäµÎãàÎã§.");
             return null;
         }
 
         Transform soundTransform = soundObject.transform;
-
         soundTransform.SetParent(soundParent);
         soundTransform.position = position;
         soundTransform.rotation = Quaternion.identity;
-
         soundObject.gameObject.SetActive(true);
 
         return soundObject;
@@ -470,12 +447,12 @@ public class SoundManager : MonoBehaviour
 
         if (pooledObjects.Contains(soundObject))
         {
-            Debug.LogWarning($"[SoundManager] ¿ÃπÃ «Æø° π›»Øµ» ∞¥√º¿‘¥œ¥Ÿ. Object={soundObject.name}");
+            Debug.LogWarning(
+                $"[SoundManager] Ïù¥ÎØ∏ ÌíÄÏóê Î∞òÌôòÎêú Í∞ùÏ≤¥ÏûÖÎãàÎã§. Object={soundObject.name}");
             return;
         }
 
         soundObject.ResetSound();
-
         soundObject.transform.SetParent(soundParent);
         soundObject.gameObject.SetActive(false);
 
@@ -486,85 +463,77 @@ public class SoundManager : MonoBehaviour
     public void PlaySound(int soundID, Vector3 position, float volumeScale = 1f)
     {
         if (!TryGetSoundData(soundID, out SoundData soundData))
-        {
             return;
-        }
 
         StartCoroutine(PlaySoundCoroutine(soundData, position, volumeScale));
-
     }
 
-    private IEnumerator PlaySoundCoroutine(SoundData soundData, Vector3 position, float volumeScale)
+    private IEnumerator PlaySoundCoroutine(
+        SoundData soundData,
+        Vector3 position,
+        float volumeScale)
     {
         yield return EnsureClipLoaded(soundData);
 
         if (!clipTable.TryGetValue(soundData.soundID, out AudioClip clip) || clip == null)
         {
-            Debug.LogError($"[SoundManager] ¿Áª˝«“ Clip¿Ã æ¯Ω¿¥œ¥Ÿ. ID={soundData.soundID}");
+            Debug.LogError($"[SoundManager] Ïû¨ÏÉùÌï† ClipÏù¥ ÏóÜÏäµÎãàÎã§. ID={soundData.soundID}");
             yield break;
         }
 
         SpawnAndPlay(soundData, clip, position, volumeScale);
     }
 
+    private void SpawnAndPlay(
+        SoundData soundData,
+        AudioClip clip,
+        Vector3 position,
+        float volumeScale)
+    {
+        SoundPoolObject soundObject = Spawn(position);
+        if (soundObject == null) return;
+
+        soundObject.Play(clip, soundData, volumeScale);
+    }
+
     public SoundPoolObject PlayLoopSound(int soundID, Vector3 position, float volumeScale = 1f)
     {
-        if (soundID <= 0)
-            return null;
-
         if (!TryGetSoundData(soundID, out SoundData soundData))
-        {
             return null;
-        }
 
         if (!clipTable.TryGetValue(soundID, out AudioClip clip) || clip == null)
         {
-            Debug.LogWarning($"[SoundManager] ∑Á«¡ ªÁøÓµÂ∞° æ∆¡˜ ∑ŒµÂµ«¡ˆ æ æ“Ω¿¥œ¥Ÿ. ID={soundID}");
-
+            Debug.LogWarning(
+                $"[SoundManager] Î£®ÌîÑ ÏÇ¨Ïö¥ÎìúÎäî Î®ºÏ†Ä Î°úÎìúÎêòÏñ¥Ïïº Ìï©ÎãàÎã§. ID={soundID}");
             StartCoroutine(EnsureClipLoaded(soundData));
-
             return null;
         }
 
         SoundPoolObject soundObject = Spawn(position);
-
-        if (soundObject == null)
-            return null;
+        if (soundObject == null) return null;
 
         soundObject.Play(clip, soundData, volumeScale);
-
         return soundObject;
     }
 
     public void PlayBGM(int soundID)
     {
         if (!TryGetSoundData(soundID, out SoundData soundData))
-        {
             return;
-        }
 
         if (bgmSource == null)
         {
-            Debug.LogError("[SoundManager] BGM AudioSource∞° ø¨∞·µ«¡ˆ æ æ“Ω¿¥œ¥Ÿ.");
+            Debug.LogError("[SoundManager] BGM AudioSourceÍ∞Ä Ïó∞Í≤∞ÎêòÏßÄ ÏïäÏïòÏäµÎãàÎã§.");
             return;
         }
 
-        if (currentBgmID == soundID &&
-            bgmSource.isPlaying)
-        {
-            Debug.Log($"[BGM] ∞∞¿∫ ∞Ó¿ª ¿Ø¡ˆ«’¥œ¥Ÿ. ID={soundID}, Time={bgmSource.time:F2}");
-
+        if (currentBgmID == soundID && bgmSource.isPlaying)
             return;
-        }
 
         if (requestedBgmID == soundID)
-        {
-            Debug.Log($"[BGM] ¿ÃπÃ ø‰√ª ∂«¥¬ ∑ŒµÂ ¡ﬂ¿‘¥œ¥Ÿ. ID={soundID}");
             return;
-        }
 
         requestedBgmID = soundID;
-
         StartCoroutine(LoadAndPlayBGMCoroutine(soundData, soundID));
     }
 
@@ -573,14 +542,11 @@ public class SoundManager : MonoBehaviour
         yield return EnsureClipLoaded(soundData);
 
         if (requestedBgmID != requestID)
-        {
             yield break;
-        }
 
         if (!clipTable.TryGetValue(requestID, out AudioClip clip) || clip == null)
         {
-            Debug.LogError($"[BGM] ¿Áª˝«“ Clip¿Ã æ¯Ω¿¥œ¥Ÿ. ID={requestID}");
-
+            Debug.LogError($"[SoundManager] BGM ClipÏù¥ ÏóÜÏäµÎãàÎã§. ID={requestID}");
             requestedBgmID = -1;
             yield break;
         }
@@ -588,105 +554,12 @@ public class SoundManager : MonoBehaviour
         ApplyAndPlayBGM(soundData, clip);
     }
 
-    private void SpawnAndPlay(SoundData soundData, AudioClip clip, Vector3 position, float volumeScale)
-    {
-        SoundPoolObject soundObject = Spawn(position);
-
-        soundObject.Play(clip, soundData, volumeScale);
-
-    }
-
-   
-
-    private IEnumerator PreloadSoundCoroutine(SoundData soundData)
-    {
-        int soundID = soundData.soundID;
-
-        if (loadingSoundIDs.Contains(soundID))
-            yield break;
-
-        if (soundData.audioClipReference == null || !soundData.audioClipReference.RuntimeKeyIsValid())
-        {
-            yield break;
-        }
-
-        loadingSoundIDs.Add(soundID);
-
-        AsyncOperationHandle<AudioClip> handle = soundData.audioClipReference.LoadAssetAsync<AudioClip>();
-
-        yield return handle;
-
-        loadingSoundIDs.Remove(soundID);
-
-        if (handle.Status != AsyncOperationStatus.Succeeded)
-        {
-            Debug.LogError($"ªÁøÓµÂ ªÁ¿¸ ∑ŒµÂ Ω«∆–: {soundID}");
-
-            yield break;
-        }
-
-        clipTable[soundID] = handle.Result;
-        clipHandles[soundID] = handle;
-    }
-
-    private IEnumerator LoadAndPlayBGMCoroutine(SoundData soundData)
-    {
-        if (soundData == null)
-            yield break;
-
-        int soundID = soundData.soundID;
-
-        if (soundData.audioClipReference == null || !soundData.audioClipReference.RuntimeKeyIsValid())
-        {
-            Debug.LogError($"[BGM] Addressable Reference∞° ¿Ø»ø«œ¡ˆ æ Ω¿¥œ¥Ÿ. ID={soundID}");
-            yield break;
-        }
-
-        if (loadingSoundIDs.Contains(soundID))
-        {
-            while(loadingSoundIDs.Contains(soundID))
-                yield return null;
-
-            if (clipTable.TryGetValue(soundID, out AudioClip cachedClip))
-            {
-                ApplyAndPlayBGM(soundData, cachedClip);
-            }
-
-            yield break;
-        }
-
-        loadingSoundIDs.Add(soundID);
-
-        AsyncOperationHandle<AudioClip> handle = soundData.audioClipReference.LoadAssetAsync<AudioClip>();
-
-        yield return handle;
-
-        if (handle.Status != AsyncOperationStatus.Succeeded)
-        {
-            Debug.LogError($"[BGM] AudioClip ∑ŒµÂ Ω«∆–. ID={soundID}, Exception={handle.OperationException}");
-            yield break;
-        }
-
-        AudioClip clip = handle.Result;
-
-        if (clip == null)
-        {
-            Debug.LogError($"[BGM] ∑ŒµÂ ∞·∞˙∞° null¿‘¥œ¥Ÿ. ID={soundID}");
-            yield break;
-        }
-        clipTable[soundID] = clip;
-        clipHandles[soundID] = handle;
-
-        ApplyAndPlayBGM(soundData, clip);
-    }
-
     private void ApplyAndPlayBGM(SoundData soundData, AudioClip clip)
     {
-        if (soundData == null || soundData == null || clip == null)
+        if (soundData == null || clip == null || bgmSource == null)
             return;
 
         bgmSource.Stop();
-
         bgmSource.outputAudioMixerGroup = bgmMixerGroup;
         bgmSource.clip = clip;
         bgmSource.volume = soundData.volume;
@@ -694,46 +567,32 @@ public class SoundManager : MonoBehaviour
         bgmSource.loop = true;
         bgmSource.spatialBlend = 0f;
 
-        if (bgmMixerGroup != null)
-        {
-            bgmSource.outputAudioMixerGroup =
-                bgmMixerGroup;
-        }
-
         currentBgmID = soundData.soundID;
-
+        requestedBgmID = -1;
         bgmSource.Play();
-
-        Debug.Log($"[BGM] ¿Áª˝ Ω√¿€ ID={currentBgmID}, Clip={clip.name}, " +
-            $"Volume={bgmSource.volume}, IsPlaying={bgmSource.isPlaying}");
     }
 
     public void StopBGM()
     {
+        requestedBgmID = -1;
+
         if (bgmSource == null)
             return;
 
         bgmSource.Stop();
         bgmSource.clip = null;
         currentBgmID = -1;
-
-        Debug.Log("[BGM] ¿Áª˝ ¡§¡ˆ");
     }
 
     public void PauseBGM()
     {
         if (bgmSource != null && bgmSource.isPlaying)
-        {
             bgmSource.Pause();
-        }
     }
 
     public void ResumeBGM()
     {
         if (bgmSource != null && bgmSource.clip != null)
-        {
             bgmSource.UnPause();
-        }
     }
-
 }

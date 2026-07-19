@@ -47,6 +47,7 @@ public class TopViewCameraController : MonoBehaviour, ICameraModule
     IInputService inputService;
 
     bool active;
+    bool inputBlocked;
     bool startPositionResolved;
     float activatedTime;
     float currentZoomRate;
@@ -54,6 +55,7 @@ public class TopViewCameraController : MonoBehaviour, ICameraModule
 
     public CameraViewType ViewType => CameraViewType.TopView;
     public CinemachineCamera Camera => topViewCam;
+    public bool InputBlocked => inputBlocked;
 
     #region 생명 주기
 
@@ -115,7 +117,7 @@ public class TopViewCameraController : MonoBehaviour, ICameraModule
 
     public void Move(Vector2 input)
     {
-        if (!active || topViewTarget == null) return;
+        if (!active || inputBlocked || topViewTarget == null) return;
 
         Vector2 finalInput = Vector2.ClampMagnitude(input + GetEdgeMoveInput(), 1f);
         if (finalInput.sqrMagnitude < 0.0001f) return;
@@ -128,12 +130,20 @@ public class TopViewCameraController : MonoBehaviour, ICameraModule
 
     public void Zoom(float input)
     {
-        if (!active || Mathf.Abs(input) < 0.01f) return;
+        if (!active || inputBlocked || Mathf.Abs(input) < 0.01f) return;
         targetZoomRate = Mathf.Clamp01(targetZoomRate - input * zoomSpeed * Time.unscaledDeltaTime);
     }
 
     public void Rotate(Vector2 input)
     {
+    }
+
+    public void SetInputBlocked(bool blocked)
+    {
+        inputBlocked = blocked;
+
+        if (blocked)
+            targetZoomRate = currentZoomRate;
     }
 
     #endregion
