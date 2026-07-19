@@ -26,6 +26,9 @@ public class ObjectPoolManager : MonoBehaviour
 
     // 오브젝트 풀
     private Dictionary<GameObject, Queue<PoolableObject>> pools = new();
+    private readonly HashSet<PoolableObject> activeObjects = new();
+    private readonly List<PoolableObject> despawnBuffer = new();
+    private bool isDespawningAll;
 
     private Dictionary<int, ProjectileData> projectileTable = new();
     private Dictionary<int, HitBoxData> hitBoxTable = new();
@@ -286,13 +289,12 @@ public class ObjectPoolManager : MonoBehaviour
             pools[prefab] = new Queue<PoolableObject>();
         }
 
-        PoolableObject obj;
+        PoolableObject obj = null;
 
-        if (pools[prefab].Count > 0)
-        {
+        while (pools[prefab].Count > 0 && obj == null)
             obj = pools[prefab].Dequeue();
-        }
-        else
+
+        if (obj == null)
         {
             GameObject newObj = Instantiate(prefab, parent);
             obj = newObj.GetComponent<PoolableObject>();
@@ -309,6 +311,7 @@ public class ObjectPoolManager : MonoBehaviour
 
         obj.transform.SetParent(parent);
         obj.transform.SetPositionAndRotation(position, rotation);
+        activeObjects.Add(obj);
         obj.OnSpawned();
 
         //Debug.Log($"[Pool] 실제 타입 : {obj.GetType().Name}, 요청 타입 : {typeof(T).Name}");
@@ -322,7 +325,11 @@ public class ObjectPoolManager : MonoBehaviour
     {
         if (obj == null)
             return;
-        Debug.Log($"[Pool] Despawn 실행: {obj.name}");
+
+        // 이미 반환된 객체를 다시 큐에 넣지 않는다.
+        // PoolEffect처럼 여러 종료 경로가 동시에 호출돼도 한 번만 처리된다.
+        if (!activeObjects.Remove(obj))
+            return;
 
         GameObject key = obj.prefabKey;
 
@@ -339,6 +346,39 @@ public class ObjectPoolManager : MonoBehaviour
             pools[key] = new Queue<PoolableObject>();
 
         pools[key].Enqueue(obj);
+    }
+
+    /// <summary>
+    /// 씬 전환 전에 현재 사용 중인 모든 풀 객체를 즉시 반환한다.
+    /// Despawn 과정에서 다른 객체가 함께 반환될 수 있으므로 스냅샷을 순회한다.
+    /// </summary>
+    public void DespawnAllActive()
+    {
+        if (isDespawningAll)
+            return;
+
+        isDespawningAll = true;
+
+        try
+        {
+            despawnBuffer.Clear();
+
+            foreach (PoolableObject obj in activeObjects)
+            {
+                if (obj != null)
+                    despawnBuffer.Add(obj);
+            }
+
+            for (int i = despawnBuffer.Count - 1; i >= 0; i--)
+                Despawn(despawnBuffer[i]);
+
+            activeObjects.RemoveWhere(obj => obj == null);
+            despawnBuffer.Clear();
+        }
+        finally
+        {
+            isDespawningAll = false;
+        }
     }
     #endregion
 

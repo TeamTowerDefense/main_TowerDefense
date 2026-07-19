@@ -12,10 +12,7 @@ public class TitleMenuController : MonoBehaviour
     [SerializeField] Button exitButton;
 
     [Header("패널")]
-    [SerializeField] GameObject settingPanel;
-
-    [Header("옵션")]
-    [SerializeField] bool hideSettingPanelOnAwake = true;
+    [SerializeField] SettingsPanelController settingPanel;
 
     #endregion
 
@@ -23,9 +20,6 @@ public class TitleMenuController : MonoBehaviour
 
     void Awake()
     {
-        if (hideSettingPanelOnAwake && settingPanel != null)
-            settingPanel.SetActive(false);
-
         BindButtons();
     }
 
@@ -70,12 +64,15 @@ public class TitleMenuController : MonoBehaviour
     public void OnClickSetting()
     {
         if (settingPanel == null)
+            settingPanel = SettingsPanelController.Current;
+
+        if (settingPanel == null)
         {
             Debug.LogWarning("[TitleMenuController] Setting Panel이 없습니다.", this);
             return;
         }
 
-        settingPanel.SetActive(!settingPanel.activeSelf);
+        settingPanel.Toggle();
     }
 
     public void OnClickExit()

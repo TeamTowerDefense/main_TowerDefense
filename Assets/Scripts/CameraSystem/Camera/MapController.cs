@@ -65,17 +65,27 @@ public class MapController : MonoBehaviour, IMapService, IAutoSceneService
 
     void OnDestroy()
     {
-        if (enemies.Count > 0)
+        // Despawn -> EnemyInfoProvider.OnDisable -> Unregister가 호출되면
+        // enemies가 변경되므로 원본 컬렉션을 직접 순회하면 안 된다.
+        List<EnemyInfo> remainingEnemies = new(enemies);
+
+        enemies.Clear();
+        enemyInfoByProvider.Clear();
+        enemyInfoProviders.Clear();
+        enemyGrid.Clear();
+
+        ObjectPoolManager poolManager = ObjectPoolManager.Instance;
+        if (poolManager != null)
         {
-            foreach (var enemy in enemies)
+            foreach (EnemyInfo enemy in remainingEnemies)
             {
+                if (enemy?.Transform == null) continue;
                 if (!enemy.Transform.TryGetComponent(out PoolableObject pool)) continue;
-                ObjectPoolManager.Instance.Despawn(pool);
+                poolManager.Despawn(pool);
             }
         }
 
-        enemyGrid.Clear();
-        enemyInfoByProvider.Clear();
+        remainingEnemies.Clear();
 
         ((IAutoSceneService)this).UnregisterSceneServices();
     }

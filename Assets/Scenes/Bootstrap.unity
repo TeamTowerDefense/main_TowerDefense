@@ -599,10 +599,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SoundManager
   bgmSource: {fileID: 494596080}
-  bgmMixerGroup: {fileID: 24300002, guid: d8f4c3d9cc6e67746bb9acb4a5d1528f, type: 2}
+  bgmMixerGroup: {fileID: 5311195186175972641, guid: d8f4c3d9cc6e67746bb9acb4a5d1528f, type: 2}
   lobbyBgmID: 30001
   stageBgmID: 30002
-  sfxMixerGroup: {fileID: 24300002, guid: d8f4c3d9cc6e67746bb9acb4a5d1528f, type: 2}
+  sfxMixerGroup: {fileID: -2167870753256851613, guid: d8f4c3d9cc6e67746bb9acb4a5d1528f, type: 2}
   soundDB: {fileID: 11400000, guid: bab62b649eceffb47963b75f89d079cd, type: 2}
   soundPrefab: {fileID: 1381401195}
   soundParent: {fileID: 905434196}

@@ -25,7 +25,6 @@ public class GameBootstrapper : MonoBehaviour
     #endregion
 
     #region 생명주기
-
     IEnumerator Start()
     {
         yield return null;
