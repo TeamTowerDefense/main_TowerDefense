@@ -66,11 +66,15 @@ public class Monster : PoolableObject, IEnemyHealth
         propertyBlock = new MaterialPropertyBlock();
         monsterRenderer = GetComponentInChildren<Renderer>();
 
+    }
+
+    private void OnEnable()
+    {
         if (keywordController != null)
         {
+            keywordController.OnKeywordChanged -= UpdateAllStats;
             keywordController.OnKeywordChanged += UpdateAllStats;
         }
-
     }
 
     private void OnDisable()
